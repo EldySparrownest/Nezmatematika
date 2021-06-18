@@ -8,7 +8,7 @@ using System.Windows.Data; // for IValueConverter
 
 namespace MVVMMathProblemsBase.ViewModel.ValueConverters
 {
-    public class BoolToFeedackConverter : IValueConverter
+    public class NullBoolToFeedackConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,11 +58,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\User.cs" />
     <Compile Include="ViewModel\Commands\MakeStepVisibleCommand.cs" />
     <Compile Include="ViewModel\Commands\CheckIfAnswerIsCorrectCommand.cs" />
     <Compile Include="ViewModel\MathProblemVM.cs" />
-    <Compile Include="ViewModel\ValueConverters\BoolToFeedackConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\BoolToVisibilityConverter.cs" />
+    <Compile Include="ViewModel\ValueConverters\NullBoolToFeedackConverter.cs" />
+    <Compile Include="ViewModel\ValueConverters\NullBoolToVisibilityConverter.cs" />
+    <Compile Include="ViewModel\ValueConverters\NullBoolToSolidColorBrushConverter.cs" />
     <Compile Include="View\MainMenuWindow.xaml.cs">
       <DependentUpon>MainMenuWindow.xaml</DependentUpon>
     </Compile>
@@ -70,11 +75,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\UserTypeSelectWindow.xaml.cs">
+      <DependentUpon>UserTypeSelectWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\MainMenuWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MathProblemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserTypeSelectWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -98,6 +110,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

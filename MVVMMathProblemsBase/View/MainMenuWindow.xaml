@@ -5,9 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
         mc:Ignorable="d"
-        Title="MainMenuWindow" Height="450" Width="800">
+        Title="Nezmatematika" Height="450" Width="800">
     <DockPanel>
-        <TextBlock Text="Ahoj, světe!"/>
+        <Grid>
+            <StackPanel VerticalAlignment="Top"
+                        Margin="20">
+                <Label Content="Jméno Příjmení, Třída"
+                           HorizontalAlignment="Left"
+                           Margin="5,5,5,0"/>
+                <StackPanel HorizontalAlignment="Right">
+                    <Button Content="Upravit profil"
+                            Margin="5"/>
+                    <Button Content="Přepnout profil"
+                            Margin="5"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom"
+                        Margin="20">
+                <Button Content="Začít nový kurz"
+                            Margin="5"
+                            VerticalAlignment="Bottom"/>
+                    <Button Content="Pokračovat v kurzu"
+                            Margin="5"/>
+                    <Button Content="Statistiky"
+                            Margin="5"/>
+                    <Button Content="Nastavení"
+                            Margin="5"/>
+                    <Button Content="Ukončit"
+                            Click="AppCurrentShutdown"
+                            Margin="5"
+                            VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </Grid>
+
         <ListView DockPanel.Dock="Right"
                   Width="140"
                   Background="MidnightBlue">

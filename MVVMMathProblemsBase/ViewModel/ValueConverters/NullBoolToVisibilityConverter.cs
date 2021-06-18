@@ -9,7 +9,7 @@ using System.Windows.Data; // for IVAlueConverter
 
 namespace MVVMMathProblemsBase.ViewModel.ValueConverters
 {
-    public class BoolToVisibilityConverter : IValueConverter
+    public class NullBoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

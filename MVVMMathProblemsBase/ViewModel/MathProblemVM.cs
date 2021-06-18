@@ -73,15 +73,15 @@ namespace MVVMMathProblemsBase.ViewModel
                     new List<string> { "8" },
                     new List<SolutionStep> {
                         new SolutionStep("Přečti si první větu.",
-                            BoolToVisibilityConverter.Convert(isInDesignMode)),
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
                         new SolutionStep("Znovu si přečti první větu.",
-                            BoolToVisibilityConverter.Convert(isInDesignMode)),
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
                         new SolutionStep("Adélka (první účastník oslavy) má 5 nevlastních sourozenců, takže už z první věty máme 6 lidí.",
-                            BoolToVisibilityConverter.Convert(isInDesignMode)),
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
                         new SolutionStep("Na oslavě budou i oba její rodiče, takže je musíme přičíst.",
-                            BoolToVisibilityConverter.Convert(isInDesignMode)),
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
                         new SolutionStep("Adélka + 5 nevlastních sourozenců + 2 rodiče = 8 lidí na oslavě." ,
-                            BoolToVisibilityConverter.Convert(isInDesignMode))});
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode))});
 
             //            }
             Solved = null;

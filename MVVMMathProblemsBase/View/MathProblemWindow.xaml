@@ -4,14 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:MVVMMathProblemsBase.ViewModel"
         xmlns:converters="clr-namespace:MVVMMathProblemsBase.ViewModel.ValueConverters"
         mc:Ignorable="d"
         Title="MathProblemWindow" Height="450" Width="800">
     <Window.Resources>
         <vm:MathProblemVM x:Key="vm"/>
-        <converters:BoolToFeedackConverter x:Key="boolToFeedback"/>
-        <converters:BoolToVisibilityConverter x:Key="boolToVisibility"/>
+        <converters:NullBoolToFeedackConverter x:Key="boolToFeedback"/>
+        <converters:NullBoolToSolidColorBrushConverter x:Key="boolToSolidColorBrush"/>
+        <converters:NullBoolToVisibilityConverter x:Key="boolToVisibility"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource vm}">
         <Grid.RowDefinitions>
@@ -61,8 +63,10 @@
                         Command="{Binding CheckIfAnswerIsCorrectCommand}"
                         CommandParameter="{Binding UserAnswer}"
                         Content="Potvrdit"/>
-            <TextBlock Text="{Binding Solved, Converter={StaticResource boolToFeedback}}"
-                           Margin="0,0,0,0"/>
+            <TextBlock Background="{Binding Solved, Converter={StaticResource boolToSolidColorBrush}}"
+                       Text="{Binding Solved, Converter={StaticResource boolToFeedback}}"
+                       Margin="0,0,0,0">
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Window>

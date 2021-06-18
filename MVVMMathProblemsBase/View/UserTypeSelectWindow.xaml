@@ -1,0 +1,17 @@
+﻿<Window x:Class="MVVMMathProblemsBase.View.UserTypeSelectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
+        mc:Ignorable="d"
+        Title="Nezmatematika: Výběr módu" Height="150" Width="250">
+    <Grid>
+        <StackPanel Margin="15" VerticalAlignment="Center">
+            <Button Content="JSEM STUDENT"
+                    Margin="5"/>
+            <Button Content="JSEM VYUČUJÍCÍ"
+                    Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>

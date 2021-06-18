@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVMMathProblemsBase.Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,7 @@ namespace MVVMMathProblemsBase
     /// </summary>
     public partial class App : Application
     {
+        public static User AppUser = null;
+        public static string UserType = string.Empty;
     }
 }

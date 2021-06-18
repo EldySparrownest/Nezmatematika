@@ -15,17 +15,13 @@ using System.Windows.Shapes;
 namespace MVVMMathProblemsBase.View
 {
     /// <summary>
-    /// Interakční logika pro MainMenuWindow.xaml
+    /// Interakční logika pro UserTypeSelectWindow.xaml
     /// </summary>
-    public partial class MainMenuWindow : Window
+    public partial class UserTypeSelectWindow : Window
     {
-        public MainMenuWindow()
+        public UserTypeSelectWindow()
         {
             InitializeComponent();
-        }
-        private void AppCurrentShutdown(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
     }
 }
