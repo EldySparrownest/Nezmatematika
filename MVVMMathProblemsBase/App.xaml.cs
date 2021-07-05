@@ -15,6 +15,6 @@ namespace MVVMMathProblemsBase
     public partial class App : Application
     {
         public static User AppUser = null;
-        public static string UserType = string.Empty;
+        public static bool? IsInStudentMode = null;
     }
 }

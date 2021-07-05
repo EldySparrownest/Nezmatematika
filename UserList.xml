@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User>
+    <Id>teacher25062021233945</Id>
+    <FirstName>Monika</FirstName>
+    <LastName>Polívková</LastName>
+    <ClassName>6.A</ClassName>
+    <UserType>teacher</UserType>
+  </User>
+  <User>
+    <Id>teacher25062021235117</Id>
+    <FirstName>Sára</FirstName>
+    <LastName>Kvasničková</LastName>
+    <ClassName>7.A</ClassName>
+    <UserType>teacher</UserType>
+  </User>
+  <User>
+    <Id>teacher25062021235427</Id>
+    <FirstName>J1</FirstName>
+    <LastName>P1</LastName>
+    <ClassName>T1</ClassName>
+    <UserType>teacher</UserType>
+  </User>
+  <User>
+    <Id>student24062021222802</Id>
+    <FirstName>Josef</FirstName>
+    <LastName>Novák</LastName>
+    <ClassName>4.B</ClassName>
+    <UserType>student</UserType>
+  </User>
+</ArrayOfUser>

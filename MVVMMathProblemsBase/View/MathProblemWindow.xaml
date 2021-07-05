@@ -55,7 +55,7 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="20">
-            <TextBlock Text="Odpověď:"
+            <Label Content="Odpověď:"
                        Margin="0,10,0,0"/>
             <TextBox Text="{Binding UserAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          />

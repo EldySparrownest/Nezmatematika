@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MySettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LastStudentUser>
+    <Id>student26062021225353</Id>
+    <FirstName>Saxana</FirstName>
+    <LastName>Metlová</LastName>
+    <ClassName>2.A</ClassName>
+    <UserType>student</UserType>
+  </LastStudentUser>
+  <LastTeacherUser>
+    <Id>teacher2606202105538</Id>
+    <FirstName>Pistachio</FirstName>
+    <LastName>Andalusa</LastName>
+    <ClassName>xxxxx</ClassName>
+    <UserType>teacher</UserType>
+  </LastTeacherUser>
+  <HasCourseToContinue>false</HasCourseToContinue>
+  <Setting2 />
+</MySettings>

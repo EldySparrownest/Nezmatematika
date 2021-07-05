@@ -13,6 +13,7 @@ namespace MVVMMathProblemsBase.ViewModel.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            //true = Visible, false = Hidden, null = Collapsed           
             bool? visible = (bool?) value;
             if (visible == true)
                 return Visibility.Visible;

@@ -8,10 +8,14 @@
         Title="Nezmatematika: Výběr módu" Height="150" Width="250">
     <Grid>
         <StackPanel Margin="15" VerticalAlignment="Center">
-            <Button Content="JSEM STUDENT"
-                    Margin="5"/>
-            <Button Content="JSEM VYUČUJÍCÍ"
-                    Margin="5"/>
+            <Button x:Name="btnStudent"
+                    Content="JSEM STUDENT"
+                    Margin="5"
+                    Click="btnStudent_Click"/>
+            <Button x:Name="btnTeacher"
+                    Content="JSEM VYUČUJÍCÍ"
+                    Margin="5"
+                    Click="btnTeacher_Click"/>
         </StackPanel>
     </Grid>
 </Window>

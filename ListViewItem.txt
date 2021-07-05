@@ -1,0 +1,170 @@
+agenturapancersro
+sláma
+                                <MultiBinding StringFormat="{}{0} {1}, {2}">
+                                    <Binding Path="User.FirstName" />
+                                    <Binding Path="User.LastName" />
+                                    <Binding Path="User.ClassName" />
+                                </MultiBinding>
+
+                            <TextBlock.Text>
+                                <Binding Path="Fi" />
+                            </TextBlock.Text>
+
+<TextBlock Text="{Binding FirstName}">
+
+{Binding NewUserVis}
+{Binding UserSelVis}
+
+
+        <Grid Name="gridRightSide2"
+              DataContext="{StaticResource vm}">
+            <StackPanel HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="10"
+                        Visibility="Visible">
+                <Border BorderBrush="Black"
+                        BorderThickness="2">
+                    <Grid MinHeight="100"
+                          MinWidth="160">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="*"
+                                              MinWidth="150" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Založení nového profilu"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Background="LightGray" />
+                        <Label Content="Jméno:"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               HorizontalAlignment="Right" />
+                        <Label Content="Příjmení:"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               HorizontalAlignment="Right" />
+                        <Label Content="Třída:"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               HorizontalAlignment="Right" />
+                        <TextBox Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="0,5"
+                                 VerticalAlignment="Center"
+                                 Width="150"
+                                 MaxLength="30" />
+                        <TextBox Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Margin="5"
+                                 VerticalAlignment="Center"
+                                 Width="150"
+                                 MaxLength="30" />
+                        <TextBox Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 MaxLength="5"
+                                 Grid.Row="3"
+                                 Grid.Column="1"
+                                 Margin="5"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Width="60" />
+                        <Button x:Name="btnCreateNewUser2"
+                                Content="Vytvořit"
+                                Command="{Binding CreateNewUserCommand}"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Margin="5"
+                                Width="100"
+                                HorizontalAlignment="Right">
+                        </Button>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+
+                <Label HorizontalAlignment="Left"
+                       Margin="5,5,5,0">
+                    <Label.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} {1}, {2}">
+                                    <Binding Path="CurrentUser.FirstName" />
+                                    <Binding Path="CurrentUser.LastName" />
+                                    <Binding Path="CurrentUser.ClassName" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Label.Content>
+                </Label>
+
+
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ListViewItem.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Odstranit profil"
+                                              Command="{Binding Source={StaticResource vm}, Path=DeleteUserCommand}"
+                                              CommandParameter="{Binding}" />
+                                </ContextMenu>
+                            </ListViewItem.ContextMenu>
+
+                            <TextBlock Grid.Column="0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{1}, {0} - {2}">
+                                        <Binding Path="FirstName" />
+                                        <Binding Path="LastName" />
+                                        <Binding Path="ClassName" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock Text="{Binding ClassName}"
+                                       Margin="5,0"
+                                       HorizontalAlignment="Right" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+
+
+
+
+
+
+
+
+
+                        <ListViewItem.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Odstranit profil"
+                                          Command="{Binding Source={StaticResource vm}, Path=DeleteUserCommand}"
+                                          CommandParameter="{Binding}" />
+                            </ContextMenu>
+                        </ListViewItem.ContextMenu>
+
+
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+        </Style>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="ContextMenu"
+                                    Value="{StaticResource resourceContextMenu}" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+
+                                         SelectedColor="{Binding Settings.MainBackgroundBrush, 
+                                                                 Converter={StaticResource solidColorBrushToColor},
+                                                                 Mode=OneWayToSource}"

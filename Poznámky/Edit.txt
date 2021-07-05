@@ -1,0 +1,74 @@
+                    <StackPanel HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="10"
+                                Visibility="{Binding EditUserVis}">
+                        <Border BorderBrush="Black"
+                                BorderThickness="2">
+                            <Grid Name="gridEditUser"
+                                  MinHeight="100"
+                                  MinWidth="160">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="*"
+                                                      MinWidth="150" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Label Content="Úprava existujícího profilu"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Background="LightGray" />
+                                <Label Content="Jméno:"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       HorizontalAlignment="Right" />
+                                <Label Content="Příjmení:"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       HorizontalAlignment="Right" />
+                                <Label Content="Třída:"
+                                       Grid.Row="3"
+                                       Grid.Column="0"
+                                       HorizontalAlignment="Right" />
+                                <TextBox Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="0,5"
+                                         VerticalAlignment="Center"
+                                         Width="150"
+                                         MaxLength="30" />
+                                <TextBox Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Grid.Row="2"
+                                         Grid.Column="1"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         Width="150"
+                                         MaxLength="30" />
+                                <TextBox Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         MaxLength="5"
+                                         Grid.Row="3"
+                                         Grid.Column="1"
+                                         Margin="5"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Width="60" />
+                                <Button x:Name="btnEditUser"
+                                        Content="Uložit"
+                                        Command="{Binding EditUserCommand}"
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Margin="5"
+                                        Width="100"
+                                        HorizontalAlignment="Right"
+                                        Height="19"
+                                        VerticalAlignment="Top">
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>

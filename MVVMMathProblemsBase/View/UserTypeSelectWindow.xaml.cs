@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVMMathProblemsBase.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,32 @@ namespace MVVMMathProblemsBase.View
     /// </summary>
     public partial class UserTypeSelectWindow : Window
     {
+        UserTypeSelectVM vM;
+
         public UserTypeSelectWindow()
         {
             InitializeComponent();
+
+            vM = Resources["vm"] as UserTypeSelectVM;
+        }
+
+        private void SelectModeAndSwitchToMainMenu(bool? isInStudentMode)
+        {
+            App.IsInStudentMode = isInStudentMode;
+            MainMenuWindow mainMenuWindow = new MainMenuWindow();
+            
+            mainMenuWindow.Show();
+            this.Close();           
+        }
+
+        private void btnStudent_Click(object sender, RoutedEventArgs e)
+        {
+            SelectModeAndSwitchToMainMenu(true);
+        }
+
+        private void btnTeacher_Click(object sender, RoutedEventArgs e)
+        {
+            SelectModeAndSwitchToMainMenu(false);
         }
     }
 }
