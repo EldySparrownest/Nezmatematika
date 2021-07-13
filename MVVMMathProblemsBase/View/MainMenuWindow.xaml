@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="Nezmatematika"
         Height="450"
-        Width="800">
+        Width="3000">
     <Window.Resources>
         <vm:MainMenuVM x:Key="vm" />
         <converters:NullBoolToVisibilityConverter x:Key="nullBoolToVisibility" />
@@ -446,6 +446,86 @@
                                 Margin="5" />
                     </StackPanel>
                 </StackPanel>
+            </Grid>
+            <Grid x:Name="gridNewCourse">
+                <StackPanel HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Margin="10"
+                            Visibility="{Binding NewCourseVis}">
+                    <Border BorderBrush="Black"
+                            BorderThickness="2">
+                        <Grid Name="gridNewCourseForm"
+                              MinHeight="100"
+                              MinWidth="160">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*"
+                                                  MinWidth="150" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Label Content="Založení nového kurzu"
+                                   Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Background="LightGray" />
+                            <Label Content="Název:"
+                                   Grid.Row="1"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox Text="{Binding TempCourseTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Grid.Row="1"
+                                     Grid.Column="1"
+                                     Margin="0,5"
+                                     VerticalAlignment="Center"
+                                     Width="150"
+                                     MaxLength="30" />
+                            <Label Content="Popis:"
+                                   Grid.Row="2"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox Text="{Binding TempCourseDesc, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Grid.Row="2"
+                                     Grid.Column="1"
+                                     Margin="5"
+                                     VerticalAlignment="Center"
+                                     Width="150"/>
+                            <Label Content="Štítky:"
+                                   Grid.Row="3"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox Text="{Binding TempSchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Grid.Row="3"
+                                     Grid.Column="1"
+                                     VerticalAlignment="Center"
+                                     Width="150" />
+                            <ComboBox Grid.Row="4"
+                                      Grid.Column="1"
+                                      Margin="5">
+                            </ComboBox>
+
+                            <Button x:Name="btnCreateNewCourse"
+                                    Content="Vytvořit"
+                                    Command="{Binding CreateNewUserCommand}"
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="5"
+                                    Width="100"
+                                    HorizontalAlignment="Right" />
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="gridCourseEditor"
+                  Visibility="{Binding CourseEditorVis}">
+                
             </Grid>
         </DockPanel>
     </Grid>
