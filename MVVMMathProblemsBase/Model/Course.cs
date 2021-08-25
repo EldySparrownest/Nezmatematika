@@ -18,7 +18,7 @@ namespace MVVMMathProblemsBase.Model
         public int CourseStarted { get; set; }
         public int CourseFinished { get; set; }
         public TimeSpan NetCourseTime { get; set; }
-        public int ProblemBookmark { get; set; }
+        public MathProblem CurrentMathProblem { get; set; }
     }
     [Serializable]
     public class Course
@@ -29,6 +29,7 @@ namespace MVVMMathProblemsBase.Model
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
+        public string CourseDesc { get; set; }
         [field: NonSerialized] 
         public ObservableCollection<string> Tags { get; set; }
 
@@ -46,29 +47,29 @@ namespace MVVMMathProblemsBase.Model
             }
         }
 
+        public Course(User author, string title, string desc, ObservableCollection<string> tags)
+        {
+            Author = author;
+            CourseTitle = title;
+            CourseDesc = desc;
+            Tags = tags;
+            Problems = new ObservableCollection<MathProblem>();
+            Created = DateTime.Now;
+            LastEdited = DateTime.Now;
+        }
+
         public void AddNewMathProblem(MathProblem mathProblem)
         {
+            string precedingLabel;
             if (Problems.Count == 0)
             {
-                mathProblem.OrderLabel = "1.";
+                precedingLabel = "0";
             }
             else
             {
-                string lastLabel = Problems[Problems.Count - 1].OrderLabel;
-                int dotIndex = lastLabel.IndexOf('.');
-                string[] lastLabelArray = lastLabel.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                int newLabelNbr;
-                if (lastLabelArray.Length == 1
-                    && Int32.TryParse(lastLabelArray[0], out newLabelNbr))
-                {
-                    newLabelNbr++;
-                    mathProblem.OrderLabel = String.Concat(Convert.ToString(newLabelNbr), lastLabel.Substring(dotIndex));
-                }
-                else
-                {
-                    mathProblem.OrderLabel = Problems[Problems.Count - 1].OrderLabel + ".";
-                }
+                precedingLabel = Problems[Problems.Count - 1].OrderLabel;
             }
+            mathProblem.OrderLabel = MathProblem.GetNextOrderLabel(precedingLabel);
             Problems.Add(mathProblem);
         }
         public void Save(string filename)

@@ -16,6 +16,7 @@ namespace MVVMMathProblemsBase.Model
         public Color MainBackgroundColour { get; set; }
         public Color SecondaryBackgroundColour { get; set; }
         public List<string> Setting2 { get; set; }
+        public List<UserCourseData> CoursesData { get; set; }
 
         public void Save(string filename)
         {

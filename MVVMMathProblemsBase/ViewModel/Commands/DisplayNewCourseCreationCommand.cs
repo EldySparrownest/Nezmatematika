@@ -25,11 +25,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == false)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Execute(object parameter)
         {
+            MMVM.BackToMainMenu();
             MMVM.NewCourseVis = Visibility.Visible;
         }
     }

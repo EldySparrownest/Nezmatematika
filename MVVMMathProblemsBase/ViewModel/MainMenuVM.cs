@@ -65,8 +65,8 @@ namespace MVVMMathProblemsBase.ViewModel
         public User LastStudentUser
         {
             get { return lastStudentUser; }
-            set 
-            { 
+            set
+            {
                 lastStudentUser = value;
                 OnPropertyChanged("LastStudentUser");
             }
@@ -76,8 +76,8 @@ namespace MVVMMathProblemsBase.ViewModel
         public User LastTeacherUser
         {
             get { return lastTeacherUser; }
-            set 
-            { 
+            set
+            {
                 lastTeacherUser = value;
                 OnPropertyChanged("LastTeacherUser");
             }
@@ -114,6 +114,30 @@ namespace MVVMMathProblemsBase.ViewModel
                 OnPropertyChanged("CurrentUser");
             }
         }
+        private Course currentCourse;
+
+        public Course CurrentCourse
+        {
+            get { return currentCourse; }
+            set
+            {
+                currentCourse = value;
+                OnPropertyChanged("CurrentCourse");
+            }
+        }
+
+        private MathProblem currentMathProblem;
+
+        public MathProblem CurrentMathProblem
+        {
+            get { return currentMathProblem; }
+            set
+            {
+                currentMathProblem = value;
+                OnPropertyChanged("CurrentMathProblem");
+            }
+        }
+
         private string tempFirstName;
         public string TempFirstName
         {
@@ -165,6 +189,40 @@ namespace MVVMMathProblemsBase.ViewModel
                 OnPropertyChanged("TempSchoolName");
             }
         }
+        private string tempCourseTitle;
+
+        public string TempCourseTitle
+        {
+            get { return tempCourseTitle; }
+            set
+            {
+                tempCourseTitle = value;
+                OnPropertyChanged("TempCourseTitle");
+            }
+        }
+        private string tempCourseDesc;
+
+        public string TempCourseDesc
+        {
+            get { return tempCourseDesc; }
+            set
+            {
+                tempCourseDesc = value;
+                OnPropertyChanged("TempCourseDesc");
+            }
+        }
+        private ObservableCollection<string> tempCourseTags;
+
+        public ObservableCollection<string> TempCourseTags
+        {
+            get { return tempCourseTags; }
+            set
+            {
+                tempCourseTags = value;
+                OnPropertyChanged("TempCourseTags");
+            }
+        }
+
 
         private bool? isInStudentMode;
         public bool? IsInStudentMode
@@ -240,6 +298,27 @@ namespace MVVMMathProblemsBase.ViewModel
                 OnPropertyChanged("UserSelVis");
             }
         }
+        private Visibility newCourseVis;
+        public Visibility NewCourseVis
+        {
+            get { return newCourseVis; }
+            set
+            {
+                newCourseVis = value;
+                OnPropertyChanged("NewCourseVis");
+            }
+        }
+        private Visibility editCourseVis;
+        public Visibility EditCourseVis
+        {
+            get { return editCourseVis; }
+            set
+            {
+                editCourseVis = value;
+                OnPropertyChanged("EditCourseVis");
+            }
+        }
+
         private Visibility settingsVis;
         public Visibility SettingsVis
         {
@@ -262,16 +341,30 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
+        private Color selectedTextColour;
+        public Color SelectedTextColour
+        {
+            get { return selectedTextColour; }
+            set
+            {
+                selectedTextColour = value;
+                OnPropertyChanged("SelectedTextColour");
+            }
+        }
+
+        public AddNewProblemCommand AddNewProblemCommand { get; set; }
+        public ApplyNewSettingsCommand ApplyNewSettingsCommand { get; set; }
+        public BackToMainMenuFromAnywhereCommand BackToMainMenuFromAnywhereCommand { get; set; }
+        public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
+        public CreateNewCourseCommand CreateNewCourseCommand { get; set; }
         public CreateNewUserCommand CreateNewUserCommand { get; set; }
         public DeleteUserCommand DeleteUserCommand { get; set; }
+        public DisplayNewCourseCreationCommand DisplayNewCourseCreationCommand { get; set; }
         public DisplayProfileSelectionCommand DisplayProfileSelectionCommand { get; set; }
-        public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
-        public EditUserCommand EditUserCommand { get; set; }
         public DisplaySettingsCommand DisplaySettingsCommand { get; set; }
+        public EditUserCommand EditUserCommand { get; set; }
+        public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
         public RestoreDefaultSettingsCommand RestoreDefaultSettingsCommand { get; set; }
-        public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
-        public ApplyNewSettingsCommand ApplyNewSettingsCommand { get; set; }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -281,12 +374,15 @@ namespace MVVMMathProblemsBase.ViewModel
             IsInStudentMode = App.IsInStudentMode;
             LoadDefaultSettings();
             AllUsersList = new ObservableCollection<User>();
+            TempCourseTags = new ObservableCollection<string>();
             GetListOfAllUsers();
             SetLastUsedUserFromAllUsers();
             SetCurrentUserToLastUsedUser();
             LoadSettingsForUser(CurrentUser);
             EditUserVis = Visibility.Collapsed;
             UserSelVis = Visibility.Collapsed;
+            NewCourseVis = Visibility.Collapsed;
+            EditCourseVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
             if (IsInStudentMode == true)
             {
@@ -307,27 +403,25 @@ namespace MVVMMathProblemsBase.ViewModel
             {
                 NewUserVis = Visibility.Collapsed;
             }
-            //IsInStudentMode = null;
-            //CurrentUser = App.AppUser; //na začátku bude null
-            //StudentVis = Visibility.Collapsed;
-            //TeacherVis = Visibility.Collapsed;
-            //bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject());
-            //if (isInDesignMode)
-            //{
-            //    StudentVis = Visibility.Visible;
-            //}
             UsersOfTypeList = new ObservableCollection<User>();
             GetUsersOfTypeList();
 
+            SelectedTextColour = Colors.Black;
+
+            AddNewProblemCommand = new AddNewProblemCommand(this);
+            ApplyNewSettingsCommand = new ApplyNewSettingsCommand(this);
+            BackToMainMenuFromAnywhereCommand = new BackToMainMenuFromAnywhereCommand(this);
+            BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
+            CreateNewCourseCommand = new CreateNewCourseCommand(this);
             CreateNewUserCommand = new CreateNewUserCommand(this);
             DeleteUserCommand = new DeleteUserCommand(this);
+            DisplayNewCourseCreationCommand = new DisplayNewCourseCreationCommand(this);
             DisplayProfileSelectionCommand = new DisplayProfileSelectionCommand(this);
-            PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
-            EditUserCommand = new EditUserCommand(this);
             DisplaySettingsCommand = new DisplaySettingsCommand(this);
+            EditUserCommand = new EditUserCommand(this);
+            PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
             RestoreDefaultSettingsCommand = new RestoreDefaultSettingsCommand(this);
-            BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
-            ApplyNewSettingsCommand = new ApplyNewSettingsCommand(this);
+            
         }
 
         //public MainMenuVM(bool inStudentMode) // NOT USED AND NOT UPDATED
@@ -470,12 +564,42 @@ namespace MVVMMathProblemsBase.ViewModel
                 xmls.Serialize(sw, new List<User>(this.AllUsersList));
             }
         }
-        public void ClearTempValues()
+        public void ClearUserTempValues()
         {
             TempFirstName = string.Empty;
             TempLastName = string.Empty;
             TempSchoolName = string.Empty;
             TempClassName = string.Empty;
+        }
+        
+        public void ClearCourseTempValues()
+        {
+            TempCourseTitle = string.Empty;
+            TempCourseDesc = string.Empty;
+            TempCourseTags.Clear();
+        }
+
+        public void BackToMainMenu()
+        {
+            ClearUserTempValues();
+            ClearCourseTempValues();
+            EditCourseVis = Visibility.Collapsed;
+            EditUserVis = Visibility.Collapsed;
+            NewCourseVis = Visibility.Collapsed;
+            NewUserVis = Visibility.Collapsed;
+            SettingsVis = Visibility.Collapsed;
+            UserSelVis = Visibility.Collapsed;
+
+            if (IsInStudentMode == true)
+            {
+                StudentVis = Visibility.Visible;
+                TeacherVis = Visibility.Collapsed;
+            }
+            else
+            {
+                StudentVis = Visibility.Collapsed;
+                TeacherVis = Visibility.Visible;
+            }
         }
 
         public void CreateNewUser(string fName, string lName, string sName, string cName)
@@ -495,7 +619,7 @@ namespace MVVMMathProblemsBase.ViewModel
             AllUsersList.Add(CurrentUser);
             SaveUserList();
             UsersOfTypeList.Add(CurrentUser);
-            ClearTempValues();
+            ClearUserTempValues();
         }
 
         public void GetListOfAllUsers()
@@ -548,7 +672,12 @@ namespace MVVMMathProblemsBase.ViewModel
             //AllUsersList.Add(CurrentUser);
             SaveUserList();
             //UsersOfTypeList.Add(CurrentUser);
-            ClearTempValues();
+            ClearUserTempValues();
+        }
+        public void CreateNewCourse()
+        {
+            CurrentCourse = new Course(CurrentUser, TempCourseTitle, TempCourseDesc, TempCourseTags);
+            CurrentCourse.AddNewMathProblem(new MathProblem());
         }
         private void OnPropertyChanged(string propertyName)
         {

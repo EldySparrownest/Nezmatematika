@@ -30,24 +30,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.ClearTempValues();
-            MMVM.EditCourseVis = Visibility.Collapsed;
-            MMVM.EditUserVis = Visibility.Collapsed;
-            MMVM.NewCourseVis = Visibility.Collapsed;
-            MMVM.NewUserVis = Visibility.Collapsed;
-            MMVM.SettingsVis = Visibility.Collapsed;
-            MMVM.UserSelVis = Visibility.Collapsed;
-
-            if (MMVM.IsInStudentMode == true)
-            {
-                MMVM.StudentVis = Visibility.Visible;
-                MMVM.TeacherVis = Visibility.Collapsed;
-            }
-            else
-            {
-                MMVM.StudentVis = Visibility.Collapsed;
-                MMVM.TeacherVis = Visibility.Visible;
-            }
+            MMVM.BackToMainMenu();
         }
     }
 }
