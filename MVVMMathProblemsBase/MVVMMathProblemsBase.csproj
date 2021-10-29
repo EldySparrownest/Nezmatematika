@@ -74,8 +74,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\Course.cs" />
+    <Compile Include="Model\CourseSerialisable.cs" />
+    <Compile Include="Model\GlobalValues.cs" />
+    <Compile Include="Model\MathProblemSerialisable.cs" />
     <Compile Include="Model\MySettings.cs" />
+    <Compile Include="Model\SolutionStep.cs" />
+    <Compile Include="Model\SolutionStepSerialisable.cs" />
+    <Compile Include="Model\TextStyling.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserCourseData.cs" />
     <Compile Include="Model\UserStats.cs" />
     <Compile Include="ViewModel\Commands\AddNewProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
@@ -84,9 +91,11 @@
     <Compile Include="ViewModel\Commands\CreateNewCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewUserCommand.cs" />
     <Compile Include="ViewModel\Commands\DeleteUserCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayCourseToEditSelectionCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayNewCourseCreationCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayProfileSelectionCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplaySettingsCommand.cs" />
+    <Compile Include="ViewModel\Commands\EditCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\EditUserCommand.cs" />
     <Compile Include="ViewModel\Commands\MakeStepVisibleCommand.cs" />
     <Compile Include="ViewModel\Commands\CheckIfAnswerIsCorrectCommand.cs" />
@@ -100,7 +109,7 @@
     <Compile Include="ViewModel\ValueConverters\NullBoolToModeNameStringCovnerter.cs" />
     <Compile Include="ViewModel\ValueConverters\NullBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModel\ValueConverters\NullBoolToSolidColorBrushConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\SolidColorBrushToColorConvertor.cs" />
+    <Compile Include="ViewModel\ValueConverters\SolidColorBrushToColorConverter.cs" />
     <Compile Include="View\MainMenuWindow.xaml.cs">
       <DependentUpon>MainMenuWindow.xaml</DependentUpon>
     </Compile>

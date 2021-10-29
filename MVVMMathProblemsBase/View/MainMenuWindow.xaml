@@ -22,6 +22,7 @@
           Background="{Binding Converter={StaticResource nullColorToSolidColorBrush},
                                Path=Settings.MainBackgroundColour,
                                Mode=TwoWay}">
+
         <DockPanel DataContext="{StaticResource vm}">
             <Grid Name="gridStudentMenu"
                   HorizontalAlignment="Left"
@@ -105,7 +106,7 @@
                             Command="{Binding DisplayNewCourseCreationCommand}"
                             Margin="5" />
                     <Button Content="Upravit kurz"
-                            IsEnabled="{Binding Settings.HasCourseToContinue}"
+                            Command="{Binding DisplayCourseToEditSelectionCommand}"
                             Margin="5" />
                     <Button Content="Statistiky"
                             Margin="5" />
@@ -464,10 +465,77 @@
                     </Border>
                 </StackPanel>
             </Grid>
+            <Grid x:Name="gridCoursesToContinueSelection"
+                  Visibility="{Binding CoursesToContinueVis}">
+                <StackPanel>
+                    <ListView Name="lvContinuableCourses"
+                              SelectedValue="{Binding CurrentCourse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding CoursesToContinueList}"
+                              Visibility="{Binding CoursesToContinueVis}"
+                              IsSynchronizedWithCurrentItem="True"
+                              Thumb.DragDelta="Thumb_DragDelta">
+                        <ListView.Resources>
+                            <ContextMenu x:Key="resourceContextMenu">
+                                <MenuItem Header="Odstranit kurz"
+                                          Command="{Binding Source={StaticResource vm}, Path=DeleteCourseCommand}"
+                                          CommandParameter="{Binding}" />
+                            </ContextMenu>
+                        </ListView.Resources>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="ContextMenu"
+                                        Value="{StaticResource resourceContextMenu}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn local:GridColumn.MinWidth="70"
+                                                Width="Auto"
+                                                DisplayMemberBinding="{Binding CourseTitle}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="CourseTitle"
+                                                              Click="lvContinuableCoursesColumnHeader_Click">
+                                            Název
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CourseTitle}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn local:GridColumn.MinWidth="60"
+                                                Width="Auto"
+                                                DisplayMemberBinding="{Binding LastEdited}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="LastEdited"
+                                                              Click="lvContinuableCoursesColumnHeader_Click">
+                                            Poslední změna
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding LastEdited}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Content="Začít editovat"
+                            Command="{Binding EditCourseCommand}"
+                            Margin="5"
+                            HorizontalAlignment="Right"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Top"
+                            VerticalContentAlignment="Center" />
+                </StackPanel>
+            </Grid>
             <Grid x:Name="gridCourseEditor"
                   Visibility="{Binding EditCourseVis}">
                 <DockPanel>
-                    <ToolBarTray DockPanel.Dock ="Top"
+                    <ToolBarTray DockPanel.Dock="Top"
                                  VerticalAlignment="Top"
                                  Margin="0,0,0,0">
                         <ToolBar>
@@ -489,8 +557,10 @@
                                     Foreground="LimeGreen"
                                     Margin="5"
                                     VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center"/>
-                            <Button Content="Uložit"
+                                    VerticalContentAlignment="Center" />
+                            <Button Name="btnSaveCourse"
+                                    Content="Uložit"
+                                    Click="btnSaveCourse_Click"
                                     Margin="5" />
                             <Separator />
                             <ToggleButton x:Name="btnBold"
@@ -562,19 +632,29 @@
                                 <ComboBox x:Name="cbEditorFontFamily"
                                           MaxHeight="25"
                                           Width="150"
-                                          SelectionChanged="cbEditorFontFamily_SelectionChanged"/>
+                                          SelectionChanged="cbEditorFontFamily_SelectionChanged" />
                                 <ComboBox x:Name="cbEditorFontSize"
                                           MaxHeight="25"
                                           Width="50"
                                           Margin="5,0,5,0"
                                           IsEditable="True"
                                           TextBoxBase.TextChanged="cbEditorFontSize_TextChanged"
-                                          Text="16"/>
+                                          Text="16" />
+                                <Separator />
+                                <Button x:Name="btnSymbols"
+                                        Content="Symboly"
+                                        Margin="5"
+                                        Click="btnPi_Click" />
+                                <Button x:Name="btnPi"
+                                        Content="π"
+                                        Margin="5"
+                                        Click="btnPi_Click" />
                             </StackPanel>
                         </ToolBar>
                     </ToolBarTray>
 
-                    <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <StackPanel Orientation="Vertical"
+                                DockPanel.Dock="Left">
                         <!--DataContext="{Binding CurrentCourse}">-->
                         <Label Content="{Binding CurrentCourse.CourseTitle}" />
                         <Label Content="{Binding CurrentCourse.CourseDesc}" />
@@ -586,8 +666,8 @@
                                 <DataTemplate>
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding OrderLabel}" 
-                                                       Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding OrderLabel}"
+                                                       Margin="0,0,5,0" />
                                             <TextBlock Text="{Binding ProblemText}" />
                                         </StackPanel>
                                         <TextBlock Text="{Binding ProblemQuestion}" />
@@ -691,7 +771,7 @@
 
                         <RichTextBox x:Name="contentRichTextBox"
                                      SelectionChanged="contentRichTextBox_SelectionChanged"
-                                     VerticalAlignment="Stretch"/>
+                                     VerticalAlignment="Stretch" />
 
                     </Grid>
                 </DockPanel>
@@ -707,7 +787,8 @@
                 </Grid.RowDefinitions>
                 <StackPanel Margin="0,0,-0.4,0"
                             Grid.RowSpan="2">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5">
                         <TextBlock Text="Pozadí hlavního menu: " />
                         <wpftool:ColorPicker AdvancedTabHeader="Pokročilé"
                                              AvailableColorsHeader="Dostupné barvy"
@@ -727,7 +808,8 @@
                                              x:Name="collapsedColorPicker"
                                              Visibility="{Binding SettingsVis}" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5">
                         <TextBlock Text="Pozadí nastavení: " />
                         <wpftool:ColorPicker AdvancedTabHeader="Pokročilé"
                                              AvailableColorsHeader="Dostupné barvy"
@@ -745,6 +827,12 @@
                                              ShowRecentColors="True"
                                              UsingAlphaChannel="False"
                                              x:Name="btnBackgroundColorPicker" />
+                    </StackPanel>
+                    <StackPanel Name="spSAutosaveProblems" Orientation="Horizontal"
+                                Margin="5">
+                        <TextBlock Text="Automaticky ukládat příklady při přepínání: "/>
+                        <CheckBox x:Name="cbSAutosaveProblems"
+                                  IsChecked="{Binding Settings.AutosaveProblemWhenSwitching}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">

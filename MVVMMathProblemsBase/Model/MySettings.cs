@@ -13,6 +13,7 @@ namespace MVVMMathProblemsBase.Model
     {
         public User ThisUser { get; set; }
         public bool HasCourseToContinue { get; set; }
+        public bool AutosaveProblemWhenSwitching { get; set; }
         public Color MainBackgroundColour { get; set; }
         public Color SecondaryBackgroundColour { get; set; }
         public List<string> Setting2 { get; set; }
@@ -28,10 +29,10 @@ namespace MVVMMathProblemsBase.Model
         }
         public MySettings Read(string filename)
         {
-            using (StreamReader sw = new StreamReader(filename))
+            using (StreamReader sr = new StreamReader(filename))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(MySettings));
-                return xmls.Deserialize(sw) as MySettings;
+                return xmls.Deserialize(sr) as MySettings;
             }
         }
     }
