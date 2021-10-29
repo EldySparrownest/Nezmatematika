@@ -81,7 +81,8 @@ namespace MVVMMathProblemsBase.ViewModel
                         new SolutionStep("Na oslavě budou i oba její rodiče, takže je musíme přičíst.",
                             NullBoolToVisibilityConverter.Convert(isInDesignMode)),
                         new SolutionStep("Adélka + 5 nevlastních sourozenců + 2 rodiče = 8 lidí na oslavě." ,
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode))});
+                            NullBoolToVisibilityConverter.Convert(isInDesignMode))},
+                    Environment.CurrentDirectory);
 
             //            }
             Solved = null;

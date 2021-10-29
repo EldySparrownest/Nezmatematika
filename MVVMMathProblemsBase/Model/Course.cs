@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,52 +10,65 @@ using System.Xml.Serialization;
 
 namespace MVVMMathProblemsBase.Model
 {
-    [Serializable]
-    public class UserCourseData
-    {
-        public string CourseId { get; set; }
-        public string UserId { get; set; }
-        public int Mistakes { get; set; }
-        public int CourseStarted { get; set; }
-        public int CourseFinished { get; set; }
-        public TimeSpan NetCourseTime { get; set; }
-        public MathProblem CurrentMathProblem { get; set; }
-    }
-    [Serializable]
     public class Course
     {
         public string Id { get; set; }
         public User Author { get; set; }
         public DateTime Created { get; set; }
+        public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
         public string CourseDesc { get; set; }
-        [field: NonSerialized] 
+        public string DirPath { get; set; }
+        public string FilePath { get; set; }
         public ObservableCollection<string> Tags { get; set; }
 
-        private List<MathProblem> problemsList;
-        [field: NonSerialized]
         private ObservableCollection<MathProblem> problems;
-        [field: NonSerialized] 
         public ObservableCollection<MathProblem> Problems 
         { 
             get { return problems; } 
             set
             {
                 problems = value;
-                //OnPropertyChanged("Problems");
+                OnPropertyChanged("Problems");
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Course(CourseSerialisable serialisedCourse)
+        {
+            DirPath = serialisedCourse.DirPath;
+            FilePath = serialisedCourse.FilePath;
+            Author = serialisedCourse.Author;
+            Id = serialisedCourse.Id;
+            Created = serialisedCourse.Created;
+            LastOpened = serialisedCourse.LastOpened;
+            LastEdited = serialisedCourse.LastEdited;
+            TimeSpentEditing = serialisedCourse.TimeSpentEditing;
+            CourseTitle = serialisedCourse.CourseTitle;
+            CourseDesc = serialisedCourse.CourseDesc;
+            Tags = new ObservableCollection<string>(serialisedCourse.Tags);
+            Problems = new ObservableCollection<MathProblem>();
+
+            foreach (var problem in serialisedCourse.Problems)
+            {
+                Problems.Add(new MathProblem(problem));
+            }
+        }
         public Course(User author, string title, string desc, ObservableCollection<string> tags)
         {
             Author = author;
+            Id = NewCourseId(author.Id);
+            DirPath = CourseDirPath();
+            FilePath = CourseFilePath();
             CourseTitle = title;
             CourseDesc = desc;
             Tags = tags;
             Problems = new ObservableCollection<MathProblem>();
             Created = DateTime.Now;
+            LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
         }
 
@@ -72,22 +86,62 @@ namespace MVVMMathProblemsBase.Model
             mathProblem.OrderLabel = MathProblem.GetNextOrderLabel(precedingLabel);
             Problems.Add(mathProblem);
         }
+
+        private static string NewCourseId(string authorID)
+            => string.Join("_", authorID,
+                    string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
+
+        private string CourseDirPath()
+            => DirPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, Id);
+
+        private string CourseFilePath()
+            => System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
+
         public void Save(string filename)
         {
-            problemsList = Problems.ToList<MathProblem>();
-            using (StreamWriter sw = new StreamWriter(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(Course));
-                xmls.Serialize(sw, this);
-            }
+            TimeSpentEditing = TimeSpentEditing + (LastOpened - DateTime.Now);
+            LastEdited = DateTime.Now;
+            CourseSerialisable cs = new CourseSerialisable(this);
+
+            //    CourseSerialisable cs = new CourseSerialisable()
+            //    {
+            //        Created = DateTime.Now,
+            //        LastEdited = DateTime.Now,
+            //        TimeSpentEditing = TimeSpan.Zero,
+            //        Tags = new List<string>(),
+            //        Problems = new List<MathProblemSerialisable>()
+            //    };
+
+            //    CourseSerialisable cs2 = new CourseSerialisable()
+            //    {
+            //        Author = this.Author,
+            //        Id = this.Id,
+            //        Created = this.Created,
+            //        LastEdited = this.LastEdited,
+            //        TimeSpentEditing = this.TimeSpentEditing,
+            //        CourseTitle = this.CourseTitle,
+            //        CourseDesc = this.CourseDesc,
+            //        Tags = this.Tags.ToList(),
+            //        Problems = new List<MathProblemSerialisable>()
+
+            //    //foreach (MathProblem problem in course.Problems)
+            //    //{
+            //    //    Problems.Add(new MathProblemSerialisable(problem));
+            //    //}
+            //};
+
+            cs.Save(filename);
         }
-        public Course Read(string filename)
+
+        public static Course Read(string filename)
         {
-            using (StreamReader sw = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(Course));
-                return xmls.Deserialize(sw) as Course;
-            }
+            var cs = CourseSerialisable.Read(filename);
+            return new Course(cs);
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

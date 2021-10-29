@@ -9,41 +9,58 @@ using System.Windows; // for Visibility
 
 namespace MVVMMathProblemsBase.Model
 {
-    public class SolutionStep
-    {
-        public string StepText { get; set; }
-        public Visibility StepVisibility { get; set; }
-
-        public SolutionStep()
-        {
-            StepVisibility = Visibility.Hidden;
-        }
-        public SolutionStep(string text)
-        {
-            StepText = text;
-            StepVisibility = Visibility.Hidden;
-        }
-        public SolutionStep(string text, Visibility stepVis)
-        {
-            StepText = text;
-            StepVisibility = stepVis;
-        }
-    }
     public class MathProblem
     {
+        public string Id { get; set; }
+        public string FilePath { get; set; }
         public string OrderLabel { get; set; }
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }
         public List<string> CorrectAnswers { get; set; }
         public ObservableCollection<SolutionStep> SolutionSteps { get; set; }
 
+        public MathProblem(MathProblemSerialisable serialisedMathProblem)
+        {
+            Id = serialisedMathProblem.Id;
+            FilePath = serialisedMathProblem.FilePath;
+
+            OrderLabel = serialisedMathProblem.OrderLabel;
+            ProblemText = serialisedMathProblem.ProblemText;
+            ProblemQuestion = serialisedMathProblem.ProblemQuestion;
+            CorrectAnswers = serialisedMathProblem.CorrectAnswers;
+            SolutionSteps = new ObservableCollection<SolutionStep>();
+
+            foreach (var step in serialisedMathProblem.SolutionSteps)
+            {
+                SolutionSteps.Add(new SolutionStep(step));
+            }
+        }
+        
         public MathProblem()
         {
+            Id = NewMathProblemId();
+
             ProblemText = "Zde bude zadání.";
             ProblemQuestion = "Zde bude otázka.";
+            CorrectAnswers = new List<string>();
+            SolutionSteps = new ObservableCollection<SolutionStep>();
         }
-        public MathProblem(string text, string question, List<string> answers, List<SolutionStep> steps)
+        public MathProblem(string orderLabel, string courseDir)
         {
+            Id = NewMathProblemId();
+            FileLocation(courseDir);
+
+            OrderLabel = orderLabel;
+            ProblemText = "Zde bude zadání.";
+            ProblemQuestion = "Zde bude otázka.";
+            CorrectAnswers = new List<string>();
+            SolutionSteps = new ObservableCollection<SolutionStep>();
+        }
+        //Následující konstruktor využívá jenom MathProblemVM, takže není až tak důležitý
+        public MathProblem(string text, string question, List<string> answers, List<SolutionStep> steps, string courseDir)
+        {
+            Id = NewMathProblemId();
+            FileLocation(courseDir);
             ProblemText = text;
             ProblemQuestion = question;
             CorrectAnswers = answers;
@@ -70,7 +87,6 @@ namespace MVVMMathProblemsBase.Model
                         charToIncrement = lastLabelArray[0][lastLabelArray[0].Length - 1];
                         charToIncrement++;
                         return String.Concat(charToIncrement, ".");
-
                     }
                 }
                 else
@@ -90,6 +106,12 @@ namespace MVVMMathProblemsBase.Model
             }
             return "1.";
         }
+
+        private static string NewMathProblemId()
+            => string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+
+        public void FileLocation(string courseDir)
+            => FilePath = System.IO.Path.Combine(courseDir, $"{Id}.rtf");
 
         public int FindLastVisibleStep()
         {

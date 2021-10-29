@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,16 @@ namespace MVVMMathProblemsBase.View
     /// Interakční logika pro MainMenuWindow.xaml
     /// </summary>
 
+    //HLAVNÍ SEZNAM VĚCÍ NEZBYTNÝCH, KTERÉ MUSÍM DODĚLAT:
+    // 1) najít způsob, jak serializovat kurzy a příklady (asi udělám helper třídy)
+    // 2) dořešit přepínání mezi příklady v editoru
+    // 3) rozchodit studentský mód
+
+    //Podtrhování a přeškrtávání pohromadě asi fungovat prostě nebude... Pokud mám mít jen jedno, bude to podtrhávání.
+    //Dořešit scrollování na listview (bude potřeba nastudovat z internetu)
+    //Ribbon, pokud to půjde nějak rozchodit
+
+
     public partial class MainMenuWindow : Window
     {
         MainMenuVM vM;
@@ -32,6 +43,7 @@ namespace MVVMMathProblemsBase.View
         {
             InitializeComponent();
             vM = Resources["vm"] as MainMenuVM;
+            vM.CurrentMathProblemChanged += ViewModel_CurrentMathProblemChanged;
 
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cbEditorFontFamily.ItemsSource = fontFamilies;
@@ -44,6 +56,15 @@ namespace MVVMMathProblemsBase.View
             cbEditorFontSize.ItemsSource = fontSizes;
 
             lvUsers.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
+        }
+        void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Thumb senderAsThumb = e.OriginalSource as Thumb;
+            GridViewColumnHeader header = senderAsThumb.TemplatedParent as GridViewColumnHeader;
+            if (header.Column.ActualWidth < MinWidth)
+                header.Column.Width = MinWidth;
+            if (header.Column.ActualWidth > MaxWidth)
+                header.Column.Width = MaxWidth;
         }
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -64,14 +85,39 @@ namespace MVVMMathProblemsBase.View
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
             lvUsers.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
-        void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void lvContinuableCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            Thumb senderAsThumb = e.OriginalSource as Thumb;
-            GridViewColumnHeader header = senderAsThumb.TemplatedParent as GridViewColumnHeader;
-            if (header.Column.ActualWidth < MinWidth)
-                header.Column.Width = MinWidth;
-            if (header.Column.ActualWidth > MaxWidth)
-                header.Column.Width = MaxWidth;
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (listViewSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+                lvContinuableCourses.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            listViewSortCol = column;
+            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+
+        private void ViewModel_CurrentMathProblemChanged(object sender, EventArgs e)
+        {
+            contentRichTextBox.Document.Blocks.Clear();
+            if (vM.CurrentMathProblem != null)
+            {
+                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath))
+                {
+                    FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
+                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    contents.Load(fileStream, DataFormats.Rtf);
+                    fileStream.Close();
+                }
+            }
         }
 
         private void btnBold_Click(object sender, RoutedEventArgs e)
@@ -95,125 +141,125 @@ namespace MVVMMathProblemsBase.View
 
         private void btnUnderline_Click(object sender, RoutedEventArgs e)
         {
-            var textDecorations = new TextDecorationCollection();
-            if (!contentRichTextBox.Selection.IsEmpty)
+            //var textDecorations = new TextDecorationCollection();
+            //if (!contentRichTextBox.Selection.IsEmpty)
+            //{
+            //    var tpFirst = contentRichTextBox.Selection.Start;
+            //    var tpLast = contentRichTextBox.Selection.End;
+            //    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
+            //    var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
+            //    for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
+            //    {
+            //        textDecorations.Clear();
+            //        textRange = new TextRange(t, t.GetPositionAtOffset(1));
+            //        textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
+            //        if (!underlined)
+            //        { textDecorations.Add(TextDecorations.Underline[0]); }
+            //        else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
+            //        textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+            //    }
+            //}
+            //else
+            //{
+            //    NewParagraphWhenSelectionIsEmpty();
+            //}
+
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+            TextDecorationCollection textDecorations = new TextDecorationCollection();
+            try
             {
-                var tpFirst = contentRichTextBox.Selection.Start;
-                var tpLast = contentRichTextBox.Selection.End;
-                var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
-                var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
-                for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
+                textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
+                if (isButtonChecked)
+                { textDecorations.Add(TextDecorations.Underline); }
+                else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+            }
+            catch (Exception)
+            {
+                textDecorations = new TextDecorationCollection();
+                if (!contentRichTextBox.Selection.IsEmpty)
                 {
-                    textDecorations.Clear();
-                    textRange = new TextRange(t, t.GetPositionAtOffset(1));
-                    textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
-                    if (!underlined)
-                    { textDecorations.Add(TextDecorations.Underline[0]); }
-                    else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
-                    textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                    var tpFirst = contentRichTextBox.Selection.Start;
+                    var tpLast = contentRichTextBox.Selection.End;
+                    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
+                    var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
+                    for (TextPointer t = tpFirst; t.CompareTo(tpLast.GetPositionAtOffset(-1)) < 0; t = t.GetPositionAtOffset(1))
+                    {
+                        textDecorations.Clear();
+                        textRange = new TextRange(t, t.GetPositionAtOffset(1));
+                        textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
+                        if (!underlined)
+                        { textDecorations.Add(TextDecorations.Underline[0]); }
+                        else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
+                        textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                    }
+                }
+                else
+                {
+                    InsertNewParagraphOrRun();
                 }
             }
-            else
-            {
-                NewParagraphWhenSelectionIsEmpty();
-            }
-
-            //bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
-            ////TextDecorationCollection textDecorations = new TextDecorationCollection();
-            //try
-            //{
-            //    textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
-            //    if (isButtonChecked)
-            //    { textDecorations.Add(TextDecorations.Underline); }
-            //    else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
-            //    contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
-            //}
-            //catch (Exception)
-            //{
-            //    textDecorations = new TextDecorationCollection();
-            //    if (!contentRichTextBox.Selection.IsEmpty)
-            //    {
-            //        var tpFirst = contentRichTextBox.Selection.Start;
-            //        var tpLast = contentRichTextBox.Selection.End;
-            //        var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
-            //        var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
-            //        for (TextPointer t = tpFirst; t.CompareTo(tpLast) <= 0; t = t.GetPositionAtOffset(1))
-            //        {
-            //            textDecorations.Clear();
-            //            textRange = new TextRange(t, t.GetPositionAtOffset(1));
-            //            textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
-            //            if (!underlined)
-            //            { textDecorations.Add(TextDecorations.Underline[0]); }
-            //            else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
-            //            textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        NewParagraphWhenSelectionIsEmpty();
-            //    }
-            //}
         }
         private void btnStrikethrough_Click(object sender, RoutedEventArgs e)
         {
-            var textDecorations = new TextDecorationCollection();
-            if (!contentRichTextBox.Selection.IsEmpty)
+            //var textDecorations = new TextDecorationCollection();
+            //if (!contentRichTextBox.Selection.IsEmpty)
+            //{
+            //    var tpFirst = contentRichTextBox.Selection.Start;
+            //    var tpLast = contentRichTextBox.Selection.End;
+            //    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
+            //    var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
+            //    for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
+            //    {
+            //        textDecorations.Clear();
+            //        textRange = new TextRange(t, t.GetPositionAtOffset(1));
+            //        textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
+            //        if (!strikedthrough)
+            //        { textDecorations.Add(TextDecorations.Strikethrough[0]); }
+            //        else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
+            //        textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+            //    }
+            //}
+            //else
+            //{
+            //    NewParagraphWhenSelectionIsEmpty();
+            //}
+
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+            TextDecorationCollection textDecorations = new TextDecorationCollection();
+            try
             {
-                var tpFirst = contentRichTextBox.Selection.Start;
-                var tpLast = contentRichTextBox.Selection.End;
-                var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
-                var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
-                for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
+                textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
+                if (isButtonChecked)
+                { textDecorations.Add(TextDecorations.Strikethrough); }
+                else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
+                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+            }
+            catch (Exception)
+            {
+                textDecorations = new TextDecorationCollection();
+                if (!contentRichTextBox.Selection.IsEmpty)
                 {
-                    textDecorations.Clear();
-                    textRange = new TextRange(t, t.GetPositionAtOffset(1));
-                    textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
-                    if (!strikedthrough)
-                    { textDecorations.Add(TextDecorations.Strikethrough[0]); }
-                    else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
-                    textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                    var tpFirst = contentRichTextBox.Selection.Start;
+                    var tpLast = contentRichTextBox.Selection.End;
+                    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
+                    var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
+                    for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
+                    {
+                        textDecorations.Clear();
+                        textRange = new TextRange(t, t.GetPositionAtOffset(1));
+                        textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
+                        if (!strikedthrough)
+                        { textDecorations.Add(TextDecorations.Strikethrough[0]); }
+                        else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
+                        textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                    }
+                }
+                else
+                {
+                    InsertNewParagraphOrRun();
                 }
             }
-            else
-            {
-                NewParagraphWhenSelectionIsEmpty();
-            }
-
-            //bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
-            //TextDecorationCollection textDecorations = new TextDecorationCollection();
-            //try
-            //{
-            //    textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
-            //    if (isButtonChecked)
-            //    { textDecorations.Add(TextDecorations.Strikethrough); }
-            //    else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
-            //    contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
-            //}
-            //catch (Exception)
-            //{
-            //    textDecorations = new TextDecorationCollection();
-            //    if (!contentRichTextBox.Selection.IsEmpty)
-            //    {
-            //        var tpFirst = contentRichTextBox.Selection.Start;
-            //        var tpLast = contentRichTextBox.Selection.End;
-            //        var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
-            //        var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
-            //        for (TextPointer t = tpFirst; t.CompareTo(tpLast) <= 0; t = t.GetPositionAtOffset(1))
-            //        {
-            //            textDecorations.Clear();
-            //            textRange = new TextRange(t, t.GetPositionAtOffset(1));
-            //            textDecorations = textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
-            //            if (!strikedthrough)
-            //            { textDecorations.Add(TextDecorations.Strikethrough[0]); }
-            //            else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
-            //            textRange.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        NewParagraphWhenSelectionIsEmpty();
-            //    }
-            //}
         }
 
         private void contentRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
@@ -253,7 +299,31 @@ namespace MVVMMathProblemsBase.View
             { cbEditorFontSize.Text = (contentRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty)).ToString(); }
         }
 
-        private void NewParagraphWhenSelectionIsEmpty()
+        private Run MakeNewRunWithProperties()
+        {
+            var fontFamily = new FontFamily(cbEditorFontFamily.SelectedItem.ToString());
+            var fontSize = Convert.ToDouble(cbEditorFontSize.Text);
+            var fontStyle = (btnItalics.IsChecked ?? false) ? FontStyles.Italic : FontStyles.Normal;
+            var fontWeight = (btnItalics.IsChecked ?? false) ? FontWeights.Bold : FontWeights.Normal;
+
+            var textDecorations = new TextDecorationCollection();
+            if (btnUnderline.IsChecked ?? false)
+            { textDecorations.Add(TextDecorations.Underline[0]); }
+            if (btnStrikethrough.IsChecked ?? false)
+            { textDecorations.Add(TextDecorations.Strikethrough[0]); }
+            
+            Run newRun = new Run();
+            newRun.FontFamily = fontFamily;
+            newRun.FontSize = fontSize;
+            newRun.FontStyle = fontStyle;
+            newRun.FontWeight = fontWeight;
+            newRun.Foreground = new SolidColorBrush((Color)wpfcpEditorFontColour.SelectedColor);
+            newRun.TextDecorations = textDecorations;
+
+            return newRun;
+        }
+        
+        private Paragraph NewParagraphWhenSelectionIsEmpty()
         {
             var fontFamily = new FontFamily(cbEditorFontFamily.SelectedItem.ToString());
             var fontSize = Convert.ToDouble(cbEditorFontSize.Text);
@@ -266,17 +336,28 @@ namespace MVVMMathProblemsBase.View
             if (btnStrikethrough.IsChecked ?? false)
             { textDecorations.Add(TextDecorations.Strikethrough[0]); }
 
+            Paragraph p = new Paragraph();
+            p.FontFamily = fontFamily;
+            p.FontSize = fontSize;
+            p.FontStyle = fontStyle;
+            p.FontWeight = fontWeight;
+            p.TextDecorations = textDecorations;
+            return p;
+        }
+        private void NewParagraphWhenSelectionIsEmpty(string text)
+        {
+            NewParagraphWhenSelectionIsEmpty();
+            if (contentRichTextBox.CaretPosition.IsAtInsertionPosition)
+            { contentRichTextBox.CaretPosition.InsertTextInRun(text); }
+        }
+
+        private void InsertNewParagraphOrRun()
+        {
             // Check to see if we are at the start of the textbox and nothing has been added yet
             if (contentRichTextBox.Selection.Start.Paragraph == null)
             {
                 // Add a new paragraph object to the richtextbox with the fontsize
-                Paragraph p = new Paragraph();
-                p.FontFamily = fontFamily;
-                p.FontSize = fontSize;
-                p.FontStyle = fontStyle;
-                p.FontWeight = fontWeight;
-                p.TextDecorations = textDecorations;
-                contentRichTextBox.Document.Blocks.Add(p);
+                contentRichTextBox.Document.Blocks.Add(NewParagraphWhenSelectionIsEmpty());
             }
             else
             {
@@ -289,12 +370,7 @@ namespace MVVMMathProblemsBase.View
                 {
                     Paragraph curParagraph = curBlock as Paragraph;
                     // Create a new run object with the fontsize, and add it to the current block
-                    Run newRun = new Run();
-                    newRun.FontFamily = fontFamily;
-                    newRun.FontSize = fontSize;
-                    newRun.FontStyle = fontStyle;
-                    newRun.FontWeight = fontWeight;
-                    newRun.TextDecorations = textDecorations;
+                    Run newRun = MakeNewRunWithProperties();
                     curParagraph.Inlines.Add(newRun);
                     // Reset the cursor into the new block. 
                     // If we don't do this, the font size will default again when you start typing.
@@ -320,6 +396,8 @@ namespace MVVMMathProblemsBase.View
             {
                 if (!contentRichTextBox.Selection.IsEmpty)
                 { contentRichTextBox.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush); }
+                else
+                { NewParagraphWhenSelectionIsEmpty(); }
             }
         }
 
@@ -375,6 +453,58 @@ namespace MVVMMathProblemsBase.View
         private void AppCurrentShutdown(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void btnPi_Click(object sender, RoutedEventArgs e)
+        {
+            InsertTextFromButtonClick("π");
+        }
+
+        private void InsertTextFromButtonClick(string textToInsert)
+        {
+            if (!contentRichTextBox.Selection.IsEmpty)
+            {
+                contentRichTextBox.Selection.Text = textToInsert;
+            }
+            else
+            {
+                NewParagraphWhenSelectionIsEmpty(textToInsert);
+            }
+            contentRichTextBox.CaretPosition = contentRichTextBox.CaretPosition.GetPositionAtOffset(textToInsert.Length);
+        }
+
+        private void btnSaveCourse_Click(object sender, RoutedEventArgs e)
+        {
+            vM.SaveCurrentCourse();
+            //string coursePath = System.IO.Path.Combine(courseDir, $"{vM.CurrentCourse.Id}{vM.CourseFilename}"); //PROČ se nejde dostat ke konstantám?!
+            //vM.CurrentCourse.Save(coursePath);
+
+            //JAK SMAZAT OBSAH CELÉHO ADRESÁŘE?
+
+            //string rtfFile;
+            //FileStream fileStream;
+
+            if (vM.CurrentMathProblem != null)
+            {
+                var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                vM.SaveMathProblem(vM.CurrentMathProblem, contents);
+            }
+
+            //for (int i = 0; i < vM.CurrentCourse.Problems.Count; i++)
+            //{
+            //    //rtfFile = System.IO.Path.Combine(courseDir, String.Join(Convert.ToString(vM.CurrentCourse.Problems[i]), ".rtf"));
+            //    //fileStream = new FileStream(rtfFile, FileMode.Create);
+            //    //vM
+            //    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+            //    vM.SaveMathProblem(vM.CurrentCourse.Problems[i], contents);
+            //}
+
+            //vM.SelectedNote.FileLocation = rtfFile;
+            //DatabaseHelper.Update(viewModel.SelectedNote);
+
+
+            //var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+            //contents.Save(fileStream, DataFormats.Rtf);
         }
     }
 

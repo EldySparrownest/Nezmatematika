@@ -28,10 +28,10 @@ namespace MVVMMathProblemsBase.Model
         }
         public MySettings Read(string filename)
         {
-            using (StreamReader sw = new StreamReader(filename))
+            using (StreamReader sr = new StreamReader(filename))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(MySettings));
-                return xmls.Deserialize(sw) as MySettings;
+                return xmls.Deserialize(sr) as MySettings;
             }
         }
     }
