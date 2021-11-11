@@ -401,7 +401,6 @@ namespace MVVMMathProblemsBase.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler CurrentMathProblemAboutToChangeToNotNull;
         public event EventHandler CurrentMathProblemChanged;
-
         public MainMenuVM()
         {
             IsInStudentMode = App.IsInStudentMode;
