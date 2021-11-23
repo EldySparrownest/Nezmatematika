@@ -128,31 +128,6 @@ namespace MVVMMathProblemsBase.View
             }
         }
 
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
-
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
-        }
-
-        private void ViewModel_CurrentMathProblemChanged(object sender, EventArgs e)
-        {
-            contentRichTextBox.Document.Blocks.Clear();
-            if (vM.CurrentMathProblem != null)
-            {
-                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath))
-                {
-                    FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
-                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
-                    contents.Load(fileStream, DataFormats.Rtf);
-                    fileStream.Close();
-                }
-            }
-        }
-
         private void btnBold_Click(object sender, RoutedEventArgs e)
         {
             bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
@@ -486,6 +461,42 @@ namespace MVVMMathProblemsBase.View
         private void AppCurrentShutdown(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void btnPi_Click(object sender, RoutedEventArgs e)
+        {
+            InsertTextFromButtonClick("π");
+        }
+
+        private void InsertTextFromButtonClick(string textToInsert)
+        {
+            if (!contentRichTextBox.Selection.IsEmpty)
+            {
+                contentRichTextBox.Selection.Text = textToInsert;
+            }
+            else
+            {
+                NewParagraphWhenSelectionIsEmpty(textToInsert);
+            }
+            contentRichTextBox.CaretPosition = contentRichTextBox.CaretPosition.GetPositionAtOffset(textToInsert.Length);
+        }
+
+        private void btnSaveCourse_Click(object sender, RoutedEventArgs e)
+        {
+            //string coursePath = System.IO.Path.Combine(courseDir, $"{vM.CurrentCourse.Id}{vM.CourseFilename}"); //PROČ se nejde dostat ke konstantám?!
+            //vM.CurrentCourse.Save(coursePath);
+
+            //JAK SMAZAT OBSAH CELÉHO ADRESÁŘE?
+
+            if (vM.CurrentCourse != null)
+            {
+                vM.SaveCurrentCourse();
+                if (vM.CurrentMathProblem != null)
+                {
+                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    vM.SaveMathProblem(vM.CurrentMathProblem, contents);
+                }
+            }
         }
     }
 
