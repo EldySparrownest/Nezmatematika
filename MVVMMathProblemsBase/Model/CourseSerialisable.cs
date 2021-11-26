@@ -49,9 +49,10 @@ namespace MVVMMathProblemsBase.Model
             Tags = course.Tags.ToList();
             Problems = new List<MathProblemSerialisable>();
 
+            var factory = new MathProblemFactory();
             foreach (MathProblem problem in course.Problems)
             {
-                Problems.Add(new MathProblemSerialisable(problem));
+                Problems.Add(factory.CreateFromMathProblem(problem));
             }
         }
 

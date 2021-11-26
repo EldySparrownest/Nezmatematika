@@ -52,9 +52,10 @@ namespace MVVMMathProblemsBase.Model
             Tags = new ObservableCollection<string>(serialisedCourse.Tags);
             Problems = new ObservableCollection<MathProblem>();
 
+            var factory = new MathProblemFactory();
             foreach (var problem in serialisedCourse.Problems)
             {
-                Problems.Add(new MathProblem(problem));
+                Problems.Add(factory.CreateFromSerialised(problem));
             }
         }
         public Course(User author, string title, string desc, ObservableCollection<string> tags)
@@ -83,8 +84,9 @@ namespace MVVMMathProblemsBase.Model
             {
                 precedingLabel = Problems[Problems.Count - 1].OrderLabel;
             }
-            mathProblem.OrderLabel = MathProblem.GetNextOrderLabel(precedingLabel);
-            Problems.Add(mathProblem);
+
+            var mathProblemFactory = new MathProblemFactory();
+            Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní", precedingLabel));
         }
 
         private static string NewCourseId(string authorID)

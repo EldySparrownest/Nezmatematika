@@ -118,7 +118,7 @@ namespace MVVMMathProblemsBase.View
             contentRichTextBox.Document.Blocks.Clear();
             if (vM.CurrentMathProblem != null)
             {
-                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath))
+                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
                 {
                     FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
                     var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);

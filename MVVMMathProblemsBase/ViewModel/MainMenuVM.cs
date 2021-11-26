@@ -388,6 +388,7 @@ namespace MVVMMathProblemsBase.ViewModel
         public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
         public CreateNewCourseCommand CreateNewCourseCommand { get; set; }
         public CreateNewUserCommand CreateNewUserCommand { get; set; }
+        public DeleteCourseCommand DeleteCourseCommand { get; set; }
         public DeleteUserCommand DeleteUserCommand { get; set; }
         public DisplayCourseToEditSelectionCommand DisplayCourseToEditSelectionCommand { get; set; }
         public DisplayNewCourseCreationCommand DisplayNewCourseCreationCommand { get; set; }
@@ -449,6 +450,7 @@ namespace MVVMMathProblemsBase.ViewModel
             BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
             CreateNewCourseCommand = new CreateNewCourseCommand(this);
             CreateNewUserCommand = new CreateNewUserCommand(this);
+            DeleteCourseCommand = new DeleteCourseCommand(this);
             DeleteUserCommand = new DeleteUserCommand(this);
             DisplayCourseToEditSelectionCommand = new DisplayCourseToEditSelectionCommand(this);
             DisplayNewCourseCreationCommand = new DisplayNewCourseCreationCommand(this);
@@ -741,11 +743,16 @@ namespace MVVMMathProblemsBase.ViewModel
 
         public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
         {
-            mathProblem.FileLocation(CurrentCourse.DirPath);
-
-            FileStream fileStream = new FileStream(mathProblem.FilePath, FileMode.Create);
-            textRange.Save(fileStream, DataFormats.Rtf);
-            fileStream.Close();
+            try
+            {
+                FileStream fileStream = new FileStream(mathProblem.FilePath, FileMode.Create);
+                textRange.Save(fileStream, DataFormats.Rtf);
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message); 
+            }
         }
 
         private void OnPropertyChanged(string propertyName)

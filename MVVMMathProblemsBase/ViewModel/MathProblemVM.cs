@@ -66,23 +66,23 @@ namespace MVVMMathProblemsBase.ViewModel
             bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject());
 /*            if (isInDesignMode)
             {*/
-                CurrentMathProblem = new MathProblem("Adélka má 5 nevlastních sourozenců. Její nevlastní sestra Míša má 2 vlastní bratry, " +
-                        "1 nevlastní sestru a 2 přiženěné bratry. Míšin přiženěný bratra Jakub má 1 vlastního bratra, 1 nevlastní sestru a " +
-                        "3 přiženěné sourozence.",
-                    "Kolik nejméně lidí bude na Adélčině oslavě narozenin, kde s ní budou oba její rodiče a všichni její nevlastní sourozenci?",
-                    new List<string> { "8" },
-                    new List<SolutionStep> {
-                        new SolutionStep("Přečti si první větu.",
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
-                        new SolutionStep("Znovu si přečti první větu.",
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
-                        new SolutionStep("Adélka (první účastník oslavy) má 5 nevlastních sourozenců, takže už z první věty máme 6 lidí.",
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
-                        new SolutionStep("Na oslavě budou i oba její rodiče, takže je musíme přičíst.",
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
-                        new SolutionStep("Adélka + 5 nevlastních sourozenců + 2 rodiče = 8 lidí na oslavě." ,
-                            NullBoolToVisibilityConverter.Convert(isInDesignMode))},
-                    Environment.CurrentDirectory);
+                //CurrentMathProblem = new MathProblem("Adélka má 5 nevlastních sourozenců. Její nevlastní sestra Míša má 2 vlastní bratry, " +
+                //        "1 nevlastní sestru a 2 přiženěné bratry. Míšin přiženěný bratra Jakub má 1 vlastního bratra, 1 nevlastní sestru a " +
+                //        "3 přiženěné sourozence.",
+                //    "Kolik nejméně lidí bude na Adélčině oslavě narozenin, kde s ní budou oba její rodiče a všichni její nevlastní sourozenci?",
+                //    new List<string> { "8" },
+                //    new List<SolutionStep> {
+                //        new SolutionStep("Přečti si první větu.",
+                //            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
+                //        new SolutionStep("Znovu si přečti první větu.",
+                //            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
+                //        new SolutionStep("Adélka (první účastník oslavy) má 5 nevlastních sourozenců, takže už z první věty máme 6 lidí.",
+                //            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
+                //        new SolutionStep("Na oslavě budou i oba její rodiče, takže je musíme přičíst.",
+                //            NullBoolToVisibilityConverter.Convert(isInDesignMode)),
+                //        new SolutionStep("Adélka + 5 nevlastních sourozenců + 2 rodiče = 8 lidí na oslavě." ,
+                //            NullBoolToVisibilityConverter.Convert(isInDesignMode))},
+                //    Environment.CurrentDirectory);
 
             //            }
             Solved = null;
