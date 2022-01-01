@@ -9,6 +9,7 @@ namespace MVVMMathProblemsBase.Model
     interface IMathProblem
     {
         string Id { get; set; }
+        string DirPath { get; set; }
         string FilePath { get; set; }
         string OrderLabel { get; set; }
         string ProblemText { get; set; }

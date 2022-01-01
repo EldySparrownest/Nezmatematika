@@ -1,4 +1,5 @@
 ﻿using MVVMMathProblemsBase.ViewModel;
+using MVVMMathProblemsBase.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,23 +39,54 @@ namespace MVVMMathProblemsBase.View
 
         private GridViewColumnHeader listViewSortCol = null;
         private SortAdorner listViewSortAdorner = null;
+        private Dictionary<string, RichTextBox> dicContentLoad;
 
         public MainMenuWindow()
         {
             InitializeComponent();
             vM = Resources["vm"] as MainMenuVM;
-            vM.CurrentMathProblemAboutToChangeToNotNull += ViewModel_CurrentMathProblemAboutToChange;
+            vM.NotNullCurrentMathProblemAboutToChange += ViewModel_CurrentMathProblemAboutToChange;
             vM.CurrentMathProblemChanged += ViewModel_CurrentMathProblemChanged;
+
+            dicContentLoad = new Dictionary<string, RichTextBox>()
+            {
+                { "ProblemText", rtbProblemText},
+                { "Question", rtbQuestion }
+            };
+
+            var initFontFamily = new FontFamily("Cambria Math");
+            var initFontSize = 16;
+
+            rtbProblemText.FontFamily = initFontFamily;
+            rtbProblemText.FontSize = initFontSize;
+
+            rtbQuestion.FontFamily = initFontFamily;
+            rtbQuestion.FontSize = initFontSize;
+
+            rtbCodeMode.FontFamily = initFontFamily;
+            rtbCodeMode.FontSize = initFontSize;
+
+            var p = new Paragraph();
+            p.FontFamily = initFontFamily;
+            p.FontSize = initFontSize;
+            p.Margin = new Thickness(0);
+
+            rtbProblemText.Document.Blocks.Clear();
+            rtbProblemText.Document.Blocks.Add(p);
+
+            rtbQuestion.Document.Blocks.Clear();
+            rtbQuestion.Document.Blocks.Add(p);
+
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbCodeMode.Document.Blocks.Add(p);
 
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cbEditorFontFamily.ItemsSource = fontFamilies;
-            cbEditorFontFamily.SelectedItem = new FontFamily("Cambria Math");
-
-            contentRichTextBox.FontFamily = cbEditorFontFamily.SelectedItem as FontFamily;
-            contentRichTextBox.FontSize = Convert.ToDouble(cbEditorFontSize.Text);
+            cbEditorFontFamily.SelectedItem = initFontFamily;
 
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 40, 44, 48, 72 };
             cbEditorFontSize.ItemsSource = fontSizes;
+            cbEditorFontSize.Text = initFontSize.ToString();
 
             lvUsers.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
         }
@@ -62,10 +94,13 @@ namespace MVVMMathProblemsBase.View
         {
             Thumb senderAsThumb = e.OriginalSource as Thumb;
             GridViewColumnHeader header = senderAsThumb.TemplatedParent as GridViewColumnHeader;
-            if (header.Column.ActualWidth < MinWidth)
-                header.Column.Width = MinWidth;
-            if (header.Column.ActualWidth > MaxWidth)
-                header.Column.Width = MaxWidth;
+            if (!(header is null))
+            {
+                if (header.Column.ActualWidth < MinWidth)
+                    header.Column.Width = MinWidth;
+                if (header.Column.ActualWidth > MaxWidth)
+                    header.Column.Width = MaxWidth;
+            }
         }
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -113,17 +148,114 @@ namespace MVVMMathProblemsBase.View
                 btnSaveCourse_Click(sender, new RoutedEventArgs());
             }
         }
-        private void ViewModel_CurrentMathProblemChanged(object sender, EventArgs e)
+        private void ViewModel_CurrentMathProblemChanged(object sender, EventArgs e)    //TODO: add splitting the RTF into RTBs
         {
-            contentRichTextBox.Document.Blocks.Clear();
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbProblemText.Document.Blocks.Clear();
+            rtbQuestion.Document.Blocks.Clear();
+
+            var fileNbr = 0;
+
             if (vM.CurrentMathProblem != null)
             {
                 if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
                 {
                     FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
-                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
-                    contents.Load(fileStream, DataFormats.Rtf);
+                    var trCodeMode = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
+                    trCodeMode.Load(fileStream, DataFormats.Rtf);
                     fileStream.Close();
+
+                    var tpContentStart = rtbCodeMode.Document.ContentStart;
+
+                    AllRTBToRTF(vM.CurrentCourse.DirPath, fileNbr++);
+
+                    string openTag;
+                    string closeTag;
+                    RichTextBox rtbTarget;
+                    int textOpenTagStartIndex;
+                    int textCloseTagStartIndex;
+                    TextPointer tpStart;
+                    TextPointer tpEnd;
+                    TextRange tr1;
+                    TextRange tr2;
+                    string debugFilePath;
+
+                    for (int i = 0; i < dicContentLoad.Count; i++)
+                    {
+                        openTag = $"<{dicContentLoad.ElementAt(i).Key}>";
+                        closeTag = $"</{dicContentLoad.ElementAt(i).Key}>";
+                        rtbTarget = dicContentLoad.ElementAt(i).Value;
+
+                        textOpenTagStartIndex = trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase);
+                        if (textOpenTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
+                        textCloseTagStartIndex = trCodeMode.Text.IndexOf(closeTag, StringComparison.OrdinalIgnoreCase);
+                        if (textCloseTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
+
+                        //var x = TextRangeHelper.GetInlinesOfRTB(rtbCodeMode);
+                        //tpStart = TextRangeHelper.GetPositionAtOffset(x, textOpenTagStartIndex + openTag.Length);
+
+                        tpStart = tpContentStart.GetPositionVisibleCharactersAway(textOpenTagStartIndex + openTag.Length);
+                        tpEnd = tpContentStart.GetPositionVisibleCharactersAway(textCloseTagStartIndex);
+
+                        var y = tpStart.DeleteTextInRun(openTag.Length);
+
+                        tr1 = new TextRange(tpStart, tpEnd);
+                        tr2 = new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd);
+
+                        using (var stream = new MemoryStream())
+                        {
+                            tr1.Save(stream, DataFormats.XamlPackage);
+                            tr2.Load(stream, DataFormats.XamlPackage);
+                        }
+
+                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}0.rtf");
+                        SaveRTF(debugFilePath, tr1);
+                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}1.rtf");
+                        SaveRTF(debugFilePath, tr2);
+                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}2.rtf");
+                    }
+
+                    //for (int i = 0; i < dicContentLoad.Count; i++)
+                    //{
+                    //    openTag = $"<{dicContentLoad.ElementAt(i).Key}>";
+                    //    closeTag = $"</{dicContentLoad.ElementAt(i).Key}>";
+                    //    rtbTarget = dicContentLoad.ElementAt(i).Value;
+
+                    //    while (trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase) != -1)
+                    //    {
+
+                    //    }
+
+                    //    textOpenTagStartIndex = trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase);
+                    //    //                        MessageBox.Show($"{ textOpenTagStartIndex}_{openTag.Length}\n{codeModeContent.Text}\n{codeModeContent.Text[textOpenTagStartIndex]}\n{codeModeContent.Text[textOpenTagStartIndex+openTag.Length]}");
+                    //    if (textOpenTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
+                    //    textCloseTagStartIndex = trCodeMode.Text.IndexOf(closeTag, StringComparison.OrdinalIgnoreCase);
+                    //    //                        MessageBox.Show($"{ textCloseTagStartIndex}_{closeTag.Length}\n{codeModeContent.Text}\n{codeModeContent.Text[textCloseTagStartIndex]}\n{codeModeContent.Text[textCloseTagStartIndex + closeTag.Length]}");
+                    //    if (textCloseTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
+
+                    //    //var x = (rtbCodeMode.Document.Blocks.FirstBlock as Paragraph).Inlines;
+                    //    //tpStart = TextRangeHelper.GetPositionAtOffset(x, startIndex + openTag.Length);
+                    //    //tpStart = rtbCodeMode.Document.ContentStart.GetPositionAtOffset(startIndex + openTag.Length);
+                    //    tpStart = tpContentStart.GetPositionVisibleCharactersAway(textOpenTagStartIndex);//+ openTag.Length);
+                    //    tpEnd = tpContentStart.GetPositionVisibleCharactersAway(textCloseTagStartIndex);
+
+                    //    var y = tpStart.DeleteTextInRun(openTag.Length);
+
+                    //    tr1 = new TextRange(tpStart, tpEnd);
+                    //    tr2 = new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd);
+
+                    //    using (var stream = new MemoryStream())
+                    //    {
+                    //        tr1.Save(stream, DataFormats.XamlPackage);
+                    //        tr2.Load(stream, DataFormats.XamlPackage);
+                    //    }
+
+                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}0.rtf");
+                    //    SaveRTF(debugFilePath, tr1);
+                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}1.rtf");
+                    //    SaveRTF(debugFilePath, tr2);
+                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}2.rtf");
+                    //}
                 }
             }
         }
@@ -132,9 +264,9 @@ namespace MVVMMathProblemsBase.View
         {
             bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
             if (isButtonChecked)
-            { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold); }
+            { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold); }
             else
-            { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal); }
+            { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal); }
 
         }
 
@@ -142,18 +274,18 @@ namespace MVVMMathProblemsBase.View
         {
             bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
             if (isButtonChecked)
-            { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Italic); }
+            { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Italic); }
             else
-            { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Normal); }
+            { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Normal); }
         }
 
         private void btnUnderline_Click(object sender, RoutedEventArgs e)
         {
             //var textDecorations = new TextDecorationCollection();
-            //if (!contentRichTextBox.Selection.IsEmpty)
+            //if (!rtbProblemText.Selection.IsEmpty)
             //{
-            //    var tpFirst = contentRichTextBox.Selection.Start;
-            //    var tpLast = contentRichTextBox.Selection.End;
+            //    var tpFirst = rtbProblemText.Selection.Start;
+            //    var tpLast = rtbProblemText.Selection.End;
             //    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
             //    var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
             //    for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
@@ -176,19 +308,19 @@ namespace MVVMMathProblemsBase.View
             TextDecorationCollection textDecorations = new TextDecorationCollection();
             try
             {
-                textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
+                textDecorations.Add(rtbProblemText.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
                 if (isButtonChecked)
                 { textDecorations.Add(TextDecorations.Underline); }
                 else { textDecorations.TryRemove(TextDecorations.Underline, out textDecorations); }
-                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                rtbProblemText.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
             }
             catch (Exception)
             {
                 textDecorations = new TextDecorationCollection();
-                if (!contentRichTextBox.Selection.IsEmpty)
+                if (!rtbProblemText.Selection.IsEmpty)
                 {
-                    var tpFirst = contentRichTextBox.Selection.Start;
-                    var tpLast = contentRichTextBox.Selection.End;
+                    var tpFirst = rtbProblemText.Selection.Start;
+                    var tpLast = rtbProblemText.Selection.End;
                     var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
                     var underlined = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
                     for (TextPointer t = tpFirst; t.CompareTo(tpLast.GetPositionAtOffset(-1)) < 0; t = t.GetPositionAtOffset(1))
@@ -211,10 +343,10 @@ namespace MVVMMathProblemsBase.View
         private void btnStrikethrough_Click(object sender, RoutedEventArgs e)
         {
             //var textDecorations = new TextDecorationCollection();
-            //if (!contentRichTextBox.Selection.IsEmpty)
+            //if (!rtbProblemText.Selection.IsEmpty)
             //{
-            //    var tpFirst = contentRichTextBox.Selection.Start;
-            //    var tpLast = contentRichTextBox.Selection.End;
+            //    var tpFirst = rtbProblemText.Selection.Start;
+            //    var tpLast = rtbProblemText.Selection.End;
             //    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
             //    var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
             //    for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
@@ -237,19 +369,19 @@ namespace MVVMMathProblemsBase.View
             TextDecorationCollection textDecorations = new TextDecorationCollection();
             try
             {
-                textDecorations.Add(contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
+                textDecorations.Add(rtbProblemText.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection);
                 if (isButtonChecked)
                 { textDecorations.Add(TextDecorations.Strikethrough); }
                 else { textDecorations.TryRemove(TextDecorations.Strikethrough, out textDecorations); }
-                contentRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
+                rtbProblemText.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, textDecorations);
             }
             catch (Exception)
             {
                 textDecorations = new TextDecorationCollection();
-                if (!contentRichTextBox.Selection.IsEmpty)
+                if (!rtbProblemText.Selection.IsEmpty)
                 {
-                    var tpFirst = contentRichTextBox.Selection.Start;
-                    var tpLast = contentRichTextBox.Selection.End;
+                    var tpFirst = rtbProblemText.Selection.Start;
+                    var tpLast = rtbProblemText.Selection.End;
                     var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
                     var strikedthrough = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
                     for (TextPointer t = tpFirst; t.CompareTo(tpLast) < 0; t = t.GetPositionAtOffset(1))
@@ -270,15 +402,15 @@ namespace MVVMMathProblemsBase.View
             }
         }
 
-        private void contentRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        private void rtbProblemText_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            var selectedWeight = contentRichTextBox.Selection.GetPropertyValue(FontWeightProperty);
+            var selectedWeight = rtbProblemText.Selection.GetPropertyValue(FontWeightProperty);
             btnBold.IsChecked = (selectedWeight != DependencyProperty.UnsetValue) && (selectedWeight.Equals(FontWeights.Bold));
 
-            var selectedStyle = contentRichTextBox.Selection.GetPropertyValue(FontStyleProperty);
+            var selectedStyle = rtbProblemText.Selection.GetPropertyValue(FontStyleProperty);
             btnItalics.IsChecked = (selectedStyle != DependencyProperty.UnsetValue) && (selectedStyle.Equals(FontStyles.Italic));
 
-            var selectedDecoration = contentRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
+            var selectedDecoration = rtbProblemText.Selection.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection;
 
             //if (selectedDecoration != null && selectedDecoration != DependencyProperty.UnsetValue)
             //{
@@ -287,7 +419,7 @@ namespace MVVMMathProblemsBase.View
             //}
             //else
             //{
-            //    var tpFirst = contentRichTextBox.Selection.Start;
+            //    var tpFirst = rtbProblemText.Selection.Start;
             //    var textRange = new TextRange(tpFirst, tpFirst.GetPositionAtOffset(1));
             //    btnStrikethrough.IsChecked = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Strikethrough[0]);
             //    btnUnderline.IsChecked = (textRange.GetPropertyValue(Inline.TextDecorationsProperty) as TextDecorationCollection).Contains(TextDecorations.Underline[0]);
@@ -301,10 +433,10 @@ namespace MVVMMathProblemsBase.View
                 && (selectedDecoration != DependencyProperty.UnsetValue)
                 && selectedDecoration.Contains(TextDecorations.Strikethrough[0]);
 
-            cbEditorFontFamily.SelectedItem = contentRichTextBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+            cbEditorFontFamily.SelectedItem = rtbProblemText.Selection.GetPropertyValue(Inline.FontFamilyProperty);
 
-            if (contentRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty) != DependencyProperty.UnsetValue)
-            { cbEditorFontSize.Text = (contentRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty)).ToString(); }
+            if (rtbProblemText.Selection.GetPropertyValue(Inline.FontSizeProperty) != DependencyProperty.UnsetValue)
+            { cbEditorFontSize.Text = (rtbProblemText.Selection.GetPropertyValue(Inline.FontSizeProperty)).ToString(); }
         }
 
         private Run MakeNewRunWithProperties()
@@ -355,24 +487,24 @@ namespace MVVMMathProblemsBase.View
         private void NewParagraphWhenSelectionIsEmpty(string text)
         {
             NewParagraphWhenSelectionIsEmpty();
-            if (contentRichTextBox.CaretPosition.IsAtInsertionPosition)
-            { contentRichTextBox.CaretPosition.InsertTextInRun(text); }
+            if (rtbProblemText.CaretPosition.IsAtInsertionPosition)
+            { rtbProblemText.CaretPosition.InsertTextInRun(text); }
         }
 
         private void InsertNewParagraphOrRun()
         {
             // Check to see if we are at the start of the textbox and nothing has been added yet
-            if (contentRichTextBox.Selection.Start.Paragraph == null)
+            if (rtbProblemText.Selection.Start.Paragraph == null)
             {
                 // Add a new paragraph object to the richtextbox with the fontsize
-                contentRichTextBox.Document.Blocks.Add(NewParagraphWhenSelectionIsEmpty());
+                rtbProblemText.Document.Blocks.Add(NewParagraphWhenSelectionIsEmpty());
             }
             else
             {
                 // Get current position of cursor
-                TextPointer curCaret = contentRichTextBox.CaretPosition;
+                TextPointer curCaret = rtbProblemText.CaretPosition;
                 // Get the current block object that the cursor is in
-                Block curBlock = contentRichTextBox.Document.Blocks.Where
+                Block curBlock = rtbProblemText.Document.Blocks.Where
                     (x => x.ContentStart.CompareTo(curCaret) == -1 && x.ContentEnd.CompareTo(curCaret) == 1).FirstOrDefault();
                 if (curBlock != null)
                 {
@@ -382,7 +514,7 @@ namespace MVVMMathProblemsBase.View
                     curParagraph.Inlines.Add(newRun);
                     // Reset the cursor into the new block. 
                     // If we don't do this, the font size will default again when you start typing.
-                    contentRichTextBox.CaretPosition = newRun.ElementStart;
+                    rtbProblemText.CaretPosition = newRun.ElementStart;
                 }
             }
         }
@@ -400,10 +532,10 @@ namespace MVVMMathProblemsBase.View
         }
         private void ApplyColourToText(Brush colourBrush)
         {
-            if (contentRichTextBox != null)
+            if (rtbProblemText != null)
             {
-                if (!contentRichTextBox.Selection.IsEmpty)
-                { contentRichTextBox.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush); }
+                if (!rtbProblemText.Selection.IsEmpty)
+                { rtbProblemText.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush); }
                 else
                 { NewParagraphWhenSelectionIsEmpty(); }
             }
@@ -413,13 +545,13 @@ namespace MVVMMathProblemsBase.View
         {
             if (cbEditorFontFamily.SelectedItem != null)
             {
-                if (contentRichTextBox != null)
+                if (rtbProblemText != null)
                 {
-                    if (!contentRichTextBox.Selection.IsEmpty)
-                    { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem); }
+                    if (!rtbProblemText.Selection.IsEmpty)
+                    { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem); }
                     else
                     { NewParagraphWhenSelectionIsEmpty(); }
-                    contentRichTextBox.Focus();
+                    rtbProblemText.Focus();
                 }
             }
         }
@@ -430,24 +562,84 @@ namespace MVVMMathProblemsBase.View
             { cbEditorFontSize.Text = String.Empty; }
             else
             {
-                if (contentRichTextBox != null)
+                if (rtbProblemText != null)
                 {
-                    if (!contentRichTextBox.Selection.IsEmpty)
-                    { contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text); }
+                    if (!rtbProblemText.Selection.IsEmpty)
+                    { rtbProblemText.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text); }
                     else
                     { NewParagraphWhenSelectionIsEmpty(); }
                 }
             }
-            contentRichTextBox.Focus();
+            rtbProblemText.Focus();
         }
 
         private void cbEditorFontFamily_LostFocus(object sender, RoutedEventArgs e)
         {
-            contentRichTextBox.Focus();
+            rtbProblemText.Focus();
         }
+
         private void cbEditorFontSize_LosFocus(object sender, RoutedEventArgs e)
         {
-            contentRichTextBox.Focus();
+            rtbProblemText.Focus();
+        }
+
+        private void btnCodeMode_Click(object sender, RoutedEventArgs e)
+        {
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+            if (isButtonChecked)
+            {
+                rtbCodeMode.Document.Blocks.Clear();
+                rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+            }
+        }
+
+        private FlowDocument FlowDocumentOfCurrentMathProblem()
+        {
+            FlowDocument newdocument = new FlowDocument();
+            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
+
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<ProblemText>"));
+            AddDocument(rtbProblemText.Document, newdocument);
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</ProblemText>\n"));
+            newdocument.Blocks.Add(new Paragraph {Margin = new Thickness(0) });
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<Question>"));
+            AddDocument(rtbQuestion.Document, newdocument);
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</Question>"));
+            return newdocument;
+        }
+
+        public static void AddDocument(FlowDocument from, FlowDocument to)
+        {
+            TextRange range = new TextRange(from.ContentStart, from.ContentEnd);
+            MemoryStream stream = new MemoryStream();
+            System.Windows.Markup.XamlWriter.Save(range, stream);
+            range.Save(stream, DataFormats.XamlPackage);
+
+            TextRange range2 = new TextRange(to.ContentEnd, to.ContentEnd);
+            range2.Load(stream, DataFormats.XamlPackage);
+        }
+
+        private void AllRTBToRTF(string dirpath, int fileNbr) //only used when debugging
+        {
+            var problemPath = System.IO.Path.Combine(dirpath, $"{fileNbr}problem.rtf");
+            var questionPath = System.IO.Path.Combine(dirpath, $"{fileNbr}question.rtf");
+            var codeModePath = System.IO.Path.Combine(dirpath, $"{fileNbr}codemode.rtf");
+            SaveRTF(problemPath, new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd));
+            SaveRTF(questionPath, new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd));
+            SaveRTF(codeModePath, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
+        }
+        private static void SaveRTF(string path, TextRange tr) //only used when debugging
+        {
+            try
+            {
+                FileStream fileStream = new FileStream(path, FileMode.Create);
+                tr.Save(fileStream, DataFormats.Rtf);
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         private void BackToModeSelection(object sender, RoutedEventArgs e)
@@ -470,30 +662,32 @@ namespace MVVMMathProblemsBase.View
 
         private void InsertTextFromButtonClick(string textToInsert)
         {
-            if (!contentRichTextBox.Selection.IsEmpty)
+            if (!rtbProblemText.Selection.IsEmpty)
             {
-                contentRichTextBox.Selection.Text = textToInsert;
+                rtbProblemText.Selection.Text = textToInsert;
             }
             else
             {
                 NewParagraphWhenSelectionIsEmpty(textToInsert);
             }
-            contentRichTextBox.CaretPosition = contentRichTextBox.CaretPosition.GetPositionAtOffset(textToInsert.Length);
+            rtbProblemText.CaretPosition = rtbProblemText.CaretPosition.GetPositionAtOffset(textToInsert.Length);
         }
 
         private void btnSaveCourse_Click(object sender, RoutedEventArgs e)
         {
-            //string coursePath = System.IO.Path.Combine(courseDir, $"{vM.CurrentCourse.Id}{vM.CourseFilename}"); //PROČ se nejde dostat ke konstantám?!
-            //vM.CurrentCourse.Save(coursePath);
-
-            //JAK SMAZAT OBSAH CELÉHO ADRESÁŘE?
-
             if (vM.CurrentCourse != null)
             {
                 vM.SaveCurrentCourse();
                 if (vM.CurrentMathProblem != null)
                 {
-                    var contents = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    rtbCodeMode.Document.Blocks.Clear();
+                    rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+
+                    var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
+                    vM.CurrentMathProblem.ProblemText = problem.Text.Length > 20 ? problem.Text.Substring(0, 20) : problem.Text;
+                    var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
+                    vM.CurrentMathProblem.ProblemQuestion = question.Text.Length > 20 ? question.Text.Substring(0, 20) : question.Text;
+                    var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
                     vM.SaveMathProblem(vM.CurrentMathProblem, contents);
                 }
             }

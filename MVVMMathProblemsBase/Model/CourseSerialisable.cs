@@ -56,9 +56,10 @@ namespace MVVMMathProblemsBase.Model
             }
         }
 
-        public void Save(string filename)
+        public void Save()
         {
-            using (StreamWriter sw = new StreamWriter(filename))
+            Directory.CreateDirectory(DirPath);
+            using (StreamWriter sw = new StreamWriter(FilePath))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(CourseSerialisable));
                 xmls.Serialize(sw, this);

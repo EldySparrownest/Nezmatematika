@@ -119,6 +119,11 @@ namespace MVVMMathProblemsBase.ViewModel
                     ArchiveLastUsedUsers();
 
                     _UserSettingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", $"{CurrentUser.Id}{UserSettingsFilename}");
+
+                    if (EditUserVis == Visibility.Visible)
+                    {
+                        PopulateUserTempValues(CurrentUser);
+                    }
                 }
                 else
                 {
@@ -147,9 +152,9 @@ namespace MVVMMathProblemsBase.ViewModel
             get { return currentMathProblem; }
             set
             {
-                if (value != null)
+                if (currentMathProblem != null)
                 {
-                    CurrentMathProblemAboutToChangeToNotNull?.Invoke(this, new EventArgs());
+                    NotNullCurrentMathProblemAboutToChange?.Invoke(this, new EventArgs());
                 }
                 currentMathProblem = value;
                 OnPropertyChanged("CurrentMathProblem");
@@ -349,6 +354,28 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
+        private Visibility courseEditorMathProblemUserModeVis;
+        public Visibility CourseEditorMathProblemUserModeVis
+        {
+            get { return courseEditorMathProblemUserModeVis; }
+            set
+            {
+                courseEditorMathProblemUserModeVis = value;
+                OnPropertyChanged("CourseEditorMathProblemUserModeVis");
+            }
+        }
+
+        private Visibility courseEditorMathProblemCodeModeVis;
+        public Visibility CourseEditorMathProblemCodeModeVis
+        {
+            get { return courseEditorMathProblemCodeModeVis; }
+            set
+            {
+                courseEditorMathProblemCodeModeVis = value;
+                OnPropertyChanged("CourseEditorMathProblemCodeModeVis");
+            }
+        }
+
         private Visibility settingsVis;
         public Visibility SettingsVis
         {
@@ -398,9 +425,10 @@ namespace MVVMMathProblemsBase.ViewModel
         public EditUserCommand EditUserCommand { get; set; }
         public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
         public RestoreDefaultSettingsCommand RestoreDefaultSettingsCommand { get; set; }
+        public SwitchBetweenUserAndCodeModeCommand SwitchBetweenUserAndCodeModeCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler CurrentMathProblemAboutToChangeToNotNull;
+        public event EventHandler NotNullCurrentMathProblemAboutToChange;
         public event EventHandler CurrentMathProblemChanged;
         public MainMenuVM()
         {
@@ -416,6 +444,8 @@ namespace MVVMMathProblemsBase.ViewModel
             UserSelVis = Visibility.Collapsed;
             NewCourseVis = Visibility.Collapsed;
             EditCourseVis = Visibility.Collapsed;
+            CourseEditorMathProblemUserModeVis = Visibility.Collapsed;
+            CourseEditorMathProblemCodeModeVis = Visibility.Collapsed;
             CoursesToContinueVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
             if (IsInStudentMode == true)
@@ -460,6 +490,7 @@ namespace MVVMMathProblemsBase.ViewModel
             EditUserCommand = new EditUserCommand(this);
             PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
             RestoreDefaultSettingsCommand = new RestoreDefaultSettingsCommand(this);
+            SwitchBetweenUserAndCodeModeCommand = new SwitchBetweenUserAndCodeModeCommand(this);
         }
 
         public void LoadDefaultSettings()
@@ -601,13 +632,21 @@ namespace MVVMMathProblemsBase.ViewModel
         {
             ClearUserTempValues();
             ClearCourseTempValues();
-            EditCourseVis = Visibility.Collapsed;
-            EditUserVis = Visibility.Collapsed;
-            NewCourseVis = Visibility.Collapsed;
+
+            //výběry údržby uživatelů
             NewUserVis = Visibility.Collapsed;
-            SettingsVis = Visibility.Collapsed;
+            EditUserVis = Visibility.Collapsed;
             UserSelVis = Visibility.Collapsed;
+
+            //výběry údržby kurzů
+            NewCourseVis = Visibility.Collapsed;
             CoursesToContinueVis = Visibility.Collapsed;
+            EditCourseVis = Visibility.Collapsed;
+            CourseEditorMathProblemUserModeVis = Visibility.Collapsed;
+            CourseEditorMathProblemCodeModeVis = Visibility.Collapsed;
+
+            //výběry nastavení
+            SettingsVis = Visibility.Collapsed;
 
             if (IsInStudentMode == true)
             {
@@ -660,8 +699,9 @@ namespace MVVMMathProblemsBase.ViewModel
 
         public void GetUsersOfTypeList()
         {
+            var curUser = CurrentUser;
             UsersOfTypeList.Clear();
-            var resultList = new ObservableCollection<User>();
+            var resultList = new List<User>();
             string modeName = NullBoolToModeNameStringCovnerter.Convert(IsInStudentMode);
             foreach (User user in AllUsersList)
             {
@@ -670,7 +710,11 @@ namespace MVVMMathProblemsBase.ViewModel
                     resultList.Add(user);
                 }
             }
-            UsersOfTypeList = resultList;
+            UsersOfTypeList = new ObservableCollection<User>(resultList.OrderBy(u => u.SchoolName)
+                                                                        .ThenBy(u => u.ClassName)
+                                                                        .ThenBy(u => u.LastName)
+                                                                        .ThenBy(u => u.FirstName));
+            CurrentUser = curUser;
         }
 
         public void DeleteUser(User userToDelete)
@@ -681,6 +725,14 @@ namespace MVVMMathProblemsBase.ViewModel
             AllUsersList.Remove(userToDelete);
             SaveUserList();
             CurrentUser = UsersOfTypeList[0];
+        }
+
+        public void PopulateUserTempValues(User userToEdit)
+        {
+            TempFirstName = userToEdit.FirstName;
+            TempLastName = userToEdit.LastName;
+            TempSchoolName = userToEdit.SchoolName;
+            TempClassName = userToEdit.ClassName;
         }
         public void EditUser(string fName, string lName, string sName, string cName)
         {
@@ -708,11 +760,12 @@ namespace MVVMMathProblemsBase.ViewModel
             CurrentCourse.LastOpened = DateTime.Now;
             CurrentMathProblem = CurrentCourse.Problems[0];
             EditCourseVis = Visibility.Visible;
+            CourseEditorMathProblemUserModeVis = Visibility.Visible;
         }
 
         public void SaveCurrentCourse()
         {
-            CurrentCourse.Save(CurrentCourse.FilePath);
+            CurrentCourse.Save();
         }
 
         public void UpdateAbilityToContinueCourse()
@@ -737,8 +790,7 @@ namespace MVVMMathProblemsBase.ViewModel
                     resultList.Add(Course.Read(file));
                 }
             }
-            resultList.OrderBy(c => c.LastEdited);
-            CoursesToContinueList = new ObservableCollection<Course>(resultList);
+            CoursesToContinueList = new ObservableCollection<Course>(resultList.OrderByDescending(c => c.LastEdited));
         }
 
         public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)

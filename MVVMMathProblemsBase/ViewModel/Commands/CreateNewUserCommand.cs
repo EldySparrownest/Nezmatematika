@@ -40,8 +40,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.CreateNewUser(MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempSchoolName, MMVM.TempClassName);
-            MMVM.NewUserVis = Visibility.Collapsed;
-            MMVM.UserSelVis = Visibility.Collapsed;
+            MMVM.BackToMainMenu();
+            MMVM.GetUsersOfTypeList();
         }
     }
 }

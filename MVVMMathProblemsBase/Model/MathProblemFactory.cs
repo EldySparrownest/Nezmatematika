@@ -20,6 +20,7 @@ namespace MVVMMathProblemsBase.Model
                     break;
             }
             mathProblem.Id = NewMathProblemId();
+            mathProblem.DirPath = course.DirPath;
             mathProblem.FilePath = System.IO.Path.Combine(course.DirPath, $"{mathProblem.Id}.rtf");
             mathProblem.OrderLabel = GetNextOrderLabel(precedingLabel);
             return mathProblem;
@@ -29,6 +30,7 @@ namespace MVVMMathProblemsBase.Model
         {
             var mathProblem = new MathProblem();
             mathProblem.Id = serialisedMathProblem.Id;
+            mathProblem.DirPath = serialisedMathProblem.DirPath;
             mathProblem.FilePath = serialisedMathProblem.FilePath;
 
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
@@ -48,6 +50,7 @@ namespace MVVMMathProblemsBase.Model
         {
             var serialisedMathProblem = new MathProblemSerialisable();
             serialisedMathProblem.Id = mathProblem.Id;
+            serialisedMathProblem.DirPath = mathProblem.DirPath;
             serialisedMathProblem.FilePath = mathProblem.FilePath;
 
             serialisedMathProblem.OrderLabel = mathProblem.OrderLabel;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MVVMMathProblemsBase.ViewModel.Commands
@@ -46,6 +47,9 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.EditUser(MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempSchoolName, MMVM.TempClassName);
+            MMVM.EditUserVis = Visibility.Collapsed;
+            MMVM.NewUserVis = Visibility.Visible;
+            MMVM.GetUsersOfTypeList();
         }
     }
 }

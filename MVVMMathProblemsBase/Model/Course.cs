@@ -99,40 +99,13 @@ namespace MVVMMathProblemsBase.Model
         private string CourseFilePath()
             => System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
 
-        public void Save(string filename)
+        public void Save()
         {
-            TimeSpentEditing = TimeSpentEditing + (LastOpened - DateTime.Now);
+            TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited) - DateTime.Now);
             LastEdited = DateTime.Now;
             CourseSerialisable cs = new CourseSerialisable(this);
 
-            //    CourseSerialisable cs = new CourseSerialisable()
-            //    {
-            //        Created = DateTime.Now,
-            //        LastEdited = DateTime.Now,
-            //        TimeSpentEditing = TimeSpan.Zero,
-            //        Tags = new List<string>(),
-            //        Problems = new List<MathProblemSerialisable>()
-            //    };
-
-            //    CourseSerialisable cs2 = new CourseSerialisable()
-            //    {
-            //        Author = this.Author,
-            //        Id = this.Id,
-            //        Created = this.Created,
-            //        LastEdited = this.LastEdited,
-            //        TimeSpentEditing = this.TimeSpentEditing,
-            //        CourseTitle = this.CourseTitle,
-            //        CourseDesc = this.CourseDesc,
-            //        Tags = this.Tags.ToList(),
-            //        Problems = new List<MathProblemSerialisable>()
-
-            //    //foreach (MathProblem problem in course.Problems)
-            //    //{
-            //    //    Problems.Add(new MathProblemSerialisable(problem));
-            //    //}
-            //};
-
-            cs.Save(filename);
+            cs.Save();
         }
 
         public static Course Read(string filename)

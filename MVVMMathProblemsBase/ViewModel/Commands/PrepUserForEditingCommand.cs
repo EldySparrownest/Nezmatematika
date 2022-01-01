@@ -39,17 +39,13 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             User user = parameter as User;
+            MMVM.BackToMainMenu();
+            MMVM.UserSelVis = Visibility.Visible;
             MMVM.NewUserVis = Visibility.Collapsed;
-            MMVM.SettingsVis = Visibility.Collapsed;
+
+            MMVM.PopulateUserTempValues(user);
 
             MMVM.EditUserVis = Visibility.Visible;
-            //MMVM.TempFirstName = MMVM.CurrentUser.FirstName;
-            //MMVM.TempLastName = MMVM.CurrentUser.LastName;
-            //MMVM.TempClassName = MMVM.CurrentUser.ClassName;
-            MMVM.TempFirstName = user.FirstName;
-            MMVM.TempLastName = user.LastName;
-            MMVM.TempSchoolName = user.SchoolName;
-            MMVM.TempClassName = user.ClassName;
         }
     }
 }
