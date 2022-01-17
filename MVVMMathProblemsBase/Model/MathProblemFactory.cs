@@ -17,11 +17,13 @@ namespace MVVMMathProblemsBase.Model
                 default:
                     mathProblem = new MathProblem();
                     ((MathProblem)mathProblem).SolutionSteps = new ObservableCollection<SolutionStep>();
+                    ((MathProblem)mathProblem).CorrectAnswers = new ObservableCollection<string> {""};
                     break;
             }
             mathProblem.Id = NewMathProblemId();
             mathProblem.DirPath = course.DirPath;
             mathProblem.FilePath = System.IO.Path.Combine(course.DirPath, $"{mathProblem.Id}.rtf");
+            mathProblem.Index = course.Problems.Count;
             mathProblem.OrderLabel = GetNextOrderLabel(precedingLabel);
             return mathProblem;
         }
@@ -33,10 +35,17 @@ namespace MVVMMathProblemsBase.Model
             mathProblem.DirPath = serialisedMathProblem.DirPath;
             mathProblem.FilePath = serialisedMathProblem.FilePath;
 
+            mathProblem.Index = serialisedMathProblem.Index;
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
             mathProblem.ProblemText = serialisedMathProblem.ProblemText;
             mathProblem.ProblemQuestion = serialisedMathProblem.ProblemQuestion;
-            mathProblem.CorrectAnswers = serialisedMathProblem.CorrectAnswers;
+            mathProblem.CorrectAnswers = new ObservableCollection<string>();
+
+            foreach (var answer in serialisedMathProblem.CorrectAnswers)
+            {
+                mathProblem.CorrectAnswers.Add(answer);
+            }
+
             mathProblem.SolutionSteps = new ObservableCollection<SolutionStep>();
 
             foreach (var step in serialisedMathProblem.SolutionSteps)
@@ -53,10 +62,11 @@ namespace MVVMMathProblemsBase.Model
             serialisedMathProblem.DirPath = mathProblem.DirPath;
             serialisedMathProblem.FilePath = mathProblem.FilePath;
 
+            serialisedMathProblem.Index = mathProblem.Index;
             serialisedMathProblem.OrderLabel = mathProblem.OrderLabel;
             serialisedMathProblem.ProblemText = mathProblem.ProblemText;
             serialisedMathProblem.ProblemQuestion = mathProblem.ProblemQuestion;
-            serialisedMathProblem.CorrectAnswers = mathProblem.CorrectAnswers;
+            serialisedMathProblem.CorrectAnswers = mathProblem.CorrectAnswers.ToList();
             serialisedMathProblem.SolutionSteps = new List<SolutionStepSerialisable>();
 
             foreach (var step in mathProblem.SolutionSteps)

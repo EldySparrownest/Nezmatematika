@@ -9,6 +9,8 @@ using System.Windows;
 
 namespace MVVMMathProblemsBase
 {
+    public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor };
+
     /// <summary>
     /// Interakční logika pro App.xaml
     /// </summary>
@@ -16,5 +18,6 @@ namespace MVVMMathProblemsBase
     {
         public static User AppUser = null;
         public static bool? IsInStudentMode = null;
+        public static WhereInApp WhereInApp = WhereInApp.ModeSelection;
     }
 }

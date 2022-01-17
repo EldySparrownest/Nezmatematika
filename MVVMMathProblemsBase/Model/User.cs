@@ -14,5 +14,7 @@ namespace MVVMMathProblemsBase.Model
         public string ClassName { get; set; }
         public string SchoolName { get; set; }
         public string UserType { get; set; }
+        public UserStats UserStats { get; set; }
+        public List<UserCourseData> CoursesData { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace MVVMMathProblemsBase.Model
         public string Id { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
+        public int Index { get; set; }
         public string OrderLabel { get; set; }
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }

@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace MVVMMathProblemsBase.ViewModel.Commands
 {
-    public class DisplaySettingsCommand : ICommand
+    public class DisplayNewCourseSelectionCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -18,14 +18,14 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public DisplaySettingsCommand(MainMenuVM vm)
+        public DisplayNewCourseSelectionCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null)
+            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true)
             {
                 return true;
             }
@@ -35,13 +35,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
-            
-            if (MMVM.IsInStudentMode == true)
-                MMVM.StudentSettingsVis = Visibility.Visible;
-            else
-                MMVM.TeacherSettingsVis = Visibility.Visible;
-            
-            MMVM.SettingsVis = Visibility.Visible;
+            MMVM.GetListOfNewCoursesToStart();
+            MMVM.StudentNewCourseSelVis = Visibility.Visible;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace MVVMMathProblemsBase.Model
@@ -15,6 +16,8 @@ namespace MVVMMathProblemsBase.Model
         public string Id { get; set; }
         public User Author { get; set; }
         public DateTime Created { get; set; }
+        public PublishingStatus PublishingStatus { get; set; }
+        public DateTime LastPublished { get; set; }
         public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
@@ -25,9 +28,9 @@ namespace MVVMMathProblemsBase.Model
         public ObservableCollection<string> Tags { get; set; }
 
         private ObservableCollection<MathProblem> problems;
-        public ObservableCollection<MathProblem> Problems 
-        { 
-            get { return problems; } 
+        public ObservableCollection<MathProblem> Problems
+        {
+            get { return problems; }
             set
             {
                 problems = value;
@@ -71,6 +74,7 @@ namespace MVVMMathProblemsBase.Model
             Created = DateTime.Now;
             LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
+            PublishingStatus = PublishingStatus.NotPublished;
         }
 
         public void AddNewMathProblem(MathProblem mathProblem)
@@ -89,23 +93,60 @@ namespace MVVMMathProblemsBase.Model
             Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní", precedingLabel));
         }
 
+        private void ReorderProblemIndexes()
+        {
+            for (int i = Problems.Count - 1; i >= 0; i--)
+            {
+                Problems[i].Index = i;
+            }
+        }
+
         private static string NewCourseId(string authorID)
             => string.Join("_", authorID,
                     string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
 
         private string CourseDirPath()
-            => DirPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, Id);
+            => DirPath = Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, Id);
 
         private string CourseFilePath()
-            => System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
+            => Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
 
         public void Save()
         {
+            ReorderProblemIndexes();
             TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited) - DateTime.Now);
             LastEdited = DateTime.Now;
             CourseSerialisable cs = new CourseSerialisable(this);
 
             cs.Save();
+        }
+
+        public void Publish(string coursesDirPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(coursesDirPath);
+                File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
+                var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);
+                Directory.CreateDirectory(newCourseIDDirPath);
+                
+                if (Directory.Exists(DirPath) && Directory.Exists(newCourseIDDirPath))
+                {
+                    var files = Directory.EnumerateFiles(DirPath);
+
+                    foreach (var file in files)
+                    {
+                        var newFilePath = file.Replace(DirPath, newCourseIDDirPath);
+                        File.Copy(file, newFilePath, true);
+                    }
+                }
+                PublishingStatus = PublishingStatus.PublishedUpToDate;
+                LastPublished = DateTime.Now;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         public static Course Read(string filename)

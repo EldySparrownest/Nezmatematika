@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel; // for ObservableCollection
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,34 @@ using System.Windows.Documents;
 
 namespace MVVMMathProblemsBase.Model
 {
-    public class MathProblem : IMathProblem
+    public class MathProblem : IMathProblem, INotifyPropertyChanged
     {
         public string Id { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
+        public int Index { get; set; }
         public string OrderLabel { get; set; }
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }
-        public List<string> CorrectAnswers { get; set; }
+
+        private ObservableCollection<string> correctAnswers { get; set; }
+        public ObservableCollection<string> CorrectAnswers
+        {
+            get { return correctAnswers; }
+            set
+            { 
+                correctAnswers = value;
+                OnPropertyChanged("CorrectAnswers");
+            }
+        }
         public ObservableCollection<SolutionStep> SolutionSteps { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void AddNewCorrectAnswer()
+        {
+            CorrectAnswers.Add("");
+        }
 
         public void SaveContents(TextRange contents, string filePath, string dirPath)
         {
@@ -54,6 +73,11 @@ namespace MVVMMathProblemsBase.Model
             {
                 SolutionSteps[stepindex].StepVisibility = newVis;
             }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

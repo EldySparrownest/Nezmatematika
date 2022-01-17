@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,11 @@ namespace MVVMMathProblemsBase.Model
         string Id { get; set; }
         string DirPath { get; set; }
         string FilePath { get; set; }
+        int Index { get; set; }
         string OrderLabel { get; set; }
         string ProblemText { get; set; }
         string ProblemQuestion { get; set; }
-        List<string> CorrectAnswers { get; set; }
+        ObservableCollection<string> CorrectAnswers { get; set; }
+        ObservableCollection<SolutionStep> SolutionSteps { get; set; }
     }
 }

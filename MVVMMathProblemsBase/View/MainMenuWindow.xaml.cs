@@ -1,4 +1,5 @@
-﻿using MVVMMathProblemsBase.ViewModel;
+﻿using MVVMMathProblemsBase.Model;
+using MVVMMathProblemsBase.ViewModel;
 using MVVMMathProblemsBase.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace MVVMMathProblemsBase.View
     //Dořešit scrollování na listview (bude potřeba nastudovat z internetu)
     //Ribbon, pokud to půjde nějak rozchodit
 
+    //Když chci něco skrýt v design módu, tak tomu v .xaml přihodím d:IsHidden="True"
 
     public partial class MainMenuWindow : Window
     {
@@ -45,8 +47,12 @@ namespace MVVMMathProblemsBase.View
         {
             InitializeComponent();
             vM = Resources["vm"] as MainMenuVM;
-            vM.NotNullCurrentMathProblemAboutToChange += ViewModel_CurrentMathProblemAboutToChange;
-            vM.CurrentMathProblemChanged += ViewModel_CurrentMathProblemChanged;
+            if (vM.IsInStudentMode == true)
+            {
+                vM.TeacherNotNullCurrentMathProblemAboutToChange += ViewModelTeacher_CurrentMathProblemAboutToChange;
+                vM.TeacherCurrentMathProblemChanged += ViewModel_TeacherCurrentMathProblemChanged;
+            }
+
 
             dicContentLoad = new Dictionary<string, RichTextBox>()
             {
@@ -141,121 +147,97 @@ namespace MVVMMathProblemsBase.View
             lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
-        private void ViewModel_CurrentMathProblemAboutToChange(object sender, EventArgs e)
+        private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (listViewSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+                lvStartableNewCourses.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            listViewSortCol = column;
+            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+
+        private void ResetCourseEditor(object sender, RoutedEventArgs e)
+        {
+            btnCodeMode.IsChecked = false;
+        }
+
+        private void ViewModelTeacher_CurrentMathProblemAboutToChange(object sender, EventArgs e)
         {
             if (vM.Settings.AutosaveProblemWhenSwitching)
             {
                 btnSaveCourse_Click(sender, new RoutedEventArgs());
             }
         }
-        private void ViewModel_CurrentMathProblemChanged(object sender, EventArgs e)    //TODO: add splitting the RTF into RTBs
+        private void ViewModel_TeacherCurrentMathProblemChanged(object sender, EventArgs e)
         {
             rtbCodeMode.Document.Blocks.Clear();
             rtbProblemText.Document.Blocks.Clear();
             rtbQuestion.Document.Blocks.Clear();
 
-            var fileNbr = 0;
-
             if (vM.CurrentMathProblem != null)
             {
                 if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
                 {
-                    FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
-                    var trCodeMode = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
-                    trCodeMode.Load(fileStream, DataFormats.Rtf);
-                    fileStream.Close();
-
-                    var tpContentStart = rtbCodeMode.Document.ContentStart;
-
-                    AllRTBToRTF(vM.CurrentCourse.DirPath, fileNbr++);
-
-                    string openTag;
-                    string closeTag;
-                    RichTextBox rtbTarget;
-                    int textOpenTagStartIndex;
-                    int textCloseTagStartIndex;
-                    TextPointer tpStart;
-                    TextPointer tpEnd;
-                    TextRange tr1;
-                    TextRange tr2;
-                    string debugFilePath;
-
-                    for (int i = 0; i < dicContentLoad.Count; i++)
+                    switch (App.WhereInApp)
                     {
-                        openTag = $"<{dicContentLoad.ElementAt(i).Key}>";
-                        closeTag = $"</{dicContentLoad.ElementAt(i).Key}>";
-                        rtbTarget = dicContentLoad.ElementAt(i).Value;
+                        case WhereInApp.ModeSelection:
+                            break;
+                        case WhereInApp.MainMenu:
+                            break;
+                        case WhereInApp.CourseEditor:
+                            FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
+                            var trCodeMode = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
+                            trCodeMode.Load(fileStream, DataFormats.Rtf);
+                            fileStream.Close();
 
-                        textOpenTagStartIndex = trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase);
-                        if (textOpenTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
-                        textCloseTagStartIndex = trCodeMode.Text.IndexOf(closeTag, StringComparison.OrdinalIgnoreCase);
-                        if (textCloseTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
+                            var tpContentStart = rtbCodeMode.Document.ContentStart;
 
-                        //var x = TextRangeHelper.GetInlinesOfRTB(rtbCodeMode);
-                        //tpStart = TextRangeHelper.GetPositionAtOffset(x, textOpenTagStartIndex + openTag.Length);
+                            for (int i = 0; i < dicContentLoad.Count; i++)
+                            {
+                                var openTag = $"<{dicContentLoad.ElementAt(i).Key}>";
+                                var closeTag = $"</{dicContentLoad.ElementAt(i).Key}>";
+                                var rtbTarget = dicContentLoad.ElementAt(i).Value;
 
-                        tpStart = tpContentStart.GetPositionVisibleCharactersAway(textOpenTagStartIndex + openTag.Length);
-                        tpEnd = tpContentStart.GetPositionVisibleCharactersAway(textCloseTagStartIndex);
+                                var textOpenTagStartIndex = trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase);
+                                var textCloseTagStartIndex = trCodeMode.Text.IndexOf(closeTag, StringComparison.OrdinalIgnoreCase);
 
-                        var y = tpStart.DeleteTextInRun(openTag.Length);
+                                if (textOpenTagStartIndex < 0 || textCloseTagStartIndex < 0)
+                                {
+                                    MessageBoxResult result = MessageBox.Show("Při načítání příkladu ze souboru byla zjištěna chyba.\n" +
+                                                                                "Nouzovým načtením bude celý obsah souboru načten do textového pole \"Zadání\".\n" +
+                                                                                "Chcete se pokusit příklad načíst nouzově?",
+                                                                                "Nezmatematika - chyba načtení příkladu",
+                                                                                MessageBoxButton.YesNo);
+                                    if (result == MessageBoxResult.Yes)
+                                    {
+                                        rtbProblemText.Document.Blocks.Clear();
+                                        AddDocument(rtbCodeMode.Document, rtbProblemText.Document);
+                                    }
+                                    return;
+                                }
 
-                        tr1 = new TextRange(tpStart, tpEnd);
-                        tr2 = new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd);
+                                var tpStart = tpContentStart.GetPositionVisibleCharactersAway(textOpenTagStartIndex + openTag.Length);
+                                var tpEnd = tpContentStart.GetPositionVisibleCharactersAway(textCloseTagStartIndex);
 
-                        using (var stream = new MemoryStream())
-                        {
-                            tr1.Save(stream, DataFormats.XamlPackage);
-                            tr2.Load(stream, DataFormats.XamlPackage);
-                        }
-
-                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}0.rtf");
-                        SaveRTF(debugFilePath, tr1);
-                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}1.rtf");
-                        SaveRTF(debugFilePath, tr2);
-                        debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}2.rtf");
+                                using (var stream = new MemoryStream())
+                                {
+                                    new TextRange(tpStart, tpEnd).Save(stream, DataFormats.XamlPackage);
+                                    new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd).Load(stream, DataFormats.XamlPackage);
+                                }
+                            }
+                            break;
                     }
-
-                    //for (int i = 0; i < dicContentLoad.Count; i++)
-                    //{
-                    //    openTag = $"<{dicContentLoad.ElementAt(i).Key}>";
-                    //    closeTag = $"</{dicContentLoad.ElementAt(i).Key}>";
-                    //    rtbTarget = dicContentLoad.ElementAt(i).Value;
-
-                    //    while (trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase) != -1)
-                    //    {
-
-                    //    }
-
-                    //    textOpenTagStartIndex = trCodeMode.Text.IndexOf(openTag, StringComparison.OrdinalIgnoreCase);
-                    //    //                        MessageBox.Show($"{ textOpenTagStartIndex}_{openTag.Length}\n{codeModeContent.Text}\n{codeModeContent.Text[textOpenTagStartIndex]}\n{codeModeContent.Text[textOpenTagStartIndex+openTag.Length]}");
-                    //    if (textOpenTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
-                    //    textCloseTagStartIndex = trCodeMode.Text.IndexOf(closeTag, StringComparison.OrdinalIgnoreCase);
-                    //    //                        MessageBox.Show($"{ textCloseTagStartIndex}_{closeTag.Length}\n{codeModeContent.Text}\n{codeModeContent.Text[textCloseTagStartIndex]}\n{codeModeContent.Text[textCloseTagStartIndex + closeTag.Length]}");
-                    //    if (textCloseTagStartIndex < 0) return; //TODO: throw error about the file being corrupted
-
-                    //    //var x = (rtbCodeMode.Document.Blocks.FirstBlock as Paragraph).Inlines;
-                    //    //tpStart = TextRangeHelper.GetPositionAtOffset(x, startIndex + openTag.Length);
-                    //    //tpStart = rtbCodeMode.Document.ContentStart.GetPositionAtOffset(startIndex + openTag.Length);
-                    //    tpStart = tpContentStart.GetPositionVisibleCharactersAway(textOpenTagStartIndex);//+ openTag.Length);
-                    //    tpEnd = tpContentStart.GetPositionVisibleCharactersAway(textCloseTagStartIndex);
-
-                    //    var y = tpStart.DeleteTextInRun(openTag.Length);
-
-                    //    tr1 = new TextRange(tpStart, tpEnd);
-                    //    tr2 = new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd);
-
-                    //    using (var stream = new MemoryStream())
-                    //    {
-                    //        tr1.Save(stream, DataFormats.XamlPackage);
-                    //        tr2.Load(stream, DataFormats.XamlPackage);
-                    //    }
-
-                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}0.rtf");
-                    //    SaveRTF(debugFilePath, tr1);
-                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}1.rtf");
-                    //    SaveRTF(debugFilePath, tr2);
-                    //    debugFilePath = System.IO.Path.Combine(vM.CurrentMathProblem.DirPath, $"{i}2.rtf");
-                    //}
                 }
             }
         }
@@ -583,6 +565,25 @@ namespace MVVMMathProblemsBase.View
             rtbProblemText.Focus();
         }
 
+        private void tbAnswer_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var tbAnswer = sender as TextBox;
+            var newAnswer = tbAnswer.Text;
+            if (vM.CurrentMathProblem != null && vM.CurrentAnswer != newAnswer)
+            {
+                var i = vM.CurrentMathProblem.CorrectAnswers.IndexOf(vM.CurrentAnswer);
+                if (i >= 0)
+                {
+                    vM.CurrentMathProblem.CorrectAnswers[i] = newAnswer;
+                }
+
+                //vM.CurrentAnswer = newAnswer;
+            }
+
+            //vM.TempAnswers.Clear();
+            
+        }
+
         private void btnCodeMode_Click(object sender, RoutedEventArgs e)
         {
             bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
@@ -644,6 +645,7 @@ namespace MVVMMathProblemsBase.View
 
         private void BackToModeSelection(object sender, RoutedEventArgs e)
         {
+            App.WhereInApp = WhereInApp.ModeSelection;
             App.IsInStudentMode = null;
             UserTypeSelectWindow userTypeSelectWindow = new UserTypeSelectWindow();
 
@@ -675,8 +677,10 @@ namespace MVVMMathProblemsBase.View
 
         private void btnSaveCourse_Click(object sender, RoutedEventArgs e)
         {
+            btnSaveCourse.Focus();
             if (vM.CurrentCourse != null)
             {
+                vM.CurrentMathProblem.CorrectAnswers = vM.TempAnswers;
                 vM.SaveCurrentCourse();
                 if (vM.CurrentMathProblem != null)
                 {
@@ -684,10 +688,11 @@ namespace MVVMMathProblemsBase.View
                     rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
 
                     var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
-                    vM.CurrentMathProblem.ProblemText = problem.Text.Length > 20 ? problem.Text.Substring(0, 20) : problem.Text;
+                    vM.CurrentMathProblem.ProblemText = problem.Text;
                     var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
-                    vM.CurrentMathProblem.ProblemQuestion = question.Text.Length > 20 ? question.Text.Substring(0, 20) : question.Text;
+                    vM.CurrentMathProblem.ProblemQuestion = question.Text;
                     var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
+
                     vM.SaveMathProblem(vM.CurrentMathProblem, contents);
                 }
             }

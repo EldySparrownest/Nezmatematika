@@ -89,6 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\PublishingStatus.cs" />
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\CourseSerialisable.cs" />
     <Compile Include="Model\GlobalValues.cs" />
@@ -102,16 +103,20 @@
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserCourseData.cs" />
     <Compile Include="Model\UserStats.cs" />
+    <Compile Include="ViewModel\Commands\AddNewCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\AddNewProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
+    <Compile Include="ViewModel\Commands\OpenCourseForStudentCommand.cs" />
+    <Compile Include="ViewModel\Commands\PublishCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewUserCommand.cs" />
     <Compile Include="ViewModel\Commands\DeleteCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\DeleteUserCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayCourseToEditSelectionCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayNewCourseCreationCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayNewCourseSelectionCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayProfileSelectionCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplaySettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\EditCourseCommand.cs" />
