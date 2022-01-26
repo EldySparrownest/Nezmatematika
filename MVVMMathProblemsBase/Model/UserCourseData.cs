@@ -12,12 +12,28 @@ namespace MVVMMathProblemsBase.Model
         public string CourseId { get; set; }
         public string UserId { get; set; }
         public int Mistakes { get; set; }
+        public bool Completed { get; set; }
         public DateTime CourseStarted { get; set; }
         public DateTime CourseFinished { get; set; }
         public DateTime LastSessionStarted { get; set; }
         public DateTime LastSessionEnded { get; set; }
         public TimeSpan NetCourseTime { get; set; }
-        public int CurrentMathProblemIndex { get; set; }
+        public int LastSolvedMathProblemIndex { get; set; }
         public List <int> RequeudProblems { get; set; }
+
+        public UserCourseData()
+        {
+        }
+
+        public UserCourseData(string courseId, string userId, DateTime startTime)
+        {
+            CourseId = courseId;
+            UserId = userId;
+            Mistakes = 0;
+            Completed = false;
+            CourseStarted = startTime;
+            LastSolvedMathProblemIndex = -1;
+            RequeudProblems = new List<int>();
+        }
     }
 }

@@ -22,9 +22,6 @@
           Background="{Binding Converter={StaticResource nullColorToSolidColorBrush},
                                Path=Settings.MainBackgroundColour,
                                Mode=TwoWay}">
-        <TextBox x:Name="tbSingleEditTemp"
-                 Visibility="{Binding SingleEditTempVis}" />
-
         <DockPanel DataContext="{StaticResource vm}">
             <Grid Name="gridStudentMenu"
                   HorizontalAlignment="Left"
@@ -139,12 +136,12 @@
                         VerticalContentAlignment="Center" />
 
             </Grid>
-            <!--<Grid x:Name="gridTakingCourse"
-                  Visibility="{Binding CourseForStudentVis}"
-                  Margin="10">-->
             <Grid x:Name="gridTakingCourse"
-                  Visibility="Collapsed"
+                  Visibility="{Binding CourseForStudentVis}"
                   Margin="10">
+                <!--<Grid x:Name="gridTakingCourse"
+                  Visibility="Collapsed"
+                  Margin="10">-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -152,6 +149,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -196,35 +195,51 @@
                              Grid.Row="1"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
+                             IsReadOnly="True"
+                             Height="Auto"
+                             Margin="5" />
+                <RichTextBox x:Name="rtbQuestionStudentMode"
+                             Grid.ColumnSpan="4"
+                             Grid.Column="0"
+                             Grid.Row="2"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             IsReadOnly="True"
+                             Height="Auto"
                              Margin="5" />
                 <TextBox x:Name="tbStudentsAnswer"
                          Grid.Column="0"
                          Grid.ColumnSpan="3"
-                         Grid.Row="2"
+                         Grid.Row="4"
+                         VerticalContentAlignment="Center"
                          Margin="5" />
                 <Button x:Name="btnConfirmAnswer"
                         Grid.Column="3"
-                        Grid.Row="2"
+                        Grid.Row="4"
                         Margin="5">
                     <Label Content="Potvrdit"
                            Margin="5" />
                 </Button>
                 <Grid Grid.Column="0"
                       Grid.ColumnSpan="4"
-                      Grid.Row="3">
+                      Grid.Row="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="1"
+                    <Button x:Name="btnPrevProblem"
+                            Command="{Binding SwitchToPreviousProblemCommand}"
+                            Grid.Column="1"
                             HorizontalAlignment="Center"
                             Margin="5">
                         <Label Content="← Předchozí"
                                Margin="5" />
                     </Button>
-                    <Button Grid.Column="2"
+                    <Button x:Name="btnNextProblem"
+                            Command="{Binding SwitchToNextProblemCommand}"
+                            Grid.Column="2"
                             HorizontalAlignment="Center"
                             Margin="5">
                         <Label Content="Další →"
@@ -645,7 +660,7 @@
                 </Grid.RowDefinitions>
                 <ListView Name="lvContinuableCourses"
                           SelectedValue="{Binding CurrentCourse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding CoursesToContinueList}"
+                          ItemsSource="{Binding TeacherCoursesToContinueList}"
                           Visibility="{Binding CoursesToContinueVis}"
                           IsSynchronizedWithCurrentItem="True"
                           Thumb.DragDelta="Thumb_DragDelta">
@@ -727,11 +742,11 @@
                         VerticalAlignment="Top"
                         VerticalContentAlignment="Center" />
             </Grid>
-            <!--<Grid x:Name="gridCourseEditor"
-                  Visibility="{Binding EditCourseVis}">-->
             <Grid x:Name="gridCourseEditor"
-                  Visibility="Collapsed">
-                <DockPanel>
+                  Visibility="{Binding EditCourseVis}">
+                <!--<Grid x:Name="gridCourseEditor"
+                  Visibility="Collapsed">-->
+                <DockPanel Margin="5">
                     <ToolBarTray DockPanel.Dock="Top"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Top"
@@ -762,7 +777,7 @@
                                     Click="btnSaveCourse_Click"
                                     Margin="5" />
                             <Button Name="btnPublishCourse"
-                                    Command="{Binding PublishCourseCommand}"
+                                    Click="btnPublishCourse_Click"
                                     Margin="5">
                                 <StackPanel>
                                     <TextBlock Text="O"
@@ -883,7 +898,8 @@
                                   Grid.Row="2"
                                   SelectedValue="{Binding CurrentMathProblem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding CurrentCourse.Problems}"
-                                  IsSynchronizedWithCurrentItem="True">
+                                  IsSynchronizedWithCurrentItem="True"
+                                  Margin="0,0,5,0">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Width="120">
@@ -998,59 +1014,82 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label Content="Zadání"
                                Grid.Row="0" />
                         <RichTextBox x:Name="rtbProblemText"
                                      Grid.Row="1"
-                                     SelectionChanged="rtbProblemText_SelectionChanged" />
+                                     GotFocus="SetRTBWithFocus"
+                                     SelectionChanged="RTBWithFcs_SelectionChanged" />
                         <Label Content="Otázka"
                                Grid.Row="2" />
                         <RichTextBox x:Name="rtbQuestion"
-                                     Grid.Row="3" />
+                                     Grid.Row="3"
+                                     GotFocus="SetRTBWithFocus"
+                                     SelectionChanged="RTBWithFcs_SelectionChanged" />
+                        <Label x:Name="lblCorrectAnswers"
+                               Grid.Row="4"
+                               Content="Správné odpovědi"
+                               VerticalContentAlignment="Center" />
                         <StackPanel Orientation="Horizontal"
-                                    Grid.Row="4">
-                            <Label Content="Správné odpovědi"
-                                   VerticalContentAlignment="Center" />
-                            <Button Content="+"
+                                    Grid.Row="5">
+                            <TextBox x:Name="tbNewCorrectAnswer"
+                                     Text="{Binding TempCorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="20"
+                                     MinWidth="30"
+                                     Margin="5"/>
+                            <Button x:Name="btnAddNewCorrectAnswer"
+                                    Content="+"
                                     FontWeight="Bold"
                                     FontSize="20"
                                     Background="White"
                                     BorderThickness="0"
                                     Foreground="LimeGreen"
                                     VerticalContentAlignment="Center"
-                                    Command="{Binding AddNewCorrectAnswerCommand}" />
+                                    Command="{Binding AddNewCorrectAnswerCommand}"
+                                    CommandParameter="{Binding TempCorrectAnswer}"
+                                    Margin="5"/>
+                            <Button x:Name="btnEditCurrentAnswer"
+                                    Content="Upravit"
+                                    Background="White"
+                                    BorderThickness="0"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding EditCorrectAnswerCommand}"
+                                    CommandParameter="{Binding TempCorrectAnswer}"
+                                    Margin="5" />
                         </StackPanel>
                         <ListView Name="lvProblemAnswers"
-                                  Grid.Row="5"
+                                  Grid.Row="6"
                                   SelectedValue="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding TempAnswers}"
+                                  ItemsSource="{Binding CurrentMathProblem.CorrectAnswers}"
                                   IsSynchronizedWithCurrentItem="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid x:Name="gridAnswersList"
                                           HorizontalAlignment="Stretch">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                  Margin="2.5"
                                                  Grid.Column="0"
-                                                 MinWidth="15"
-                                                 LostFocus="tbAnswer_LostFocus">
+                                                 MinWidth="15">
                                             <!--<i:Interaction.Triggers>
                                             <i:EventTrigger EventName="LostFocus">
                                                 <i:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=RenameEndCommand}"
                                                                        CommandParameter="{Binding}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>-->
-                                        </TextBox>
+                                        </Label>
                                         <Button Content="Odebrat"
                                                 Grid.Column="1"
-                                                HorizontalAlignment="Left" />
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding Source={StaticResource vm}, Path=RemoveCorrectAnswerCommand}"
+                                                CommandParameter="{Binding .}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -1178,8 +1217,10 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label Content="Nastavení pro učitele"
+                           Grid.Row="0"
                            HorizontalAlignment="Center"
                            FontWeight="Bold" />
                     <StackPanel Name="spSAutosaveProblems"
@@ -1189,6 +1230,14 @@
                         <TextBlock Text="Automaticky ukládat příklady při přepínání: " />
                         <CheckBox x:Name="cbSAutosaveProblems"
                                   IsChecked="{Binding Settings.AutosaveProblemWhenSwitching}" />
+                    </StackPanel>
+                    <StackPanel Name="spSAutosaveCoursesBeforePublishing"
+                                Grid.Row="2"
+                                Orientation="Horizontal"
+                                Margin="5">
+                        <TextBlock Text="Automaticky ukládat kurzy před zveřejněním: " />
+                        <CheckBox x:Name="cbSAutosaveCoursesBeforePublishing"
+                                  IsChecked="{Binding Settings.AutosaveCourseBeforePublishing}" />
                     </StackPanel>
                 </Grid>
                 <StackPanel Orientation="Horizontal"

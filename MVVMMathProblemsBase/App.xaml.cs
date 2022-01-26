@@ -18,6 +18,12 @@ namespace MVVMMathProblemsBase
     {
         public static User AppUser = null;
         public static bool? IsInStudentMode = null;
-        public static WhereInApp WhereInApp = WhereInApp.ModeSelection;
+        
+        private static WhereInApp whereInApp;
+        public static WhereInApp WhereInApp
+        {
+            get { return whereInApp; }
+            set { whereInApp = value; }
+        }
     }
 }

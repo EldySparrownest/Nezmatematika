@@ -17,7 +17,7 @@ namespace MVVMMathProblemsBase.Model
                 default:
                     mathProblem = new MathProblem();
                     ((MathProblem)mathProblem).SolutionSteps = new ObservableCollection<SolutionStep>();
-                    ((MathProblem)mathProblem).CorrectAnswers = new ObservableCollection<string> {""};
+                    ((MathProblem)mathProblem).CorrectAnswers = new ObservableCollection<string>();
                     break;
             }
             mathProblem.Id = NewMathProblemId();

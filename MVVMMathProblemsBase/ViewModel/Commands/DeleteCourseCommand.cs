@@ -51,7 +51,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
                 File.Delete(courseToDelete.FilePath);
             }
             MMVM.GetListOfTeacherCoursesToContinue();
-            if (MMVM.CoursesToContinueList.Count == 0)
+            if (MMVM.TeacherCoursesToContinueList.Count == 0)
             {
                 MMVM.UpdateAbilityToContinueCourse();
                 MMVM.BackToMainMenu();

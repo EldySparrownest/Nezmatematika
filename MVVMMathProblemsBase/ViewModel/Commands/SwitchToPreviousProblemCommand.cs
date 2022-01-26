@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace MVVMMathProblemsBase.ViewModel.Commands
 {
-    public class AddNewCorrectAnswerCommand : ICommand
+    public class SwitchToPreviousProblemCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -17,21 +17,20 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public AddNewCorrectAnswerCommand(MainMenuVM vm)
+        public SwitchToPreviousProblemCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblem.Index > 0;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.TempAnswers.Add(parameter.ToString());
-            MMVM.ReloadCorrectAnswers();
-            MMVM.TempCorrectAnswer = String.Empty;
+            var newIndex = MMVM.CurrentMathProblem.Index - 1;
+            MMVM.CurrentMathProblem = MMVM.CurrentCourse.Problems[newIndex];
         }
     }
 }

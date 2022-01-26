@@ -35,11 +35,6 @@ namespace MVVMMathProblemsBase.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void AddNewCorrectAnswer()
-        {
-            CorrectAnswers.Add("");
-        }
-
         public void SaveContents(TextRange contents, string filePath, string dirPath)
         {
             try
@@ -54,6 +49,38 @@ namespace MVVMMathProblemsBase.Model
                 MessageBox.Show(e.Message);
             }
         }
+
+        public void TrimAndPruneCorrectAnswers()
+        {
+            var trimmedAndPruned = new ObservableCollection<string>();
+            
+            for (int i =  0; i < CorrectAnswers.Count; i++)
+            {
+                var answer = CorrectAnswers[i].Trim();
+                if (!String.IsNullOrEmpty(answer) && !trimmedAndPruned.Contains(answer))
+                    trimmedAndPruned.Add(answer);
+            }
+
+            if (trimmedAndPruned.Count == 0)
+                trimmedAndPruned.Add("");
+
+            CorrectAnswers.Clear();
+            CorrectAnswers = trimmedAndPruned;
+        }
+
+        public bool ValidateMathProblem()
+        {
+            var pocetSpravnychOdpovedi = CorrectAnswers.Count;
+            
+            if (pocetSpravnychOdpovedi == 0)
+                return false;
+            
+            if (pocetSpravnychOdpovedi == 1 && String.IsNullOrEmpty(CorrectAnswers[0].Trim()))
+                return false;
+            
+            return true;
+        }
+
         public int FindLastVisibleStep()
         {
             int i = 0;

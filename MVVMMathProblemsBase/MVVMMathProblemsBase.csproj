@@ -108,6 +108,7 @@
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
+    <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\OpenCourseForStudentCommand.cs" />
     <Compile Include="ViewModel\Commands\PublishCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewCourseCommand.cs" />
@@ -124,8 +125,11 @@
     <Compile Include="ViewModel\Commands\MakeStepVisibleCommand.cs" />
     <Compile Include="ViewModel\Commands\CheckIfAnswerIsCorrectCommand.cs" />
     <Compile Include="ViewModel\Commands\PrepUserForEditingCommand.cs" />
+    <Compile Include="ViewModel\Commands\RemoveCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\RestoreDefaultSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchBetweenUserAndCodeModeCommand.cs" />
+    <Compile Include="ViewModel\Commands\SwitchToNextProblemCommand.cs" />
+    <Compile Include="ViewModel\Commands\SwitchToPreviousProblemCommand.cs" />
     <Compile Include="ViewModel\Helpers\TextRangeHelper.cs" />
     <Compile Include="ViewModel\MainMenuVM.cs" />
     <Compile Include="ViewModel\MathProblemVM.cs" />

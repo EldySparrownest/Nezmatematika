@@ -16,13 +16,13 @@ namespace MVVMMathProblemsBase.Model
         public Color MainBackgroundColour { get; set; }
         public Color SecondaryBackgroundColour { get; set; }
         public List<string> Setting2 { get; set; }
-        public List<UserCourseData> CoursesData { get; set; }
 
         //Student only section
         public bool RequeueOnMistake { get; set; }
 
         //Teacher only section
         public bool AutosaveProblemWhenSwitching { get; set; }
+        public bool AutosaveCourseBeforePublishing { get; set; }
 
         public void Save(string filename)
         {
