@@ -67,7 +67,7 @@ namespace MVVMMathProblemsBase.View
                 vM.StudentCurrentMathProblemChanged += ViewModel_StudentCurrentMathProblemChanged;
             }
 
-            RTBWithFcs = new RichTextBox { Visibility = Visibility.Collapsed};
+            RTBWithFcs = new RichTextBox { Visibility = Visibility.Collapsed };
 
             dicStudentContentLoad = new Dictionary<string, RichTextBox>()
             {
@@ -129,6 +129,25 @@ namespace MVVMMathProblemsBase.View
                     header.Column.Width = MaxWidth;
             }
         }
+        private void ListViewColumnHeader_Click(object sender, RoutedEventArgs e, ListView listView)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (listViewSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+                listView.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            listViewSortCol = column;
+            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            listView.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
@@ -150,22 +169,7 @@ namespace MVVMMathProblemsBase.View
         }
         private void lvContinuableCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
-            {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvContinuableCourses.Items.SortDescriptions.Clear();
-            }
-
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
-
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+            ListViewColumnHeader_Click(sender, e, lvContinuableCourses);
         }
 
         private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
@@ -186,6 +190,12 @@ namespace MVVMMathProblemsBase.View
             listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
             lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+
+
+        private void lvStudentCoursesInProgressColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            ListViewColumnHeader_Click(sender, e, lvStudentCoursesInProgress);
         }
 
         private void ResetCourseEditor(object sender, RoutedEventArgs e)
@@ -594,7 +604,7 @@ namespace MVVMMathProblemsBase.View
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<ProblemText>"));
             AddDocument(rtbProblemText.Document, newdocument);
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</ProblemText>\n"));
-            newdocument.Blocks.Add(new Paragraph {Margin = new Thickness(0) });
+            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<Question>"));
             AddDocument(rtbQuestion.Document, newdocument);
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</Question>"));

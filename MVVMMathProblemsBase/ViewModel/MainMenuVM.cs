@@ -428,14 +428,25 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
-        private Visibility coursesToContinueVis;
-        public Visibility CoursesToContinueVis
+        private Visibility studentCoursesToContinueVis;
+        public Visibility StudentCoursesToContinueVis
         {
-            get { return coursesToContinueVis; }
+            get { return studentCoursesToContinueVis; }
             set
             {
-                coursesToContinueVis = value;
-                OnPropertyChanged("CoursesToContinueVis");
+                studentCoursesToContinueVis = value;
+                OnPropertyChanged("StudentCoursesToContinueVis");
+            }
+        }
+
+        private Visibility teacherCoursesToContinueVis;
+        public Visibility TeacherCoursesToContinueVis
+        {
+            get { return teacherCoursesToContinueVis; }
+            set
+            {
+                teacherCoursesToContinueVis = value;
+                OnPropertyChanged("TeacherCoursesToContinueVis");
             }
         }
 
@@ -553,6 +564,7 @@ namespace MVVMMathProblemsBase.ViewModel
         public DisplayNewCourseSelectionCommand DisplayNewCourseSelectionCommand { get; set; }
         public DisplayProfileSelectionCommand DisplayProfileSelectionCommand { get; set; }
         public DisplaySettingsCommand DisplaySettingsCommand { get; set; }
+        public DisplayStudentCoursesToContinue DisplayStudentCoursesToContinue { get; set; }
         public EditCorrectAnswerCommand EditCorrectAnswerCommand { get; set; }
         public EditCourseCommand EditCourseCommand { get; set; }
         public EditUserCommand EditUserCommand { get; set; }
@@ -586,7 +598,8 @@ namespace MVVMMathProblemsBase.ViewModel
             EditCourseVis = Visibility.Collapsed;
             CourseEditorMathProblemUserModeVis = Visibility.Collapsed;
             CourseEditorMathProblemCodeModeVis = Visibility.Collapsed;
-            CoursesToContinueVis = Visibility.Collapsed;
+            StudentCoursesToContinueVis = Visibility.Collapsed;
+            TeacherCoursesToContinueVis = Visibility.Collapsed;
             StudentNewCourseSelVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
@@ -613,6 +626,8 @@ namespace MVVMMathProblemsBase.ViewModel
             GetUsersOfTypeList();
 
             NewCoursesToStartList = new ObservableCollection<Course>();
+            StudentCoursesCompleted = new ObservableCollection<(Course, UserCourseData)>();
+            StudentCoursesInProgress = new ObservableCollection<(Course, UserCourseData)>();
             TeacherCoursesToContinueList = new ObservableCollection<Course>();
 
             SelectedTextColour = Colors.Black;
@@ -631,6 +646,7 @@ namespace MVVMMathProblemsBase.ViewModel
             DisplayNewCourseSelectionCommand = new DisplayNewCourseSelectionCommand(this);
             DisplayProfileSelectionCommand = new DisplayProfileSelectionCommand(this);
             DisplaySettingsCommand = new DisplaySettingsCommand(this);
+            DisplayStudentCoursesToContinue = new DisplayStudentCoursesToContinue(this);
             EditCorrectAnswerCommand = new EditCorrectAnswerCommand(this);
             EditCourseCommand = new EditCourseCommand(this);
             EditUserCommand = new EditUserCommand(this);
@@ -781,13 +797,14 @@ namespace MVVMMathProblemsBase.ViewModel
 
             //učitelské výběry a obrazovky kurzů
             NewCourseVis = Visibility.Collapsed;
-            CoursesToContinueVis = Visibility.Collapsed;
+            TeacherCoursesToContinueVis = Visibility.Collapsed;
             EditCourseVis = Visibility.Collapsed;
             CourseEditorMathProblemUserModeVis = Visibility.Collapsed;
             CourseEditorMathProblemCodeModeVis = Visibility.Collapsed;
 
             //studentské výběry a obrazovky kurzů
             StudentNewCourseSelVis = Visibility.Collapsed;
+            StudentCoursesToContinueVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
 
             //výběry nastavení
