@@ -123,8 +123,13 @@ namespace MVVMMathProblemsBase.Model
 
         public void Publish(string coursesDirPath)
         {
+            var prevStatus = PublishingStatus;
+            var prevPublished = LastPublished;
+
             try
             {
+                PublishingStatus = PublishingStatus.PublishedUpToDate;
+                LastPublished = DateTime.Now;
                 Directory.CreateDirectory(coursesDirPath);
                 File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
                 var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);
@@ -140,11 +145,11 @@ namespace MVVMMathProblemsBase.Model
                         File.Copy(file, newFilePath, true);
                     }
                 }
-                PublishingStatus = PublishingStatus.PublishedUpToDate;
-                LastPublished = DateTime.Now;
             }
             catch (Exception e)
             {
+                PublishingStatus = prevStatus;
+                LastPublished = prevPublished;
                 MessageBox.Show(e.Message);
             }
         }

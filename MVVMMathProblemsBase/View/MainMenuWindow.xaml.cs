@@ -151,23 +151,6 @@ namespace MVVMMathProblemsBase.View
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             ListViewColumnHeader_Click(sender, e, lvUsers);
-
-            //GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            //string sortBy = column.Tag.ToString();
-            //if (listViewSortCol != null)
-            //{
-            //    AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-            //    lvUsers.Items.SortDescriptions.Clear();
-            //}
-
-            //ListSortDirection newDir = ListSortDirection.Ascending;
-            //if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-            //    newDir = ListSortDirection.Descending;
-
-            //listViewSortCol = column;
-            //listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            //AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            //lvUsers.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
         private void lvContinuableCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -177,25 +160,7 @@ namespace MVVMMathProblemsBase.View
         private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             ListViewColumnHeader_Click(sender, e, lvStartableNewCourses);
-
-            //GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            //string sortBy = column.Tag.ToString();
-            //if (listViewSortCol != null)
-            //{
-            //    AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-            //    lvStartableNewCourses.Items.SortDescriptions.Clear();
-            //}
-
-            //ListSortDirection newDir = ListSortDirection.Ascending;
-            //if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-            //    newDir = ListSortDirection.Descending;
-
-            //listViewSortCol = column;
-            //listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            //AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            //lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
-
 
         private void lvStudentCoursesInProgressColumnHeader_Click(object sender, RoutedEventArgs e)
         {

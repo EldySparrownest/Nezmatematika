@@ -84,41 +84,32 @@
                           Thumb.DragDelta="Thumb_DragDelta">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn local:GridColumn.MinWidth="70"
+                            <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseTitle}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CourseTitle}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                                 <GridViewColumnHeader Tag="CourseTitle"
                                                       Click="lvStartableNewCoursesColumnHeader_Click"
-                                                      Content="Název" />
+                                                      Content="Název"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="60"
+                            <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding LastEdited, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding LastEdited, StringFormat=\{dd.MM.yyyy HH:mm:ss\}}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                                <GridViewColumnHeader Tag="LastEdited"
+                                            DisplayMemberBinding="{Binding Author.DisplayName}">
+                                <GridViewColumnHeader Tag="Author"
                                                       Click="lvStartableNewCoursesColumnHeader_Click"
-                                                      Content="Poslední změna" />
+                                                      Content="Autor"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="60"
+                            <GridViewColumn local:GridColumn.MinWidth="125"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding Created, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Created, StringFormat=\{dd.MM.yyyy HH:mm:ss\}}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                                <GridViewColumnHeader Tag="LastEdited"
+                                            DisplayMemberBinding="{Binding LastPublished, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                <GridViewColumnHeader Tag="LastPublished"
                                                       Click="lvStartableNewCoursesColumnHeader_Click"
-                                                      Content="Vytvořeno" />
+                                                      Content="Zveřejněno"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="125" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -148,39 +139,52 @@
                           Thumb.DragDelta="Thumb_DragDelta">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn local:GridColumn.MinWidth="70"
+                            <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseTitle}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="CourseTitle"
-                                                          Click="lvContinuableCoursesColumnHeader_Click">
-                                        Název
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Název"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="55"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding CourseAuthor}">
+                                <GridViewColumnHeader Tag="CourseAuthor"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Autor"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="105"
+                                            Width="Auto">
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Vyřešené úlohy"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="105" />
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock>
-                                            <TextBlock Text="{Binding CourseTitle}" />
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                    <Binding Path="SolvedProblemsCount" />
+                                                    <Binding Path="CourseProblemCount" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
                                         </TextBlock>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="70"
+                            <GridViewColumn local:GridColumn.MinWidth="130"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding CourseAuthor}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="CourseAuthor"
-                                                          Click="lvContinuableCoursesColumnHeader_Click">
-                                        Autor
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock>
-                                            <TextBlock Text="{Binding CourseAuthor}" />
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
+                                            DisplayMemberBinding="{Binding LastSessionStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Naposledy otevřeno"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="130" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -450,7 +454,7 @@
                                      Grid.Row="5"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center"/>
+                                     VerticalAlignment="Center" />
                             <Label x:Name="lblgNUClass"
                                    Content="Třída:"
                                    Grid.Row="6"
@@ -462,7 +466,7 @@
                                      Grid.Row="6"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center"/>
+                                     VerticalAlignment="Center" />
                             <Button x:Name="btnCreateNewUser"
                                     Content="Vytvořit"
                                     Command="{Binding CreateNewUserCommand}"
@@ -646,11 +650,6 @@
                                         Třída
                                     </GridViewColumnHeader>
                                 </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding ClassName}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="60"
                                             Width="Auto"
@@ -661,11 +660,6 @@
                                         Škola
                                     </GridViewColumnHeader>
                                 </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding SchoolName}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <!--<GridViewColumn Header="Akce"
                                             Width="Auto">
@@ -801,45 +795,26 @@
                                         Název
                                     </GridViewColumnHeader>
                                 </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CourseTitle}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="60"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding LastEdited,
-                                                       StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                            DisplayMemberBinding="{Binding LastEdited, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="LastEdited"
                                                           Click="lvContinuableCoursesColumnHeader_Click">
                                         Poslední změna
                                     </GridViewColumnHeader>
                                 </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding LastEdited,
-                                                       StringFormat='{}{dd.MM.yyyy HH:mm:ss}'}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="60"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding Created,
-                                                       StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                            DisplayMemberBinding="{Binding Created, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumn.Header>
                                     <GridViewColumnHeader Tag="LastEdited"
                                                           Click="lvContinuableCoursesColumnHeader_Click">
                                         Vytvořeno
                                     </GridViewColumnHeader>
                                 </GridViewColumn.Header>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Created,
-                                                       StringFormat='{}{dd.MM.yyyy HH:mm:ss}'}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>

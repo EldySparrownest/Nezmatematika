@@ -21,7 +21,8 @@ namespace MVVMMathProblemsBase.Model
         public DateTime LastSessionStarted { get; set; }
         public DateTime LastSessionEnded { get; set; }
         public TimeSpan NetCourseTime { get; set; }
-        public int LastSolvedMathProblemIndex { get; set; }
+        public int ResumeOnIndex { get; set; }
+        public int SolvedProblemsCount { get; set; }
         public List <int> RequeudProblems { get; set; }
 
         public UserCourseData()
@@ -38,7 +39,8 @@ namespace MVVMMathProblemsBase.Model
             Mistakes = 0;
             Completed = false;
             CourseStarted = startTime;
-            LastSolvedMathProblemIndex = -1;
+            ResumeOnIndex = 0;
+            SolvedProblemsCount = 0;
             RequeudProblems = new List<int>();
         }
     }
