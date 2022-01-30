@@ -10,6 +10,9 @@ namespace MVVMMathProblemsBase.Model
     public class UserCourseData
     {
         public string CourseId { get; set; }
+        public string CourseTitle { get; set; }
+        public string CourseAuthor { get; set; }
+        public int CourseProblemCount { get; set; }
         public string UserId { get; set; }
         public int Mistakes { get; set; }
         public bool Completed { get; set; }
@@ -25,9 +28,12 @@ namespace MVVMMathProblemsBase.Model
         {
         }
 
-        public UserCourseData(string courseId, string userId, DateTime startTime)
+        public UserCourseData(Course course, string userId, DateTime startTime)
         {
-            CourseId = courseId;
+            CourseId = course.Id;
+            CourseTitle = course.CourseTitle;
+            CourseAuthor = course.Author.DisplayName;
+            CourseProblemCount = course.Problems.Count;
             UserId = userId;
             Mistakes = 0;
             Completed = false;

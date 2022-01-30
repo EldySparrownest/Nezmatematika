@@ -46,7 +46,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.EditUser(MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempSchoolName, MMVM.TempClassName);
+            MMVM.EditUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.EditUserVis = Visibility.Collapsed;
             MMVM.NewUserVis = Visibility.Visible;
             MMVM.GetUsersOfTypeList();

@@ -26,19 +26,17 @@
             <Grid Name="gridStudentMenu"
                   HorizontalAlignment="Left"
                   Visibility="{Binding Path=StudentVis,
-                                   Source={StaticResource vm}}"
-                  Width="200">
-                <StackPanel VerticalAlignment="Top"
+                                   Source={StaticResource vm}}">
+                <StackPanel x:Name="spStudentCurrentUser"
+                            VerticalAlignment="Top"
                             Margin="20">
                     <Label HorizontalAlignment="Left"
                            Margin="5,5,5,0">
                         <Label.Content>
                             <TextBlock>
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1}, {2}"
-                                                  UpdateSourceTrigger="PropertyChanged">
-                                        <Binding Path="CurrentUser.FirstName" />
-                                        <Binding Path="CurrentUser.LastName" />
+                                    <MultiBinding StringFormat="{}{0}, {1}">
+                                        <Binding Path="CurrentUser.DisplayName" />
                                         <Binding Path="CurrentUser.ClassName" />
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -143,35 +141,46 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <ListView x:Name="lvStudentCoursesInProgress"
+                          SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsSynchronizedWithCurrentItem="True"
                           ItemsSource="{Binding StudentCoursesInProgress}"
                           Visibility="{Binding StudentCoursesToContinueVis}"
-
                           Thumb.DragDelta="Thumb_DragDelta">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn local:GridColumn.MinWidth="70"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding Item1.CourseTitle}">
+                                            DisplayMemberBinding="{Binding CourseTitle}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="CourseTitle"
+                                                          Click="lvContinuableCoursesColumnHeader_Click">
+                                        Název
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Item1.CourseTitle}" />
+                                        <TextBlock>
+                                            <TextBlock Text="{Binding CourseTitle}" />
+                                        </TextBlock>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                                <GridViewColumnHeader Tag="CourseTitle"
-                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
-                                                      Content="Název" />
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="60"
+                            <GridViewColumn local:GridColumn.MinWidth="70"
                                             Width="Auto"
-                                            DisplayMemberBinding="{Binding Item2.LastSessionStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                            DisplayMemberBinding="{Binding CourseAuthor}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="CourseAuthor"
+                                                          Click="lvContinuableCoursesColumnHeader_Click">
+                                        Autor
+                                    </GridViewColumnHeader>
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Item2.LastSessionStarted, StringFormat=\{dd.MM.yyyy HH:mm:ss\}}" />
+                                        <TextBlock>
+                                            <TextBlock Text="{Binding CourseAuthor}" />
+                                        </TextBlock>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-                                <GridViewColumnHeader Tag="Item2.LastSessionStarted"
-                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
-                                                      Content="Naposledy otevřeno" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -200,7 +209,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -300,18 +309,17 @@
             <Grid Name="gridTeacherMenu"
                   HorizontalAlignment="Left"
                   Visibility="{Binding Path=TeacherVis,
-                                   Source={StaticResource vm}}"
-                  Width="200">
-                <StackPanel VerticalAlignment="Top"
+                                   Source={StaticResource vm}}">
+                <StackPanel x:Name="spTeacherCurrentUser"
+                            VerticalAlignment="Top"
                             Margin="20">
                     <Label HorizontalAlignment="Left"
                            Margin="5,5,5,0">
                         <Label.Content>
                             <TextBlock>
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1}, {2}">
-                                        <Binding Path="CurrentUser.FirstName" />
-                                        <Binding Path="CurrentUser.LastName" />
+                                    <MultiBinding StringFormat="{}{0}, {1}">
+                                        <Binding Path="CurrentUser.DisplayName" />
                                         <Binding Path="CurrentUser.ClassName" />
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -353,7 +361,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel HorizontalAlignment="Stretch"
+                <StackPanel x:Name="spNewUser"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             Margin="10"
                             Visibility="{Binding NewUserVis}">
@@ -374,63 +383,90 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Label Content="Založení nového profilu"
+                            <Label x:Name="lblNewUser"
+                                   Content="Založení nového profilu"
                                    Grid.Row="0"
                                    Grid.Column="0"
                                    Grid.ColumnSpan="2"
                                    Background="LightGray" />
-                            <Label Content="Jméno:"
+                            <Label x:Name="lblgNUTitleBefore"
+                                   Content="Titul před:"
                                    Grid.Row="1"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgNUTitleBefore"
+                                     Text="{Binding TempTitleBefore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="1"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="150"
                                      MaxLength="30" />
-                            <Label Content="Příjmení:"
+                            <Label x:Name="lblgNUFirstName"
+                                   Content="Jméno:"
                                    Grid.Row="2"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgNUFirstName"
+                                     Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="2"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="150"
                                      MaxLength="30" />
-                            <Label Content="Škola:"
+                            <Label x:Name="lblgNULastName"
+                                   Content="Příjmení:"
                                    Grid.Row="3"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempSchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgNULastName"
+                                     Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="3"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="150" />
-                            <Label Content="Třída:"
+                                     MaxLength="30" />
+                            <Label x:Name="lblgNUTitleAfter"
+                                   Content="Titul za:"
                                    Grid.Row="4"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="10"
+                            <TextBox x:Name="tbgNUTitleAfter"
+                                     Text="{Binding TempTitleAfter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="4"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="60" />
+                                     MaxLength="30" />
+                            <Label x:Name="lblgNUSchool"
+                                   Content="Škola:"
+                                   Grid.Row="5"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox x:Name="tbgNUSchool"
+                                     Text="{Binding TempSchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Grid.Row="5"
+                                     Grid.Column="1"
+                                     Margin="5"
+                                     VerticalAlignment="Center"/>
+                            <Label x:Name="lblgNUClass"
+                                   Content="Třída:"
+                                   Grid.Row="6"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox x:Name="tbgNUClass"
+                                     Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="10"
+                                     Grid.Row="6"
+                                     Grid.Column="1"
+                                     Margin="5"
+                                     VerticalAlignment="Center"/>
                             <Button x:Name="btnCreateNewUser"
                                     Content="Vytvořit"
                                     Command="{Binding CreateNewUserCommand}"
-                                    Grid.Row="5"
+                                    Grid.Row="7"
                                     Grid.Column="1"
                                     Margin="5"
                                     Width="100"
@@ -438,7 +474,8 @@
                         </Grid>
                     </Border>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Stretch"
+                <StackPanel x:Name="spEditUser"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             Margin="10"
                             Visibility="{Binding EditUserVis}">
@@ -449,8 +486,7 @@
                               MinWidth="160">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="60" />
-                                <ColumnDefinition Width="*"
-                                                  MinWidth="150" />
+                                <ColumnDefinition MinWidth="150" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -459,63 +495,90 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Label Content="Úprava existujícího profilu"
+                            <Label x:Name="lblgEUEditing"
+                                   Content="Úprava existujícího profilu"
                                    Grid.Row="0"
                                    Grid.Column="0"
                                    Grid.ColumnSpan="2"
                                    Background="LightGray" />
-                            <Label Content="Jméno:"
+                            <Label x:Name="lblgEUTitleBefore"
+                                   Content="Titul před:"
                                    Grid.Row="1"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgEUTitleBefore"
+                                     Text="{Binding TempTitleBefore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="1"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
+                                     HorizontalAlignment="Stretch"
                                      VerticalAlignment="Center"
-                                     Width="150"
                                      MaxLength="30" />
-                            <Label Content="Příjmení:"
+                            <Label x:Name="lblgEUFirstName"
+                                   Content="Jméno:"
                                    Grid.Row="2"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgEUFirstName"
+                                     Text="{Binding TempFirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="2"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="150"
                                      MaxLength="30" />
-                            <Label Content="Škola:"
+                            <Label x:Name="lblgEULastName"
+                                   Content="Příjmení:"
                                    Grid.Row="3"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempSchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="tbgEULastName"
+                                     Text="{Binding TempLastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="3"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
-                                     Width="150" />
-                            <Label Content="Třída:"
+                                     MaxLength="30" />
+                            <Label x:Name="lblgEUTitleAfter"
+                                   Content="Titul za:"
                                    Grid.Row="4"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
-                            <TextBox Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="10"
+                            <TextBox x:Name="tbgEUTitleAfter"
+                                     Text="{Binding TempTitleAfter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="4"
                                      Grid.Column="1"
                                      Margin="5"
-                                     HorizontalAlignment="Left"
-                                     VerticalAlignment="Center"
-                                     Width="60" />
+                                     VerticalAlignment="Center" />
+                            <Label x:Name="lblgEUSchool"
+                                   Content="Škola:"
+                                   Grid.Row="5"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox x:Name="tbgEUSchool"
+                                     Text="{Binding TempSchoolName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Grid.Row="5"
+                                     Grid.Column="1"
+                                     Margin="5"
+                                     VerticalAlignment="Center" />
+                            <Label x:Name="lblgEUClass"
+                                   Content="Třída:"
+                                   Grid.Row="6"
+                                   Grid.Column="0"
+                                   HorizontalAlignment="Right" />
+                            <TextBox x:Name="tbgEUClass"
+                                     Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="10"
+                                     Grid.Row="6"
+                                     Grid.Column="1"
+                                     Margin="5"
+                                     VerticalAlignment="Center" />
                             <Button x:Name="btnEditUser"
                                     Content="Uložit"
                                     Command="{Binding EditUserCommand}"
-                                    Grid.Row="5"
+                                    Grid.Row="7"
                                     Grid.Column="1"
                                     Margin="5"
                                     Width="100"
@@ -526,7 +589,7 @@
                         </Grid>
                     </Border>
                 </StackPanel>
-                <ListView Name="lvUsers"
+                <ListView x:Name="lvUsers"
                           SelectedValue="{Binding CurrentUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           ItemsSource="{Binding UsersOfTypeList}"
                           Visibility="{Binding UserSelVis}"
@@ -1089,7 +1152,7 @@
                                      Text="{Binding TempCorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      FontSize="20"
                                      MinWidth="30"
-                                     Margin="5"/>
+                                     Margin="5" />
                             <Button x:Name="btnAddNewCorrectAnswer"
                                     Content="+"
                                     FontWeight="Bold"
@@ -1100,7 +1163,7 @@
                                     VerticalContentAlignment="Center"
                                     Command="{Binding AddNewCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
-                                    Margin="5"/>
+                                    Margin="5" />
                             <Button x:Name="btnEditCurrentAnswer"
                                     Content="Upravit"
                                     Background="White"
@@ -1120,14 +1183,14 @@
                                     <Grid x:Name="gridAnswersList"
                                           HorizontalAlignment="Stretch">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
                                         <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 Margin="2.5"
-                                                 Grid.Column="0"
-                                                 MinWidth="15">
+                                               Margin="2.5"
+                                               Grid.Column="0"
+                                               MinWidth="15">
                                             <!--<i:Interaction.Triggers>
                                             <i:EventTrigger EventName="LostFocus">
                                                 <i:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=RenameEndCommand}"
@@ -1139,7 +1202,7 @@
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding Source={StaticResource vm}, Path=RemoveCorrectAnswerCommand}"
-                                                CommandParameter="{Binding .}"/>
+                                                CommandParameter="{Binding .}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

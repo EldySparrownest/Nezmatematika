@@ -30,8 +30,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.ClearCurrentValuesExceptUser();
             MMVM.BackToMainMenu();
+            MMVM.ClearCurrentValuesExceptUser();
         }
     }
 }

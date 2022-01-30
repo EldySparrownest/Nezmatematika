@@ -150,22 +150,24 @@ namespace MVVMMathProblemsBase.View
         }
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
-            {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvUsers.Items.SortDescriptions.Clear();
-            }
+            ListViewColumnHeader_Click(sender, e, lvUsers);
 
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
+            //GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            //string sortBy = column.Tag.ToString();
+            //if (listViewSortCol != null)
+            //{
+            //    AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+            //    lvUsers.Items.SortDescriptions.Clear();
+            //}
 
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvUsers.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+            //ListSortDirection newDir = ListSortDirection.Ascending;
+            //if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+            //    newDir = ListSortDirection.Descending;
+
+            //listViewSortCol = column;
+            //listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            //AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            //lvUsers.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
         private void lvContinuableCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -174,22 +176,24 @@ namespace MVVMMathProblemsBase.View
 
         private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
-            {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvStartableNewCourses.Items.SortDescriptions.Clear();
-            }
+            ListViewColumnHeader_Click(sender, e, lvStartableNewCourses);
 
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
+            //GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            //string sortBy = column.Tag.ToString();
+            //if (listViewSortCol != null)
+            //{
+            //    AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+            //    lvStartableNewCourses.Items.SortDescriptions.Clear();
+            //}
 
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+            //ListSortDirection newDir = ListSortDirection.Ascending;
+            //if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+            //    newDir = ListSortDirection.Descending;
+
+            //listViewSortCol = column;
+            //listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            //AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            //lvContinuableCourses.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
 
@@ -237,10 +241,6 @@ namespace MVVMMathProblemsBase.View
 
         private void ViewModel_TeacherCurrentMathProblemChanged(object sender, EventArgs e)
         {
-            rtbCodeMode.Document.Blocks.Clear();
-            rtbProblemText.Document.Blocks.Clear();
-            rtbQuestion.Document.Blocks.Clear();
-
             if (vM.CurrentMathProblem != null)
             {
                 if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
@@ -251,6 +251,9 @@ namespace MVVMMathProblemsBase.View
                         case WhereInApp.MainMenu:
                             break;
                         case WhereInApp.CourseEditor:
+                            rtbCodeMode.Document.Blocks.Clear();
+                            rtbProblemText.Document.Blocks.Clear();
+                            rtbQuestion.Document.Blocks.Clear();
                             LoadMathProblemIntoRTBs(dicTeacherContentLoad);
                             break;
                     }
@@ -737,20 +740,18 @@ namespace MVVMMathProblemsBase.View
             if (vM.CurrentCourse != null && vM.CurrentMathProblem != null)
             {
                 vM.CurrentMathProblem.CorrectAnswers = vM.TempAnswers;
+
+                rtbCodeMode.Document.Blocks.Clear();
+                rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+
+                var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
+                vM.CurrentMathProblem.ProblemText = problem.Text.Trim();
+                var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
+                vM.CurrentMathProblem.ProblemQuestion = question.Text.Trim();
+                var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
+
                 vM.SaveCurrentCourse();
-                if (vM.CurrentMathProblem != null)
-                {
-                    rtbCodeMode.Document.Blocks.Clear();
-                    rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
-
-                    var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
-                    vM.CurrentMathProblem.ProblemText = problem.Text;
-                    var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
-                    vM.CurrentMathProblem.ProblemQuestion = question.Text;
-                    var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
-
-                    vM.SaveCurrentMathProblem(contents);
-                }
+                vM.SaveCurrentMathProblem(contents);
             }
         }
     }
