@@ -64,8 +64,15 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
+        private List<Course> studentDicCourseList;
+        public List<Course> StudentDirCourseList
+        {
+            get { return studentDicCourseList; }
+            set { studentDicCourseList = value; }
+        }
+
         private ObservableCollection<UserCourseData> studentCoursesCompleted;
-        public ObservableCollection<UserCourseData> StudentCoursesCompleted
+        public ObservableCollection<UserCourseData> StudentCompletedCoursesData
         {
             get { return studentCoursesCompleted; }
             private set
@@ -76,13 +83,13 @@ namespace MVVMMathProblemsBase.ViewModel
         }
 
         private ObservableCollection<UserCourseData> studentCoursesInProgress;
-        public ObservableCollection<UserCourseData> StudentCoursesInProgress
+        public ObservableCollection<UserCourseData> StudentInProgressCoursesData
         {
             get { return studentCoursesInProgress; }
             private set
             {
                 studentCoursesInProgress = value;
-                OnPropertyChanged("StudentCoursesInProgress");
+                OnPropertyChanged("StudentInProgressCoursesData");
             }
         }
 
@@ -326,8 +333,18 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
-        private string tempCorrectAnswer;
+        private string tempAnswer;
+        public string TempAnswer
+        {
+            get { return tempAnswer; }
+            set
+            {
+                tempAnswer = value;
+                OnPropertyChanged("TempAnswer");
+            }
+        }
 
+        private string tempCorrectAnswer;
         public string TempCorrectAnswer
         {
             get { return tempCorrectAnswer; }
@@ -571,6 +588,7 @@ namespace MVVMMathProblemsBase.ViewModel
         public ApplyNewSettingsCommand ApplyNewSettingsCommand { get; set; }
         public BackToMainMenuFromAnywhereCommand BackToMainMenuFromAnywhereCommand { get; set; }
         public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
+        public CheckIfAnswerIsCorrectCommand CheckIfAnswerIsCorrectCommand { get; set; }
         public CreateNewCourseCommand CreateNewCourseCommand { get; set; }
         public CreateNewUserCommand CreateNewUserCommand { get; set; }
         public DeleteCourseCommand DeleteCourseCommand { get; set; }
@@ -642,8 +660,9 @@ namespace MVVMMathProblemsBase.ViewModel
             GetUsersOfTypeList();
 
             NewCoursesToStartList = new ObservableCollection<Course>();
-            StudentCoursesCompleted = new ObservableCollection<UserCourseData>();
-            StudentCoursesInProgress = new ObservableCollection<UserCourseData>();
+            StudentDirCourseList = new List<Course>();
+            StudentCompletedCoursesData = new ObservableCollection<UserCourseData>();
+            StudentInProgressCoursesData = new ObservableCollection<UserCourseData>();
             TeacherCoursesToContinueList = new ObservableCollection<Course>();
 
             SelectedTextColour = Colors.Black;
@@ -653,6 +672,7 @@ namespace MVVMMathProblemsBase.ViewModel
             ApplyNewSettingsCommand = new ApplyNewSettingsCommand(this);
             BackToMainMenuFromAnywhereCommand = new BackToMainMenuFromAnywhereCommand(this);
             BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
+            CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
             CreateNewCourseCommand = new CreateNewCourseCommand(this);
             CreateNewUserCommand = new CreateNewUserCommand(this);
             DeleteCourseCommand = new DeleteCourseCommand(this);
@@ -797,8 +817,10 @@ namespace MVVMMathProblemsBase.ViewModel
 
         public void ClearCurrentValuesExceptUser()
         {
+            CurrentAnswer = null;
             CurrentMathProblem = null;
             CurrentCourse = null;
+            CurrentUserCourseData = null;
         }
 
         public void BackToMainMenu()
@@ -952,7 +974,10 @@ namespace MVVMMathProblemsBase.ViewModel
 
             UpdateAbilityToContinueCourse();
 
-            CurrentMathProblem = CurrentCourse.Problems[0];
+            var index = CurrentUserCourseData.GetIndexToResumeOn();
+            //if (CurrentUserCourseData.SolvedProblemsCount >= CurrentUserCourseData.CourseProblemCount)
+            //    index = CurrentUserCourseData.RequeuedProblems[index];
+            CurrentMathProblem = CurrentCourse.Problems[index];
             CourseForStudentVis = Visibility.Visible;
         }
         private bool CheckUserCouseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id) != null;
@@ -1056,19 +1081,25 @@ namespace MVVMMathProblemsBase.ViewModel
             TeacherCoursesToContinueList = new ObservableCollection<Course>(resultList.OrderByDescending(c => c.LastEdited));
         }
 
-        public void GetListOfNewCoursesToStart()
+        private void GetStudentDirCourseList()
         {
-            NewCoursesToStartList.Clear();
-            List<Course> resultList = new List<Course>();
+            StudentDirCourseList.Clear();
             if (Directory.Exists(_CoursesDirPath()))
             {
                 var files = Directory.EnumerateFiles(_CoursesDirPath());
 
                 foreach (var file in files)
                 {
-                    resultList.Add(Course.Read(file));
+                    StudentDirCourseList.Add(Course.Read(file));
                 }
             }
+        }
+
+        public void GetListOfNewCoursesToStart()
+        {
+            NewCoursesToStartList.Clear();
+            GetStudentDirCourseList();
+            List<Course> resultList = new List<Course>(StudentDirCourseList);
 
             foreach (UserCourseData userCourseData in CurrentUser.CoursesData)
             {
@@ -1083,25 +1114,16 @@ namespace MVVMMathProblemsBase.ViewModel
 
         public void GetListOfStudentCoursesToContinue()
         {
-            StudentCoursesInProgress.Clear();
-            StudentCoursesCompleted.Clear();
-            var dirCourseList = new List<Course>();
+            StudentInProgressCoursesData.Clear();
+            StudentCompletedCoursesData.Clear();
+            GetStudentDirCourseList();
+            
             var listCoursesCompleted = new List<UserCourseData>();
             var listCoursesInProgress = new List<UserCourseData>();
             
-            if (Directory.Exists(_CoursesDirPath()))
-            {
-                var files = Directory.EnumerateFiles(_CoursesDirPath());
-
-                foreach (var file in files)
-                {
-                    dirCourseList.Add(Course.Read(file));
-                }
-            }
-
             foreach (UserCourseData userCourseData in CurrentUser.CoursesData)
             {
-                var continuableCourse = dirCourseList.Find(c => c.Id == userCourseData.CourseId);
+                var continuableCourse = StudentDirCourseList.Find(c => c.Id == userCourseData.CourseId);
                 if (continuableCourse != null)
                 {
                     if (userCourseData.Completed == true)
@@ -1111,8 +1133,8 @@ namespace MVVMMathProblemsBase.ViewModel
                 }
             }
 
-            StudentCoursesCompleted = new ObservableCollection<UserCourseData>(listCoursesCompleted.OrderByDescending(c => c.CourseFinished));
-            StudentCoursesInProgress = new ObservableCollection<UserCourseData>(listCoursesInProgress.OrderByDescending(c => c.LastSessionStarted));
+            StudentCompletedCoursesData = new ObservableCollection<UserCourseData>(listCoursesCompleted.OrderByDescending(c => c.CourseFinished));
+            StudentInProgressCoursesData = new ObservableCollection<UserCourseData>(listCoursesInProgress.OrderByDescending(c => c.LastSessionStarted));
         }
 
         public void SaveCurrentMathProblem(TextRange textRange)

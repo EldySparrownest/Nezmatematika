@@ -23,7 +23,7 @@ namespace MVVMMathProblemsBase.Model
         public TimeSpan NetCourseTime { get; set; }
         public int ResumeOnIndex { get; set; }
         public int SolvedProblemsCount { get; set; }
-        public List <int> RequeudProblems { get; set; }
+        public List <int> RequeuedProblems { get; set; }
 
         public UserCourseData()
         {
@@ -41,7 +41,19 @@ namespace MVVMMathProblemsBase.Model
             CourseStarted = startTime;
             ResumeOnIndex = 0;
             SolvedProblemsCount = 0;
-            RequeudProblems = new List<int>();
+            RequeuedProblems = new List<int>();
+        }
+
+        public int GetIndexToResumeOn()
+        {
+            var index = ResumeOnIndex;
+            if (index >= CourseProblemCount)
+            {
+                index = index - CourseProblemCount;
+                if (index < RequeuedProblems.Count)
+                    throw new Exception("Došlo k překročení počtu příkladů v kurzu.");
+            }
+            return index;
         }
     }
 }

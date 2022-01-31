@@ -28,7 +28,6 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == false && MMVM.Settings.HasCourseToContinue)
             {
                 return true;
-                //IsEnabled = "{Binding Settings.HasCourseToContinue}"
             }
             return false;
         }
@@ -36,6 +35,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
+            MMVM.ClearCurrentValuesExceptUser();
             MMVM.GetListOfTeacherCoursesToContinue();
             MMVM.TeacherCoursesToContinueVis = Visibility.Visible;
         }

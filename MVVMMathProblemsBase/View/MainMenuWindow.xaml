@@ -44,30 +44,37 @@
                         </Label.Content>
                     </Label>
                     <StackPanel HorizontalAlignment="Right">
-                        <Button Content="Změna profilu"
-                                Command="{Binding DisplayProfileSelectionCommand}"
-                                Margin="5" />
+                        <Button Command="{Binding DisplayProfileSelectionCommand}"
+                                Margin="5">
+                            <Label Content="Změna profilu" />
+                        </Button>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom"
                             Margin="20">
-                    <Button Content="Začít nový kurz"
-                            Command="{Binding DisplayNewCourseSelectionCommand}"
-                            Margin="5" />
-                    <Button Content="Pokračovat v kurzu"
-                            Command="{Binding DisplayStudentCoursesToContinue}"
-                            Margin="5" />
-                    <Button Content="Statistiky"
-                            Margin="5" />
-                    <Button Content="Nastavení"
-                            Command="{Binding DisplaySettingsCommand}"
-                            Margin="5" />
-                    <Button Content="Zpět na výběr módu"
-                            Click="BackToModeSelection"
-                            Margin="5" />
-                    <Button Content="Ukončit"
-                            Click="AppCurrentShutdown"
-                            Margin="5" />
+                    <Button Command="{Binding DisplayNewCourseSelectionCommand}"
+                            Margin="5">
+                        <Label Content="Začít nový kurz" />
+                    </Button>
+                    <Button Command="{Binding DisplayStudentCoursesToContinue}"
+                            Margin="5">
+                        <Label Content="Pokračovat v kurzu" />
+                    </Button>
+                    <Button Margin="5">
+                        <Label Content="Statistiky" />
+                    </Button>
+                    <Button Command="{Binding DisplaySettingsCommand}"
+                            Margin="5">
+                        <Label Content="Nastavení" />
+                    </Button>
+                    <Button Click="BackToModeSelection"
+                            Margin="5">
+                        <Label Content="Zpět na výběr módu" />
+                    </Button>
+                    <Button Click="AppCurrentShutdown"
+                            Margin="5">
+                        <Label Content="Ukončit" />
+                    </Button>
                 </StackPanel>
             </Grid>
             <Grid x:Name="gridStudentNewCourseSelection"
@@ -115,14 +122,15 @@
                     </ListView.View>
                 </ListView>
                 <Button x:Name="btnStartNewCourse"
-                        Content="Začít kurz"
                         Command="{Binding OpenCourseForStudentCommand}"
                         Margin="5"
                         Grid.Row="1"
                         HorizontalAlignment="Right"
                         HorizontalContentAlignment="Center"
                         VerticalAlignment="Top"
-                        VerticalContentAlignment="Center" />
+                        VerticalContentAlignment="Center">
+                    <Label Content="Začít kurz" />
+                </Button>
 
             </Grid>
             <Grid x:Name="gridStudentContinuableCourseSelection"
@@ -134,7 +142,7 @@
                 <ListView x:Name="lvStudentCoursesInProgress"
                           SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsSynchronizedWithCurrentItem="True"
-                          ItemsSource="{Binding StudentCoursesInProgress}"
+                          ItemsSource="{Binding StudentInProgressCoursesData}"
                           Visibility="{Binding StudentCoursesToContinueVis}"
                           Thumb.DragDelta="Thumb_DragDelta">
                     <ListView.View>
@@ -190,14 +198,16 @@
                     </ListView.View>
                 </ListView>
                 <Button x:Name="btnStudentContinueCourse"
-                        Content="Pokračovat"
                         Command="{Binding OpenCourseForStudentCommand}"
+                        CommandParameter="{Binding CurrentUserCourseData}"
                         Margin="5"
                         Grid.Row="1"
                         HorizontalAlignment="Right"
                         HorizontalContentAlignment="Center"
                         VerticalAlignment="Top"
-                        VerticalContentAlignment="Center" />
+                        VerticalContentAlignment="Center">
+                    <Label Content="Pokračovat" />
+                </Button>
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
@@ -271,12 +281,15 @@
                              Height="Auto"
                              Margin="5" />
                 <TextBox x:Name="tbStudentsAnswer"
+                         Text="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="0"
                          Grid.ColumnSpan="3"
                          Grid.Row="4"
                          VerticalContentAlignment="Center"
                          Margin="5" />
                 <Button x:Name="btnConfirmAnswer"
+                        Command="{Binding CheckIfAnswerIsCorrectCommand}"
+                        CommandParameter="{Binding CurrentAnswer}"
                         Grid.Column="3"
                         Grid.Row="4"
                         Margin="5">
@@ -332,31 +345,38 @@
                     </Label>
                     <StackPanel HorizontalAlignment="Right">
                         <Button x:Name="btnDispProfileSel"
-                                Content="Změna profilu"
                                 Command="{Binding DisplayProfileSelectionCommand}"
                                 Margin="5"
-                                Visibility="Visible" />
+                                Visibility="Visible">
+                            <Label Content="Změna profilu" />
+                        </Button>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Bottom"
                             Margin="20">
-                    <Button Content="Vytvořit nový kurz"
-                            Command="{Binding DisplayNewCourseCreationCommand}"
-                            Margin="5" />
-                    <Button Content="Upravit kurz"
-                            Command="{Binding DisplayCourseToEditSelectionCommand}"
-                            Margin="5" />
-                    <Button Content="Statistiky"
-                            Margin="5" />
-                    <Button Content="Nastavení"
-                            Command="{Binding DisplaySettingsCommand}"
-                            Margin="5" />
-                    <Button Content="Zpět na výběr módu"
-                            Click="BackToModeSelection"
-                            Margin="5" />
-                    <Button Content="Ukončit"
-                            Click="AppCurrentShutdown"
-                            Margin="5" />
+                    <Button Command="{Binding DisplayNewCourseCreationCommand}"
+                            Margin="5">
+                        <Label Content="Vytvořit nový kurz" />
+                    </Button>
+                    <Button Command="{Binding DisplayCourseToEditSelectionCommand}"
+                            Margin="5">
+                        <Label Content="Upravit kurz" />
+                    </Button>
+                    <Button Margin="5">
+                        <Label Content="Statistiky" />
+                    </Button>
+                    <Button Command="{Binding DisplaySettingsCommand}"
+                            Margin="5">
+                        <Label Content="Nastavení" />
+                    </Button>
+                    <Button Click="BackToModeSelection"
+                            Margin="5">
+                        <Label Content="Zpět na výběr módu" />
+                    </Button>
+                    <Button Click="AppCurrentShutdown"
+                            Margin="5">
+                        <Label Content="Ukončit" />
+                    </Button>
                 </StackPanel>
             </Grid>
             <Grid Name="gridUserCreationAndSelection"
@@ -468,13 +488,14 @@
                                      Margin="5"
                                      VerticalAlignment="Center" />
                             <Button x:Name="btnCreateNewUser"
-                                    Content="Vytvořit"
                                     Command="{Binding CreateNewUserCommand}"
                                     Grid.Row="7"
                                     Grid.Column="1"
                                     Margin="5"
                                     Width="100"
-                                    HorizontalAlignment="Right" />
+                                    HorizontalAlignment="Right">
+                                <Label Content="Vytvořit" />
+                            </Button>
                         </Grid>
                     </Border>
                 </StackPanel>
@@ -580,7 +601,6 @@
                                      Margin="5"
                                      VerticalAlignment="Center" />
                             <Button x:Name="btnEditUser"
-                                    Content="Uložit"
                                     Command="{Binding EditUserCommand}"
                                     Grid.Row="7"
                                     Grid.Column="1"
@@ -589,6 +609,7 @@
                                     HorizontalAlignment="Right"
                                     Height="19"
                                     VerticalAlignment="Top">
+                                <Label Content="Uložit" />
                             </Button>
                         </Grid>
                     </Border>
@@ -746,14 +767,15 @@
                             </ComboBox>
 
                             <Button x:Name="btnCreateNewCourse"
-                                    Content="Vytvořit"
                                     Click="ResetCourseEditor"
                                     Command="{Binding CreateNewCourseCommand}"
                                     Grid.Row="5"
                                     Grid.Column="1"
                                     Margin="5"
                                     Width="100"
-                                    HorizontalAlignment="Right" />
+                                    HorizontalAlignment="Right">
+                                <Label Content="Vytvořit" />
+                            </Button>
 
                         </Grid>
                     </Border>
@@ -820,15 +842,16 @@
                     </ListView.View>
                 </ListView>
                 <Button x:Name="btnEditCourse"
-                        Content="Začít editovat"
                         Click="ResetCourseEditor"
                         Command="{Binding EditCourseCommand}"
                         Margin="5"
                         Grid.Row="1"
                         HorizontalAlignment="Right"
-                        HorizontalContentAlignment="Center"
-                        VerticalAlignment="Top"
-                        VerticalContentAlignment="Center" />
+                        VerticalAlignment="Top">
+                    <Label Content="Začít editovat"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                </Button>
             </Grid>
             <Grid x:Name="gridCourseEditor"
                   Visibility="{Binding EditCourseVis}">
@@ -852,18 +875,20 @@
                             </Button>
                             <Separator />
                             <Button Command="{Binding AddNewProblemCommand}"
-                                    Content="+"
-                                    FontStyle="Oblique"
-                                    FontWeight="Bold"
-                                    FontSize="20"
-                                    Foreground="LimeGreen"
                                     Margin="5"
                                     VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center" />
+                                    VerticalContentAlignment="Center">
+                                <Label Content="+"
+                                       FontStyle="Oblique"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="LimeGreen" />
+                            </Button>
                             <Button Name="btnSaveCourse"
-                                    Content="Uložit"
                                     Click="btnSaveCourse_Click"
-                                    Margin="5" />
+                                    Margin="5">
+                                <Label Content="Uložit" />
+                            </Button>
                             <Button Name="btnPublishCourse"
                                     Click="btnPublishCourse_Click"
                                     Margin="5">
@@ -883,28 +908,28 @@
                                 <TextBlock Text="B"
                                            FontWeight="Bold"
                                            TextAlignment="Center"
-                                           FontSize="15" />
+                                           FontSize="20" />
                             </ToggleButton>
                             <ToggleButton x:Name="btnItalics"
                                           Click="btnItalics_Click">
                                 <TextBlock Text="I"
                                            FontStyle="Italic"
                                            TextAlignment="Center"
-                                           FontSize="15" />
+                                           FontSize="20" />
                             </ToggleButton>
                             <ToggleButton x:Name="btnUnderline"
                                           Click="btnUnderline_Click">
                                 <TextBlock Text="U"
                                            TextAlignment="Center"
                                            TextDecorations="Underline"
-                                           FontSize="15" />
+                                           FontSize="20" />
                             </ToggleButton>
                             <ToggleButton x:Name="btnStrikethrough"
                                           Click="btnStrikethrough_Click">
                                 <TextBlock Text="S"
                                            TextAlignment="Center"
                                            TextDecorations="Strikethrough"
-                                           FontSize="15" />
+                                           FontSize="20" />
                             </ToggleButton>
                             <Separator />
                             <StackPanel Orientation="Horizontal"
@@ -917,7 +942,7 @@
                                     <StackPanel Orientation="Vertical"
                                                 Background="Transparent">
                                         <TextBlock Text="A"
-                                                   FontSize="15"
+                                                   FontSize="20"
                                                    TextAlignment="Center"
                                                    Background="Transparent" />
                                         <TextBlock Height="3"
@@ -959,15 +984,17 @@
                             </StackPanel>
                             <Separator />
                             <Button x:Name="btnPi"
-                                    Content="π"
                                     Margin="5"
-                                    Click="btnPi_Click" />
+                                    Click="btnPi_Click">
+                                <Label Content="π" />
+                            </Button>
                             <Separator />
                             <ToggleButton x:Name="btnCodeMode"
-                                          Content="&lt;/&gt;"
                                           Margin="5"
                                           Click="btnCodeMode_Click"
-                                          Command="{Binding SwitchBetweenUserAndCodeModeCommand}" />
+                                          Command="{Binding SwitchBetweenUserAndCodeModeCommand}">
+                                <Label Content="&lt;/&gt;" />
+                            </ToggleButton>
                         </ToolBar>
                     </ToolBarTray>
                     <Grid x:Name="gridCourseEditorProblemList"
@@ -1129,24 +1156,27 @@
                                      MinWidth="30"
                                      Margin="5" />
                             <Button x:Name="btnAddNewCorrectAnswer"
-                                    Content="+"
-                                    FontWeight="Bold"
-                                    FontSize="20"
                                     Background="White"
-                                    BorderThickness="0"
-                                    Foreground="LimeGreen"
                                     VerticalContentAlignment="Center"
                                     Command="{Binding AddNewCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
-                                    Margin="5" />
+                                    Margin="5">
+                                <Label Content="+"
+                                       FontWeight="Bold"
+                                       FontSize="20"
+                                       Background="White"
+                                       BorderThickness="0"
+                                       Foreground="LimeGreen" />
+                            </Button>
                             <Button x:Name="btnEditCurrentAnswer"
-                                    Content="Upravit"
                                     Background="White"
                                     BorderThickness="0"
                                     VerticalContentAlignment="Center"
                                     Command="{Binding EditCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
-                                    Margin="5" />
+                                    Margin="5">
+                                <Label Content="Upravit" />
+                            </Button>
                         </StackPanel>
                         <ListView Name="lvProblemAnswers"
                                   Grid.Row="6"
@@ -1173,11 +1203,12 @@
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>-->
                                         </Label>
-                                        <Button Content="Odebrat"
-                                                Grid.Column="1"
+                                        <Button Grid.Column="1"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding Source={StaticResource vm}, Path=RemoveCorrectAnswerCommand}"
-                                                CommandParameter="{Binding .}" />
+                                                CommandParameter="{Binding .}">
+                                            <Label Content="Odebrat" />
+                                        </Button>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

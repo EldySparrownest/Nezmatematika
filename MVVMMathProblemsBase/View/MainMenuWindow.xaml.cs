@@ -198,6 +198,7 @@ namespace MVVMMathProblemsBase.View
                             break;
                         case WhereInApp.CourseForStudent:
                             LoadMathProblemIntoRTBs(dicStudentContentLoad);
+                            tbStudentsAnswer.Text = "";
                             break;
                     }
                 }

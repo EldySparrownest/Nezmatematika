@@ -9,8 +9,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 {
     public class CheckIfAnswerIsCorrectCommand : ICommand
     {
-        public MathProblemVM MMVM { get; set; }
-        public string AnswerToCheck { get; set; }
+        public MainMenuVM MMVM { get; set; }
         
         public event EventHandler CanExecuteChanged
         {
@@ -18,7 +17,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public CheckIfAnswerIsCorrectCommand(MathProblemVM vm)
+        public CheckIfAnswerIsCorrectCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
@@ -26,14 +25,14 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public bool CanExecute(object parameter)
         {
             string answer = parameter as string;
-            if (string.IsNullOrEmpty(answer))
+            if (string.IsNullOrWhiteSpace(answer))
                 return false;
             return true;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.IsAnswerCorrect();
+
         }
     }
 }

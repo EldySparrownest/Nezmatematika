@@ -88,7 +88,7 @@ namespace MVVMMathProblemsBase.ViewModel
             Solved = null;
             VisibleSteps = new ObservableCollection<SolutionStep>();
             ChangeStepVisibilityCommand = new MakeStepVisibleCommand(this);
-            CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
+            //CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
         }
 
 

@@ -35,6 +35,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
+            MMVM.ClearCurrentValuesExceptUser();
             MMVM.GetListOfNewCoursesToStart();
             MMVM.StudentNewCourseSelVis = Visibility.Visible;
         }

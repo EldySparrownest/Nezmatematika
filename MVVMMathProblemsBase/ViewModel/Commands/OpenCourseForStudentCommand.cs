@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVMMathProblemsBase.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,15 +26,22 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && MMVM.CurrentCourse != null)
+            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && (MMVM.CurrentCourse != null || MMVM.CurrentUserCourseData != null))
             {
                 return true;
             }
             return false;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object parameter = null)
         {
+            if (parameter != null)
+            {
+                var ucd = parameter as UserCourseData;
+                if (ucd != null)
+                    MMVM.CurrentCourse = MMVM.StudentDirCourseList.Find(c => c.Id == ucd.CourseId);
+            }
+            
             MMVM.BackToMainMenu();
             MMVM.StudentVis = Visibility.Collapsed;
             MMVM.OpenCurrentCourseForStudent();

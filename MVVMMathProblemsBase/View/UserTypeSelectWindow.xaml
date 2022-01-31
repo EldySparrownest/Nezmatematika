@@ -5,17 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
         mc:Ignorable="d"
-        Title="Nezmatematika: Výběr módu" Height="150" Width="250">
+        Title="Nezmatematika: Výběr módu" Height="250" Width="400">
     <Grid>
         <StackPanel Margin="15" VerticalAlignment="Center">
             <Button x:Name="btnStudent"
-                    Content="JSEM STUDENT"
-                    Margin="5"
-                    Click="btnStudent_Click"/>
-            <Button x:Name="btnTeacher"
-                    Content="JSEM VYUČUJÍCÍ"
-                    Margin="5"
-                    Click="btnTeacher_Click"/>
+                    Margin="10"
+                    Click="btnStudent_Click">
+                <Label Content="JSEM STUDENT"
+                       FontSize="30"
+                       FontWeight="Bold"/>
+            </Button>
+            <Button x:Name="btnTeacher"                   
+                    Margin="10"
+                    Click="btnTeacher_Click">
+                <Label Content="JSEM VYUČUJÍCÍ"
+                       FontSize="30"
+                       FontWeight="Bold"/>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

@@ -59,10 +59,10 @@
                        Margin="0,10,0,0"/>
             <TextBox Text="{Binding UserAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          />
-            <Button Margin="0,10"
+            <!--<Button Margin="0,10"
                         Command="{Binding CheckIfAnswerIsCorrectCommand}"
                         CommandParameter="{Binding UserAnswer}"
-                        Content="Potvrdit"/>
+                        Content="Potvrdit"/>-->
             <TextBlock Background="{Binding Solved, Converter={StaticResource boolToSolidColorBrush}}"
                        Text="{Binding Solved, Converter={StaticResource boolToFeedback}}"
                        Margin="0,0,0,0">
