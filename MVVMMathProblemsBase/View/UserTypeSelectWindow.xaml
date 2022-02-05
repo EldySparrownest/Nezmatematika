@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
         mc:Ignorable="d"
+        Icon="icons8_m_100_wP3_icon.ico"
         Title="Nezmatematika: Výběr módu" 
         MinHeight="200" 
         MinWidth="400"

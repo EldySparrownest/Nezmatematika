@@ -8,6 +8,7 @@
         xmlns:converters="clr-namespace:MVVMMathProblemsBase.ViewModel.ValueConverters"
         xmlns:wpftool="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
+        Icon="icons8_m_100_wP3_icon.ico"
         Title="Nezmatematika"
         Height="Auto"
         Width="Auto"
@@ -215,7 +216,8 @@
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
-                  Margin="20">
+                  Margin="20"
+                  MaxWidth="1000">
                 <!--<Grid x:Name="gridTakingCourse"
                   Visibility="Collapsed"
                   Margin="10">-->
@@ -718,11 +720,11 @@
                     </ListView.View>
                 </ListView>
             </Grid>
-            <Grid x:Name="gridNewCourse">
+            <Grid x:Name="gridNewCourse"
+                  Visibility="{Binding NewCourseVis}"
+                  Margin="20">
                 <StackPanel HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Margin="10"
-                            Visibility="{Binding NewCourseVis}">
+                            VerticalAlignment="Center">
                     <Border BorderBrush="Black"
                             BorderThickness="2">
                         <Grid Name="gridNewCourseForm"
@@ -797,7 +799,8 @@
                 </StackPanel>
             </Grid>
             <Grid x:Name="gridCoursesToContinueSelection"
-                  Visibility="{Binding TeacherCoursesToContinueVis}">
+                  Visibility="{Binding TeacherCoursesToContinueVis}"
+                  Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -1262,7 +1265,8 @@
                   Background="{Binding Converter={StaticResource nullColorToSolidColorBrush},
                                Path=Settings.SecondaryBackgroundColour,
                                Mode=TwoWay}"
-                  Visibility="{Binding SettingsVis}">
+                  Visibility="{Binding SettingsVis}"
+                  Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
