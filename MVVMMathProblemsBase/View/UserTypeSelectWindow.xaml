@@ -5,27 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVMMathProblemsBase.View"
         mc:Ignorable="d"
-        Title="Nezmatematika: Výběr módu" 
-        MinHeight="200" 
+        Title="Nezmatematika: Výběr módu"
+        MinHeight="535"
         MinWidth="400"
-        Height="200"
-        Width="400">
+        Width="400"
+        Background="#5ce1e6">
     <Grid>
-        <StackPanel Margin="15" VerticalAlignment="Center">
-            <Button x:Name="btnStudent"
-                    Margin="10"
-                    Click="btnStudent_Click">
-                <Label Content="JSEM STUDENT"
-                       FontSize="30"
-                       FontWeight="Bold"/>
-            </Button>
-            <Button x:Name="btnTeacher"                   
-                    Margin="10"
-                    Click="btnTeacher_Click">
-                <Label Content="JSEM VYUČUJÍCÍ"
-                       FontSize="30"
-                       FontWeight="Bold"/>
-            </Button>
-        </StackPanel>
+        <Viewbox Stretch="Uniform">
+            <StackPanel Margin="15"
+                        VerticalAlignment="Center">
+                <Button x:Name="btnStudent"
+                        Margin="10"
+                        Click="btnStudent_Click">
+                    <Label Content="JSEM STUDENT"
+                           FontSize="50"
+                           FontWeight="Bold" />
+                </Button>
+                <Button x:Name="btnTeacher"
+                        Margin="10"
+                        Click="btnTeacher_Click">
+                    <Label Content="JSEM VYUČUJÍCÍ"
+                           FontSize="50"
+                           FontWeight="Bold" />
+                </Button>
+                <Image Margin="10">
+                    <Image.Source>
+                        <BitmapImage UriSource="/Images/Logo_500x500.png" />
+                    </Image.Source>
+                </Image>
+            </StackPanel>
+        </Viewbox>
     </Grid>
 </Window>
