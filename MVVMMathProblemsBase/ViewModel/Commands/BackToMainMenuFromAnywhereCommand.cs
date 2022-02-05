@@ -30,6 +30,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            if (MMVM.IsInStudentMode == true && App.WhereInApp == WhereInApp.CourseForStudent)
+                MMVM.CurrentUserCourseData.UpdateAtSessionEnd();
             MMVM.BackToMainMenu();
             MMVM.ClearCurrentValuesExceptUser();
         }

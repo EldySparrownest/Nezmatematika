@@ -22,12 +22,7 @@ namespace MVVMMathProblemsBase.Model
 
         public void UpdateDisplayName()
         {
-            DisplayName = string.Empty;
-            if (!String.IsNullOrWhiteSpace(TitleBefore))
-                DisplayName += $"{TitleBefore} ";
-            DisplayName += $"{FirstName} {LastName}";
-            if (!String.IsNullOrWhiteSpace(TitleAfter))
-                DisplayName += $", {TitleAfter}";
+            DisplayName = $"{TitleBefore} {FirstName} {LastName} {TitleAfter}".Trim();
         }
     }
 }

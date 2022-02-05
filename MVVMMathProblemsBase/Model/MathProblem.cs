@@ -61,9 +61,6 @@ namespace MVVMMathProblemsBase.Model
                     trimmedAndPruned.Add(answer);
             }
 
-            if (trimmedAndPruned.Count == 0)
-                trimmedAndPruned.Add("");
-
             CorrectAnswers.Clear();
             CorrectAnswers = trimmedAndPruned;
         }
@@ -79,6 +76,11 @@ namespace MVVMMathProblemsBase.Model
                 return false;
             
             return true;
+        }
+
+        public bool CheckAnswerIsCorrect(string answerToCheck)
+        {
+            return CorrectAnswers.Contains(answerToCheck.Trim());
         }
 
         public int FindLastVisibleStep()

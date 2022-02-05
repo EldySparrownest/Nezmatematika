@@ -199,11 +199,28 @@ namespace MVVMMathProblemsBase.ViewModel
                 }
                 currentMathProblem = value;
                 PopulateTempAnswersFromCurrentMathProblem();
+                if (App.WhereInApp == WhereInApp.CourseForStudent && CurrentUserCourseData != null)
+                {
+                    CurrentProblemSolved = CurrentUserCourseData.GetIsProblemSolved();
+                }
                 OnPropertyChanged("CurrentMathProblem");
                 StudentCurrentMathProblemChanged?.Invoke(this, new EventArgs());
                 TeacherCurrentMathProblemChanged?.Invoke(this, new EventArgs());
             }
         }
+
+        private int currentMathProblemIndex;
+
+        public int CurrentMathProblemIndex
+        {
+            get { return currentMathProblemIndex; }
+            set 
+            { 
+                currentMathProblemIndex = value;
+                OnPropertyChanged("CurrentMathProblemIndex");
+            }
+        }
+
 
         private string currentAnswer;
         public string CurrentAnswer
@@ -227,6 +244,19 @@ namespace MVVMMathProblemsBase.ViewModel
                 OnPropertyChanged("CurrentUserCourseData");
             }
         }
+
+        private bool currentProblemSolved;
+
+        public bool CurrentProblemSolved
+        {
+            get { return currentProblemSolved; }
+            set 
+            { 
+                currentProblemSolved = value;
+                OnPropertyChanged("CurrentProblemSolved");
+            }
+        }
+
 
         private string tempTitleBefore;
         public string TempTitleBefore
@@ -526,8 +556,26 @@ namespace MVVMMathProblemsBase.ViewModel
                 OnPropertyChanged("CourseForStudentVis");
             }
         }
-
-
+        private Visibility btnNextProblemVis;
+        public Visibility BtnNextProblemVis
+        {
+            get { return btnNextProblemVis; }
+            set 
+            { 
+                btnNextProblemVis = value;
+                OnPropertyChanged("BtnNextProblemVis");
+            }
+        }
+        private Visibility btnFinishCourseVis;
+        public Visibility BtnFinishCourseVis
+        {
+            get { return btnFinishCourseVis; }
+            set
+            {
+                btnFinishCourseVis = value;
+                OnPropertyChanged("BtnFinishCourseVis");
+            }
+        }
         private Visibility settingsVis;
         public Visibility SettingsVis
         {
@@ -636,6 +684,8 @@ namespace MVVMMathProblemsBase.ViewModel
             TeacherCoursesToContinueVis = Visibility.Collapsed;
             StudentNewCourseSelVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
+            BtnNextProblemVis = Visibility.Collapsed;
+            BtnFinishCourseVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
             if (IsInStudentMode == true)
             {
@@ -876,6 +926,7 @@ namespace MVVMMathProblemsBase.ViewModel
                 ClassName = cName,
                 UserType = NullBoolToModeNameStringCovnerter.Convert(IsInStudentMode)
             };
+            CurrentUser.UpdateDisplayName();
             this.Settings.ThisUser = CurrentUser;
             this.Settings.HasCourseToContinue = false;
             RestoreDefaultSettingsForCurrentUser();
@@ -974,17 +1025,45 @@ namespace MVVMMathProblemsBase.ViewModel
 
             UpdateAbilityToContinueCourse();
 
-            var index = CurrentUserCourseData.GetIndexToResumeOn();
-            //if (CurrentUserCourseData.SolvedProblemsCount >= CurrentUserCourseData.CourseProblemCount)
-            //    index = CurrentUserCourseData.RequeuedProblems[index];
-            CurrentMathProblem = CurrentCourse.Problems[index];
+            SetCurrentMathProblemFromUCD();
             CourseForStudentVis = Visibility.Visible;
+            BtnNextProblemVis = Visibility.Visible;
+        }
+        public void SetCurrentMathProblemFromUCD()
+        {
+            CurrentMathProblemIndex = CurrentUserCourseData.GetIndexToResumeOn();
+            SetCurrentMathProblemFromCurrentIndex();
+        }
+        public void SetCurrentMathProblemFromCurrentIndex()
+        {
+            int index = CurrentMathProblemIndex;
+            if (CurrentUserCourseData.SolvedProblemsCount >= CurrentUserCourseData.CourseProblemCount)
+                index = CurrentUserCourseData.RequeuedProblems[index];
+            CurrentMathProblem = CurrentCourse.Problems[index];
         }
         private bool CheckUserCouseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
             CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.Id, startTime);
             CurrentUser.CoursesData.Add(CurrentUserCourseData);
+        }
+        public bool CheckIfAnswerIsCorrect(string answerToCheck) => CurrentMathProblem.CheckAnswerIsCorrect(answerToCheck);
+        public void RespondToAnswer(bool isCorrect)
+        {
+            if (isCorrect)
+            {
+                CurrentUserCourseData.UpdateAfterCorrectAnswer();
+                CurrentProblemSolved = true;
+                if (CurrentMathProblemIndex == CurrentCourse.Problems.Count + CurrentUserCourseData.RequeuedProblems.Count - 1)
+                    BtnNextToBtnFinish();
+            }
+            else
+                CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, Settings.RequeueOnMistake);
+        }
+        public void BtnNextToBtnFinish()
+        {
+            BtnNextProblemVis = Visibility.Collapsed;
+            BtnFinishCourseVis = Visibility.Visible;
         }
         public void CreateNewCourse()
         {
@@ -1000,7 +1079,6 @@ namespace MVVMMathProblemsBase.ViewModel
         public void StartEditingCurrentCourse()
         {
             CurrentCourse.LastOpened = DateTime.Now;
-            App.WhereInApp = WhereInApp.CourseEditor;
             CurrentMathProblem = CurrentCourse.Problems[0];
             PopulateTempAnswersFromCurrentMathProblem();
             EditCourseVis = Visibility.Visible;

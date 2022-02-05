@@ -25,14 +25,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public bool CanExecute(object parameter)
         {
             string answer = parameter as string;
-            if (string.IsNullOrWhiteSpace(answer))
+            if (string.IsNullOrWhiteSpace(answer) || MMVM.CurrentProblemSolved)
                 return false;
             return true;
         }
 
         public void Execute(object parameter)
         {
-
+            string answer = parameter as string;
+            var isCorrect = MMVM.CheckIfAnswerIsCorrect(answer);
+            MMVM.RespondToAnswer(isCorrect);
         }
     }
 }

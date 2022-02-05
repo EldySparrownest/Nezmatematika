@@ -35,6 +35,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             MMVM.NewCourseVis = Visibility.Collapsed;
             MMVM.EditCourseVis = Visibility.Visible;
             MMVM.CourseEditorMathProblemUserModeVis = Visibility.Visible;
+            App.WhereInApp = WhereInApp.CourseEditor;
         }
     }
 }

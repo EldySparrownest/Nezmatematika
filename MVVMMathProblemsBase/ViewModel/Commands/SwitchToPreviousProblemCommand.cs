@@ -24,13 +24,15 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (App.WhereInApp != WhereInApp.CourseForStudent)
+                return false;
             return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblem.Index > 0;
         }
 
         public void Execute(object parameter)
         {
-            var newIndex = MMVM.CurrentMathProblem.Index - 1;
-            MMVM.CurrentMathProblem = MMVM.CurrentCourse.Problems[newIndex];
+            MMVM.CurrentMathProblemIndex--;
+            MMVM.SetCurrentMathProblemFromCurrentIndex();
         }
     }
 }

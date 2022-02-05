@@ -44,16 +44,41 @@ namespace MVVMMathProblemsBase.Model
             RequeuedProblems = new List<int>();
         }
 
+        public void UpdateAfterCorrectAnswer()
+        {
+            SolvedProblemsCount++;
+            ResumeOnIndex++;
+        }
+
+        public void UpdateAfterIncorrectAnswer(int problemIndex, bool requeue)
+        {
+            SolvedProblemsCount++;
+            ResumeOnIndex++;
+            Mistakes++;
+            if (requeue)
+                RequeuedProblems.Add(problemIndex);
+        }
+
+        public void UpdateAtSessionEnd()
+        {
+            LastSessionEnded = DateTime.Now;
+            NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
+        }
+        
         public int GetIndexToResumeOn()
         {
             var index = ResumeOnIndex;
             if (index >= CourseProblemCount)
             {
-                index = index - CourseProblemCount;
-                if (index < RequeuedProblems.Count)
+                if (index - CourseProblemCount >= RequeuedProblems.Count)
                     throw new Exception("Došlo k překročení počtu příkladů v kurzu.");
             }
             return index;
+        }
+
+        public bool GetIsProblemSolved()
+        {
+            return (SolvedProblemsCount > ResumeOnIndex);
         }
     }
 }

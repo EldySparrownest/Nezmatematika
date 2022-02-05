@@ -9,8 +9,11 @@
         xmlns:wpftool="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Nezmatematika"
-        Height="450"
-        Width="3000">
+        Height="Auto"
+        Width="Auto"
+        MinHeight="450"
+        MinWidth="450"
+        d:DesignWidth="5000">
     <Window.Resources>
         <vm:MainMenuVM x:Key="vm" />
         <converters:NullBoolToVisibilityConverter x:Key="nullBoolToVisibility" />
@@ -78,7 +81,8 @@
                 </StackPanel>
             </Grid>
             <Grid x:Name="gridStudentNewCourseSelection"
-                  Visibility="{Binding StudentNewCourseSelVis}">
+                  Visibility="{Binding StudentNewCourseSelVis}"
+                  Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -211,7 +215,7 @@
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
-                  Margin="10">
+                  Margin="20">
                 <!--<Grid x:Name="gridTakingCourse"
                   Visibility="Collapsed"
                   Margin="10">-->
@@ -281,7 +285,7 @@
                              Height="Auto"
                              Margin="5" />
                 <TextBox x:Name="tbStudentsAnswer"
-                         Text="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding TempAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Column="0"
                          Grid.ColumnSpan="3"
                          Grid.Row="4"
@@ -289,7 +293,7 @@
                          Margin="5" />
                 <Button x:Name="btnConfirmAnswer"
                         Command="{Binding CheckIfAnswerIsCorrectCommand}"
-                        CommandParameter="{Binding CurrentAnswer}"
+                        CommandParameter="{Binding TempAnswer}"
                         Grid.Column="3"
                         Grid.Row="4"
                         Margin="5">
@@ -315,10 +319,20 @@
                     </Button>
                     <Button x:Name="btnNextProblem"
                             Command="{Binding SwitchToNextProblemCommand}"
+                            Visibility="{Binding BtnNextProblemVis}"
                             Grid.Column="2"
                             HorizontalAlignment="Center"
                             Margin="5">
                         <Label Content="Další →"
+                               Margin="5" />
+                    </Button>
+                    <Button x:Name="btnFinishCourse"
+                            Command="{Binding SwitchToNextProblemCommand}"
+                            Visibility="{Binding BtnFinishCourseVis}"
+                            Grid.Column="2"
+                            HorizontalAlignment="Center"
+                            Margin="5">
+                        <Label Content="Dokončit"
                                Margin="5" />
                     </Button>
                 </Grid>
@@ -380,7 +394,8 @@
                 </StackPanel>
             </Grid>
             <Grid Name="gridUserCreationAndSelection"
-                  HorizontalAlignment="Left">
+                  HorizontalAlignment="Left"
+                  Visibility="{Binding UserSelVis}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -388,7 +403,7 @@
                 <StackPanel x:Name="spNewUser"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
-                            Margin="10"
+                            Margin="20,20,20,10"
                             Visibility="{Binding NewUserVis}">
                     <Border BorderBrush="Black"
                             BorderThickness="2">
@@ -502,7 +517,7 @@
                 <StackPanel x:Name="spEditUser"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
-                            Margin="10"
+                            Margin="20,20,20,10"
                             Visibility="{Binding EditUserVis}">
                     <Border BorderBrush="Black"
                             BorderThickness="2">
@@ -511,7 +526,8 @@
                               MinWidth="160">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="60" />
-                                <ColumnDefinition MinWidth="150" />
+                                <ColumnDefinition Width="*"
+                                                  MinWidth="150" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -607,7 +623,6 @@
                                     Margin="5"
                                     Width="100"
                                     HorizontalAlignment="Right"
-                                    Height="19"
                                     VerticalAlignment="Top">
                                 <Label Content="Uložit" />
                             </Button>
@@ -620,7 +635,7 @@
                           Visibility="{Binding UserSelVis}"
                           IsSynchronizedWithCurrentItem="True"
                           Grid.Row="1"
-                          Margin="5"
+                          Margin="20,10,20,20"
                           Thumb.DragDelta="Thumb_DragDelta">
                     <ListView.Resources>
                         <ContextMenu x:Key="resourceContextMenu">
@@ -854,10 +869,11 @@
                 </Button>
             </Grid>
             <Grid x:Name="gridCourseEditor"
-                  Visibility="{Binding EditCourseVis}">
+                  Visibility="{Binding EditCourseVis}"
+                  MaxWidth="1000">
                 <!--<Grid x:Name="gridCourseEditor"
                   Visibility="Collapsed">-->
-                <DockPanel Margin="5">
+                <DockPanel Margin="20">
                     <ToolBarTray DockPanel.Dock="Top"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Top"
@@ -999,7 +1015,8 @@
                     </ToolBarTray>
                     <Grid x:Name="gridCourseEditorProblemList"
                           DockPanel.Dock="Left"
-                          VerticalAlignment="Stretch">
+                          VerticalAlignment="Stretch"
+                          Margin="0,10,10,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -1122,7 +1139,8 @@
                     </Grid>
                     <Grid x:Name="gridCourseEditorMathProblemUserMode"
                           Visibility="{Binding CourseEditorMathProblemUserModeVis}"
-                          VerticalAlignment="Stretch">
+                          VerticalAlignment="Stretch"
+                          Margin="10,10,0,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -1148,13 +1166,16 @@
                                Grid.Row="4"
                                Content="Správné odpovědi"
                                VerticalContentAlignment="Center" />
-                        <StackPanel Orientation="Horizontal"
+                        <StackPanel x:Name="spCEAnswerEdit"
+                                    Orientation="Horizontal"
                                     Grid.Row="5">
                             <TextBox x:Name="tbNewCorrectAnswer"
                                      Text="{Binding TempCorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="20"
-                                     MinWidth="30"
-                                     Margin="5" />
+                                     FontSize="30"
+                                     FontFamily="Cambria Math"
+                                     MinWidth="100"
+                                     Margin="0,5,5,5" 
+                                     VerticalAlignment="Center"/>
                             <Button x:Name="btnAddNewCorrectAnswer"
                                     Background="White"
                                     VerticalContentAlignment="Center"
@@ -1226,7 +1247,8 @@
                     </Grid>
                     <Grid x:Name="gridCourseEditorMathProblemCodeMode"
                           Visibility="{Binding CourseEditorMathProblemCodeModeVis}"
-                          VerticalAlignment="Stretch">
+                          VerticalAlignment="Stretch"
+                          Margin="10,10,0,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>

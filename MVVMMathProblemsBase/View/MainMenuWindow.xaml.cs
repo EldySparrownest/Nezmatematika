@@ -182,10 +182,6 @@ namespace MVVMMathProblemsBase.View
 
         private void ViewModel_StudentCurrentMathProblemChanged(object sender, EventArgs e)
         {
-            rtbProblemTextStudentMode.Document.Blocks.Clear();
-            rtbQuestionStudentMode.Document.Blocks.Clear();
-            tbStudentsAnswer.Clear();
-
             if (vM.CurrentMathProblem != null)
             {
                 if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
@@ -197,8 +193,11 @@ namespace MVVMMathProblemsBase.View
                         case WhereInApp.CourseEditor:
                             break;
                         case WhereInApp.CourseForStudent:
+                            rtbProblemTextStudentMode.Document.Blocks.Clear();
+                            rtbQuestionStudentMode.Document.Blocks.Clear();
+                            tbStudentsAnswer.Clear();
                             LoadMathProblemIntoRTBs(dicStudentContentLoad);
-                            tbStudentsAnswer.Text = "";
+                            //tbStudentsAnswer.Text = "";
                             break;
                     }
                 }
@@ -209,20 +208,18 @@ namespace MVVMMathProblemsBase.View
         {
             if (vM.CurrentMathProblem != null)
             {
-                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
+                switch (App.WhereInApp)
                 {
-                    switch (App.WhereInApp)
-                    {
-                        case WhereInApp.ModeSelection:
-                        case WhereInApp.MainMenu:
-                            break;
-                        case WhereInApp.CourseEditor:
-                            rtbCodeMode.Document.Blocks.Clear();
-                            rtbProblemText.Document.Blocks.Clear();
-                            rtbQuestion.Document.Blocks.Clear();
+                    case WhereInApp.ModeSelection:
+                    case WhereInApp.MainMenu:
+                        break;
+                    case WhereInApp.CourseEditor:
+                        rtbCodeMode.Document.Blocks.Clear();
+                        rtbProblemText.Document.Blocks.Clear();
+                        rtbQuestion.Document.Blocks.Clear();
+                        if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
                             LoadMathProblemIntoRTBs(dicTeacherContentLoad);
-                            break;
-                    }
+                        break;
                 }
             }
         }

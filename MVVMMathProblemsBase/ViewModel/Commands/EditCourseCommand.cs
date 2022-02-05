@@ -36,6 +36,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         {
             MMVM.BackToMainMenu();
             MMVM.TeacherVis = Visibility.Collapsed;
+            App.WhereInApp = WhereInApp.CourseEditor;
             MMVM.StartEditingCurrentCourse();
         }
     }
