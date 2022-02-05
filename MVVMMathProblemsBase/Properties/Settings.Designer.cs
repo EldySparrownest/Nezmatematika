@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MVVMMathProblemsBase.Properties {
+namespace Nezmatematika.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

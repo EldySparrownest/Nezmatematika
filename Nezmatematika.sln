@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVVMMathProblemsBase", "MVVMMathProblemsBase\MVVMMathProblemsBase.csproj", "{FA5F9B8B-296F-40E1-A88D-63FEF7F3A490}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nezmatematika", "MVVMMathProblemsBase\Nezmatematika.csproj", "{FA5F9B8B-296F-40E1-A88D-63FEF7F3A490}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8748F1E6-A0A0-42C6-BD94-8F628ACBDD11}"
 EndProject
