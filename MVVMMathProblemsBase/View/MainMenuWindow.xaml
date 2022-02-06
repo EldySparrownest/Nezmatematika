@@ -394,8 +394,7 @@
                 </StackPanel>
             </Grid>
             <Grid Name="gridUserCreationAndSelection"
-                  HorizontalAlignment="Left"
-                  Visibility="{Binding UserSelVis}">
+                  HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
