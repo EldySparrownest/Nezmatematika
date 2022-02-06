@@ -46,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_97A74411142C58871DF8295754710521"
-        "OwnerKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_97A74411142C58871DF8295754710521"
         "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -59,6 +53,12 @@
         {
         "MsmKey" = "8:_97A74411142C58871DF8295754710521"
         "OwnerKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_97A74411142C58871DF8295754710521"
+        "OwnerKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,13 +76,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D4B2BE48BD094F869514968618D00015"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
+        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,7 +88,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,13 +112,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
+        "OwnerKey" = "8:_D4B2BE48BD094F869514968618D00015"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -133,22 +133,6 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
-            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
-            {
-            "Enabled" = "11:TRUE"
-            "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
-            "Url" = "8:"
-            "ComponentsUrl" = "8:"
-                "Items"
-                {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
-                    {
-                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
-                    }
-                }
-            }
         }
         "Release"
         {
@@ -328,7 +312,7 @@
             "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Settings\\DefaultSettings.xml"
             "TargetName" = "8:DefaultSettings.xml"
             "Tag" = "8:"
-            "Folder" = "8:_799D3D281A7B4A6B8AF52FC2C36EAE78"
+            "Folder" = "8:_55DCBFCE667C41809A5D26B1EED20E78"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -453,61 +437,6 @@
                 {
                 }
             }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_77DF8E5A79AC4C3F940372D1FFB52D51"
-            {
-            "Name" = "8:#1915"
-            "AlwaysCreate" = "11:TRUE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:AppDataFolder"
-                "Folders"
-                {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_21BA06AF08314D1AAA8146F6871DCB71"
-                    {
-                    "Name" = "8:HopefulSparrow"
-                    "AlwaysCreate" = "11:TRUE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_4ACF4896F604409C983CCB92CE41CE65"
-                        "Folders"
-                        {
-                            "{9EF0B969-E518-4E46-987F-47570745A589}:_67C8133748A742DF842BE9B1DAE698CD"
-                            {
-                            "Name" = "8:Nezmatematika"
-                            "AlwaysCreate" = "11:TRUE"
-                            "Condition" = "8:"
-                            "Transitive" = "11:FALSE"
-                            "Property" = "8:_C1CB240B015148CB8C0B1BDFA6E62E4A"
-                                "Folders"
-                                {
-                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_10A8B60928A74F60BAE3DAFEAFFB3C25"
-                                    {
-                                    "Name" = "8:Settings"
-                                    "AlwaysCreate" = "11:TRUE"
-                                    "Condition" = "8:"
-                                    "Transitive" = "11:FALSE"
-                                    "Property" = "8:_2EA83F1EE932410C9FA71158F6A494A0"
-                                        "Folders"
-                                        {
-                                        }
-                                    }
-                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_21AA192D45C64ADFA85A0749F2FA01C0"
-                                    {
-                                    "Name" = "8:Courses"
-                                    "AlwaysCreate" = "11:TRUE"
-                                    "Condition" = "8:"
-                                    "Transitive" = "11:FALSE"
-                                    "Property" = "8:_AF388973BD3F452C91A3FF28026EF080"
-                                        "Folders"
-                                        {
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_80E6A1122818416888ADB0E88C7DFD91"
             {
             "Name" = "8:#1919"
@@ -523,30 +452,30 @@
             {
             "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
-            "AlwaysCreate" = "11:TRUE"
+            "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_147B9A3870C24588B6A5B34C3FC95E1E"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_55DCBFCE667C41809A5D26B1EED20E78"
                     {
-                    "Name" = "8:Courses"
-                    "AlwaysCreate" = "11:TRUE"
+                    "Name" = "8:Settings"
+                    "AlwaysCreate" = "11:FALSE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
-                    "Property" = "8:_9FE336A56AB040118B73FE04536C1230"
+                    "Property" = "8:_2EA83F1EE932410C9FA71158F6A494A0"
                         "Folders"
                         {
                         }
                     }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_799D3D281A7B4A6B8AF52FC2C36EAE78"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_D3D69F3AE3DD47499D0D1843385F4B5B"
                     {
-                    "Name" = "8:Settings"
-                    "AlwaysCreate" = "11:TRUE"
+                    "Name" = "8:Courses"
+                    "AlwaysCreate" = "11:FALSE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
-                    "Property" = "8:_3C02F532CFCE496D9FD1891D94A683B0"
+                    "Property" = "8:_AF388973BD3F452C91A3FF28026EF080"
                         "Folders"
                         {
                         }
@@ -569,15 +498,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
-        "ProductCode" = "8:{249DA06C-B8F9-4B38-9344-CDBCECA4311B}"
-        "PackageCode" = "8:{7E58FB7F-C635-4B68-9320-C017AE31407F}"
+        "ProductCode" = "8:{260C662E-D92A-45D2-A840-A255F4D2C8E0}"
+        "PackageCode" = "8:{80621D9E-C610-44F7-A36C-6C3B724879D8}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.2.0"
+        "ProductVersion" = "8:0.1.0"
         "Manufacturer" = "8:HopefulSparrow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -690,7 +619,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D856720D928E4D6F9535A8BE10C4B372"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_44C465E2DC3247089172675F501A7184"
             {
             "Name" = "8:Nezmatematika"
             "Arguments" = "8:"
