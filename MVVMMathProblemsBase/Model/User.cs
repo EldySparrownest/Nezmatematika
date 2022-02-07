@@ -9,7 +9,7 @@ namespace MVVMMathProblemsBase.Model
     public class User
     {
         public string Id { get; set; }
-        public string UserType { get; set; }
+        public AppMode UserType { get; set; }
         public string TitleBefore { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -20,9 +20,23 @@ namespace MVVMMathProblemsBase.Model
         public UserStats UserStats { get; set; }
         public List<UserCourseData> CoursesData { get; set; }
 
+        public User()
+        {
+            Id = NewId();
+            UserType = App.AppMode;  
+            CoursesData = new List<UserCourseData>();
+            UserStats = new UserStats(); 
+        }
+
         public void UpdateDisplayName()
         {
             DisplayName = $"{TitleBefore} {FirstName} {LastName} {TitleAfter}".Trim();
+        }
+
+        private string NewId()
+        {
+            var modeName = App.AppMode.ToString();
+            return modeName + string.Join(string.Empty, (DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

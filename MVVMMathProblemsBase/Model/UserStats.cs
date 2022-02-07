@@ -8,9 +8,17 @@ namespace MVVMMathProblemsBase.Model
 {
     public class UserStats
     {
-        public TimeSpan timeSpentInCourses;
+        public TimeSpan TimeSpentInCourses;
         public int ProblemsSolvedTotal;
         public int ProblemsSolvedFirstTry;
         public int CoursesCompleted;
+
+        public UserStats()
+        {
+            TimeSpentInCourses = TimeSpan.Zero;
+            ProblemsSolvedTotal = 0;
+            ProblemsSolvedFirstTry = 0;
+            CoursesCompleted = 0;
+        }
     }
 }

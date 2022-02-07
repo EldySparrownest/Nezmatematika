@@ -27,6 +27,7 @@ namespace MVVMMathProblemsBase.Model
 
         public UserCourseData()
         {
+            RequeuedProblems = new List<int>();
         }
 
         public UserCourseData(Course course, string userId, DateTime startTime)

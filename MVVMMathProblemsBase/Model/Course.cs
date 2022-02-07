@@ -106,10 +106,10 @@ namespace MVVMMathProblemsBase.Model
                     string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
 
         private string CourseDirPath()
-            => DirPath = Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, Id);
+            => DirPath = Path.Combine(App.MyBaseDirectory, "Courses", Author.Id, Id);
 
         private string CourseFilePath()
-            => Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
+            => Path.Combine(App.MyBaseDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
 
         public void Save()
         {
