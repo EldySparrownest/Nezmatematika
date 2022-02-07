@@ -868,8 +868,7 @@
                 </Button>
             </Grid>
             <Grid x:Name="gridCourseEditor"
-                  Visibility="{Binding EditCourseVis}"
-                  MaxWidth="1000">
+                  Visibility="{Binding EditCourseVis}">
                 <!--<Grid x:Name="gridCourseEditor"
                   Visibility="Collapsed">-->
                 <DockPanel Margin="20">

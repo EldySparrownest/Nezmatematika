@@ -21,15 +21,15 @@ namespace MVVMMathProblemsBase.ViewModel
     {
         public const string CourseFilename = "Course.xml";
         public const string UserSettingsFilename = "Settings.xml";
-        public string _MySettingsDirectoryPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings");
+        public string _MySettingsDirectoryPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings");
         //_UserListPath bude obsahovat seznam uživatelů
         //na indexu [0] bude vždy poslední použitý student (pokud existuje)
         //na indexu [Count-1] bude vždy poslední použitý učitel (pokud existuje)
-        public string _UserListPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", "UserList.xml");
-        public string _DefaultSettingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", $"Default{UserSettingsFilename}");
-        public string _UserSettingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", $"Default{UserSettingsFilename}");
-        public string _CoursesDirPath() => System.IO.Path.Combine(Environment.CurrentDirectory, "Courses");
-        public string _UserCoursesDirPath() => System.IO.Path.Combine(Environment.CurrentDirectory, "Courses", CurrentUser.Id);
+        public string _UserListPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", "UserList.xml");
+        public string _DefaultSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
+        public string _UserSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
+        public string _CoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses");
+        public string _UserCoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", CurrentUser.Id);
 
         private MySettings settings;
         public MySettings Settings
@@ -150,17 +150,17 @@ namespace MVVMMathProblemsBase.ViewModel
 
                 if (value != null)
                 {
-                    if (IsInStudentMode == true && CurrentUser.UserType == "student")
+                    if (IsInStudentMode == true && CurrentUser.UserType == AppMode.Student)
                     {
                         LastStudentUser = CurrentUser;
                     }
-                    else if (IsInStudentMode == false && CurrentUser.UserType == "teacher")
+                    else if (IsInStudentMode == false && CurrentUser.UserType == AppMode.Teacher)
                     {
                         LastTeacherUser = CurrentUser;
                     }
                     ArchiveLastUsedUsers();
 
-                    _UserSettingsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", $"{CurrentUser.Id}{UserSettingsFilename}");
+                    _UserSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"{CurrentUser.Id}{UserSettingsFilename}");
 
                     if (EditUserVis == Visibility.Visible)
                     {
@@ -396,8 +396,8 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
-        private bool? isInStudentMode;
-        public bool? IsInStudentMode
+        private bool isInStudentMode;
+        public bool IsInStudentMode
         {
             get { return isInStudentMode; }
             set
@@ -665,7 +665,7 @@ namespace MVVMMathProblemsBase.ViewModel
         public event EventHandler TeacherCurrentMathProblemChanged;
         public MainMenuVM()
         {
-            IsInStudentMode = App.IsInStudentMode;
+            IsInStudentMode = App.AppMode == AppMode.Student;
             LoadDefaultSettings();
             AllUsersList = new ObservableCollection<User>();
             GetListOfAllUsers();
@@ -687,7 +687,7 @@ namespace MVVMMathProblemsBase.ViewModel
             BtnNextProblemVis = Visibility.Collapsed;
             BtnFinishCourseVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
-            if (IsInStudentMode == true)
+            if (IsInStudentMode)
             {
                 StudentVis = Visibility.Visible;
                 TeacherVis = Visibility.Collapsed;
@@ -757,27 +757,19 @@ namespace MVVMMathProblemsBase.ViewModel
         {
             if (AllUsersList.Count >= 1)
             {
-                if (this.IsInStudentMode == true)
+                if (IsInStudentMode)
                 {
-                    if (AllUsersList[0].UserType == "student")
-                    {
+                    if (AllUsersList[0].UserType == AppMode.Student)
                         LastStudentUser = AllUsersList[0];
-                    }
                     else
-                    {
                         LastStudentUser = null;
-                    }
                 }
                 else
                 {
-                    if (AllUsersList[AllUsersList.Count - 1].UserType == "teacher")
-                    {
+                    if (AllUsersList[AllUsersList.Count - 1].UserType == AppMode.Teacher)
                         LastTeacherUser = AllUsersList[AllUsersList.Count - 1];
-                    }
                     else
-                    {
                         LastTeacherUser = null;
-                    }
                 }
             }
             else
@@ -790,17 +782,13 @@ namespace MVVMMathProblemsBase.ViewModel
         public void SetCurrentUserToLastUsedUser()
         {
             if (IsInStudentMode == true)
-            {
                 CurrentUser = LastStudentUser;
-            }
             else
-            {
                 CurrentUser = LastTeacherUser;
-            }
         }
         public void LoadSettingsForUser(User user)
         {
-            var settingsPath = user != null ? Path.Combine(Environment.CurrentDirectory, "Settings", $"{user.Id}{UserSettingsFilename}") : _DefaultSettingsPath;
+            var settingsPath = user != null ? Path.Combine(App.MyBaseDirectory, "Settings", $"{user.Id}{UserSettingsFilename}") : _DefaultSettingsPath;
             if (File.Exists(settingsPath))
                 this.Settings = new MySettings().Read(settingsPath);
         }
@@ -914,18 +902,17 @@ namespace MVVMMathProblemsBase.ViewModel
             }
         }
 
-        public void CreateNewUser(string fName, string lName, string sName, string cName)
+        public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
-            CurrentUser = new User()
-            {
-                Id = NullBoolToModeNameStringCovnerter.Convert(IsInStudentMode)
-                    + string.Join(string.Empty, (DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)),
-                FirstName = fName,
-                LastName = lName,
-                SchoolName = sName,
-                ClassName = cName,
-                UserType = NullBoolToModeNameStringCovnerter.Convert(IsInStudentMode)
-            };
+            CurrentUser = new User();
+
+            CurrentUser.TitleBefore = titBef;
+            CurrentUser.FirstName = fName;
+            CurrentUser.LastName = lName;
+            CurrentUser.TitleAfter = titAft;
+            CurrentUser.SchoolName = sName;
+            CurrentUser.ClassName = cName;
+            CurrentUser.UserType = App.AppMode;
             CurrentUser.UpdateDisplayName();
             this.Settings.ThisUser = CurrentUser;
             this.Settings.HasCourseToContinue = false;
@@ -957,13 +944,10 @@ namespace MVVMMathProblemsBase.ViewModel
             var curUser = CurrentUser;
             UsersOfTypeList.Clear();
             var resultList = new List<User>();
-            string modeName = NullBoolToModeNameStringCovnerter.Convert(IsInStudentMode);
             foreach (User user in AllUsersList)
             {
-                if (user.UserType == modeName)
-                {
+                if (user.UserType == App.AppMode)
                     resultList.Add(user);
-                }
             }
             UsersOfTypeList = new ObservableCollection<User>(resultList.OrderBy(u => u.SchoolName)
                                                                         .ThenBy(u => u.ClassName)
@@ -974,7 +958,7 @@ namespace MVVMMathProblemsBase.ViewModel
 
         public void DeleteUser(User userToDelete)
         {
-            string filePath = System.IO.Path.Combine(Environment.CurrentDirectory, "Settings", $"{userToDelete.Id}{UserSettingsFilename}");
+            string filePath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"{userToDelete.Id}{UserSettingsFilename}");
             File.Delete(filePath);
             UsersOfTypeList.Remove(userToDelete);
             AllUsersList.Remove(userToDelete);
