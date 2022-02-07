@@ -39,7 +39,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.CreateNewUser(MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempSchoolName, MMVM.TempClassName);
+            MMVM.CreateNewUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.BackToMainMenu();
             MMVM.GetUsersOfTypeList();
         }

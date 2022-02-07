@@ -29,9 +29,9 @@ namespace MVVMMathProblemsBase.View
             vM = Resources["vm"] as UserTypeSelectVM;
         }
 
-        private void SelectModeAndSwitchToMainMenu(bool? isInStudentMode)
+        private void SelectModeAndSwitchToMainMenu(bool isInStudentMode)
         {
-            App.IsInStudentMode = isInStudentMode;
+            App.AppMode = isInStudentMode ? AppMode.Student : AppMode.Teacher;
             MainMenuWindow mainMenuWindow = new MainMenuWindow();
             
             mainMenuWindow.Show();

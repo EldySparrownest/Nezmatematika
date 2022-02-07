@@ -614,7 +614,7 @@ namespace MVVMMathProblemsBase.View
         private void BackToModeSelection(object sender, RoutedEventArgs e)
         {
             App.WhereInApp = WhereInApp.ModeSelection;
-            App.IsInStudentMode = null;
+            App.AppMode = AppMode.Unselected;
             UserTypeSelectWindow userTypeSelectWindow = new UserTypeSelectWindow();
 
             userTypeSelectWindow.Show();
