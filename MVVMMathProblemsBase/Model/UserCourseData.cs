@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nezmatematika.Model
+namespace MVVMMathProblemsBase.Model
 {
     [Serializable]
     public class UserCourseData
@@ -23,14 +23,11 @@ namespace Nezmatematika.Model
         public TimeSpan NetCourseTime { get; set; }
         public int ResumeOnIndex { get; set; }
         public int SolvedProblemsCount { get; set; }
-        public int SolvedCorrectlyCount { get; set; }
-        public List<int> RequeuedProblems { get; set; }
-        public List<string> StudentAnswers { get; set; }
+        public List <int> RequeuedProblems { get; set; }
 
         public UserCourseData()
         {
             RequeuedProblems = new List<int>();
-            StudentAnswers = new List<string>();
         }
 
         public UserCourseData(Course course, string userId, DateTime startTime)
@@ -45,30 +42,13 @@ namespace Nezmatematika.Model
             CourseStarted = startTime;
             ResumeOnIndex = 0;
             SolvedProblemsCount = 0;
-            SolvedCorrectlyCount = 0;
             RequeuedProblems = new List<int>();
-            StudentAnswers = new List<string>();
-        }
-
-        public void RecordStudentAnswer(string answer)
-        {
-            if (ResumeOnIndex <= StudentAnswers.Count)
-                StudentAnswers.Add(answer);
-        }
-
-        public void UpdateAtSessionStart()
-        {
-            LastSessionStarted = DateTime.Now;
         }
 
         public void UpdateAfterCorrectAnswer()
         {
             SolvedProblemsCount++;
-            SolvedCorrectlyCount++;
             ResumeOnIndex++;
-
-            if (SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count)
-                UpdateWhenCourseCompleted();
         }
 
         public void UpdateAfterIncorrectAnswer(int problemIndex, bool requeue)
@@ -83,16 +63,7 @@ namespace Nezmatematika.Model
         public void UpdateAtSessionEnd()
         {
             LastSessionEnded = DateTime.Now;
-            if (!Completed)
-                NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
-        }
-
-        public void UpdateWhenCourseCompleted()
-        {
-            UpdateAtSessionEnd();
-            CourseFinished = DateTime.Now;
-            Completed = true;
-            ResumeOnIndex = 0;
+            NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
         }
         
         public int GetIndexToResumeOn()
@@ -106,6 +77,9 @@ namespace Nezmatematika.Model
             return index;
         }
 
-        public bool GetIsProblemSolved(int currentMathProblemIndex) => StudentAnswers.Count > currentMathProblemIndex;
+        public bool GetIsProblemSolved()
+        {
+            return (SolvedProblemsCount > ResumeOnIndex);
+        }
     }
 }

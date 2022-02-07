@@ -1,4 +1,4 @@
-﻿using Nezmatematika.Model;
+﻿using MVVMMathProblemsBase.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Nezmatematika
+namespace MVVMMathProblemsBase
 {
-    public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor, Settings };
+    public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor };
     public enum AppMode { Student, Teacher, Unselected};
 
     /// <summary>

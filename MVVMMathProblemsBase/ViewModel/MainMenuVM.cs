@@ -1,6 +1,6 @@
-﻿using Nezmatematika.Model;
-using Nezmatematika.ViewModel.Commands;
-using Nezmatematika.ViewModel.ValueConverters;
+﻿using MVVMMathProblemsBase.Model;
+using MVVMMathProblemsBase.ViewModel.Commands;
+using MVVMMathProblemsBase.ViewModel.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-namespace Nezmatematika.ViewModel
+namespace MVVMMathProblemsBase.ViewModel
 {
     public class MainMenuVM : INotifyPropertyChanged
     {
@@ -78,7 +78,7 @@ namespace Nezmatematika.ViewModel
             private set
             {
                 studentCoursesCompleted = value;
-                OnPropertyChanged("StudentCompletedCoursesData");
+                OnPropertyChanged("StudentCoursesCompleted");
             }
         }
 
@@ -201,12 +201,7 @@ namespace Nezmatematika.ViewModel
                 PopulateTempAnswersFromCurrentMathProblem();
                 if (App.WhereInApp == WhereInApp.CourseForStudent && CurrentUserCourseData != null)
                 {
-                    TempAnswer = string.Empty;
-                    CurrentProblemSolved = CurrentUserCourseData.GetIsProblemSolved(CurrentMathProblemIndex);
-                    if (CurrentProblemSolved)
-                    {
-                        LoadSolvedProblemData();
-                    }
+                    CurrentProblemSolved = CurrentUserCourseData.GetIsProblemSolved();
                 }
                 OnPropertyChanged("CurrentMathProblem");
                 StudentCurrentMathProblemChanged?.Invoke(this, new EventArgs());
@@ -251,6 +246,7 @@ namespace Nezmatematika.ViewModel
         }
 
         private bool currentProblemSolved;
+
         public bool CurrentProblemSolved
         {
             get { return currentProblemSolved; }
@@ -560,39 +556,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("CourseForStudentVis");
             }
         }
-
-        private Visibility answerFeedbackCorrectVis;
-        public Visibility AnswerFeedbackCorrectVis
-        {
-            get { return answerFeedbackCorrectVis; }
-            set 
-            { 
-                answerFeedbackCorrectVis = value;
-                OnPropertyChanged("AnswerFeedbackCorrectVis");
-            }
-        }
-        private Visibility answerFeedbackIncorrectVis;
-        public Visibility AnswerFeedbackIncorrectVis
-        {
-            get { return answerFeedbackIncorrectVis; }
-            set
-            {
-                answerFeedbackIncorrectVis = value;
-                OnPropertyChanged("AnswerFeedbackIncorrectVis");
-            }
-        }
-        private string correctAnswersDisplayList;
-        public string CorrectAnswersDisplayList
-        {
-            get { return correctAnswersDisplayList; }
-            set 
-            { 
-                correctAnswersDisplayList = value;
-                OnPropertyChanged("CorrectAnswersDisplayList");
-            }
-        }
-
-
         private Visibility btnNextProblemVis;
         public Visibility BtnNextProblemVis
         {
@@ -645,16 +608,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TeacherSettingsVis");
             }
         }
-        private Visibility aboutAppVis;
-        public Visibility AboutAppVis
-        {
-            get { return aboutAppVis; }
-            set
-            {
-                aboutAppVis = value;
-                OnPropertyChanged("AboutAppVis");
-            }
-        }
 
         private Brush selectedColour;
         public Brush SelectedColour
@@ -682,12 +635,12 @@ namespace Nezmatematika.ViewModel
         public AddNewProblemCommand AddNewProblemCommand { get; set; }
         public ApplyNewSettingsCommand ApplyNewSettingsCommand { get; set; }
         public BackToMainMenuFromAnywhereCommand BackToMainMenuFromAnywhereCommand { get; set; }
+        public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
         public CheckIfAnswerIsCorrectCommand CheckIfAnswerIsCorrectCommand { get; set; }
         public CreateNewCourseCommand CreateNewCourseCommand { get; set; }
         public CreateNewUserCommand CreateNewUserCommand { get; set; }
         public DeleteCourseCommand DeleteCourseCommand { get; set; }
         public DeleteUserCommand DeleteUserCommand { get; set; }
-        public DisplayAboutAppCommand DisplayAboutAppCommand { get; set; }
         public DisplayCourseToEditSelectionCommand DisplayCourseToEditSelectionCommand { get; set; }
         public DisplayNewCourseCreationCommand DisplayNewCourseCreationCommand { get; set; }
         public DisplayNewCourseSelectionCommand DisplayNewCourseSelectionCommand { get; set; }
@@ -697,7 +650,6 @@ namespace Nezmatematika.ViewModel
         public EditCorrectAnswerCommand EditCorrectAnswerCommand { get; set; }
         public EditCourseCommand EditCourseCommand { get; set; }
         public EditUserCommand EditUserCommand { get; set; }
-        public FinishTakingCourseCommand FinishTakingCourseCommand { get; set; }
         public OpenCourseForStudentCommand OpenCourseForStudentCommand { get; set; }
         public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
         public PublishCourseCommand PublishCourseCommand { get; set; }
@@ -732,11 +684,9 @@ namespace Nezmatematika.ViewModel
             TeacherCoursesToContinueVis = Visibility.Collapsed;
             StudentNewCourseSelVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
-            ResetAnswerFeedbackVisibility();
             BtnNextProblemVis = Visibility.Collapsed;
             BtnFinishCourseVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
-            AboutAppVis = Visibility.Collapsed;
             if (IsInStudentMode)
             {
                 StudentVis = Visibility.Visible;
@@ -771,12 +721,12 @@ namespace Nezmatematika.ViewModel
             AddNewProblemCommand = new AddNewProblemCommand(this);
             ApplyNewSettingsCommand = new ApplyNewSettingsCommand(this);
             BackToMainMenuFromAnywhereCommand = new BackToMainMenuFromAnywhereCommand(this);
+            BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
             CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
             CreateNewCourseCommand = new CreateNewCourseCommand(this);
             CreateNewUserCommand = new CreateNewUserCommand(this);
             DeleteCourseCommand = new DeleteCourseCommand(this);
             DeleteUserCommand = new DeleteUserCommand(this);
-            DisplayAboutAppCommand = new DisplayAboutAppCommand(this);
             DisplayCourseToEditSelectionCommand = new DisplayCourseToEditSelectionCommand(this);
             DisplayNewCourseCreationCommand = new DisplayNewCourseCreationCommand(this);
             DisplayNewCourseSelectionCommand = new DisplayNewCourseSelectionCommand(this);
@@ -786,7 +736,6 @@ namespace Nezmatematika.ViewModel
             EditCorrectAnswerCommand = new EditCorrectAnswerCommand(this);
             EditCourseCommand = new EditCourseCommand(this);
             EditUserCommand = new EditUserCommand(this);
-            FinishTakingCourseCommand = new FinishTakingCourseCommand(this);
             OpenCourseForStudentCommand = new OpenCourseForStudentCommand(this);
             PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
             PublishCourseCommand = new PublishCourseCommand(this);
@@ -914,9 +863,6 @@ namespace Nezmatematika.ViewModel
 
         public void BackToMainMenu()
         {
-            if (App.WhereInApp == WhereInApp.Settings)
-                RestoreUserSettings();
-            
             App.WhereInApp = WhereInApp.MainMenu;
             
             ClearUserTempValues();
@@ -938,15 +884,11 @@ namespace Nezmatematika.ViewModel
             StudentNewCourseSelVis = Visibility.Collapsed;
             StudentCoursesToContinueVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
-            ResetAnswerFeedbackVisibility();
 
             //výběry nastavení
             SettingsVis = Visibility.Collapsed;
             StudentSettingsVis = Visibility.Collapsed;
             TeacherSettingsVis = Visibility.Collapsed;
-
-            //sekce o programu
-            AboutAppVis = Visibility.Collapsed;
 
             if (IsInStudentMode == true)
             {
@@ -1061,21 +1003,15 @@ namespace Nezmatematika.ViewModel
             
             if (!CheckUserCouseDataExists())
                 CreateUserCourseData(startTime);
-
-            CurrentUserCourseData.UpdateAtSessionStart();
-            SaveUCD();
+            
+            CurrentUserCourseData.LastSessionStarted = startTime;
+            SaveUserList();
 
             UpdateAbilityToContinueCourse();
 
-            if (CurrentUserCourseData.Completed)
-                BtnFinishCourseVis = Visibility.Visible;
-            else
-                BtnFinishCourseVis = Visibility.Collapsed;
-
             SetCurrentMathProblemFromUCD();
             CourseForStudentVis = Visibility.Visible;
-            if (CurrentMathProblemIndex < CurrentUserCourseData.CourseProblemCount + CurrentUserCourseData.RequeuedProblems.Count)
-                BtnNextProblemVis = Visibility.Visible;
+            BtnNextProblemVis = Visibility.Visible;
         }
         public void SetCurrentMathProblemFromUCD()
         {
@@ -1085,11 +1021,10 @@ namespace Nezmatematika.ViewModel
         public void SetCurrentMathProblemFromCurrentIndex()
         {
             int index = CurrentMathProblemIndex;
-            if (index >= CurrentUserCourseData.CourseProblemCount)
-                index = CurrentUserCourseData.RequeuedProblems[index - CurrentUserCourseData.CourseProblemCount];
+            if (CurrentUserCourseData.SolvedProblemsCount >= CurrentUserCourseData.CourseProblemCount)
+                index = CurrentUserCourseData.RequeuedProblems[index];
             CurrentMathProblem = CurrentCourse.Problems[index];
         }
-        public bool IsThisProblemTheLastOne() => CurrentMathProblemIndex == CurrentCourse.Problems.Count + CurrentUserCourseData.RequeuedProblems.Count - 1;
         private bool CheckUserCouseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
@@ -1097,41 +1032,22 @@ namespace Nezmatematika.ViewModel
             CurrentUser.CoursesData.Add(CurrentUserCourseData);
         }
         public bool CheckIfAnswerIsCorrect(string answerToCheck) => CurrentMathProblem.CheckAnswerIsCorrect(answerToCheck);
-        public void UpdateUCDAfterAnswer(bool isCorrect)
+        public void RespondToAnswer(bool isCorrect)
         {
             if (isCorrect)
+            {
                 CurrentUserCourseData.UpdateAfterCorrectAnswer();
+                CurrentProblemSolved = true;
+                if (CurrentMathProblemIndex == CurrentCourse.Problems.Count + CurrentUserCourseData.RequeuedProblems.Count - 1)
+                    BtnNextToBtnFinish();
+            }
             else
                 CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, Settings.RequeueOnMistake);
-            SaveUCD();
-        }
-        public void DisplayAnswerFeedback(bool isCorrect)
-        {
-            CorrectAnswersDisplayList = CurrentMathProblem.GetCorrectAnswersInOneString();
-            
-            if (isCorrect)
-                AnswerFeedbackCorrectVis = Visibility.Visible;
-            else
-                AnswerFeedbackIncorrectVis = Visibility.Visible;
-        }
-        public void ResetAnswerFeedbackVisibility()
-        {
-            AnswerFeedbackCorrectVis = Visibility.Collapsed;
-            AnswerFeedbackIncorrectVis = Visibility.Collapsed;
         }
         public void BtnNextToBtnFinish()
         {
             BtnNextProblemVis = Visibility.Collapsed;
             BtnFinishCourseVis = Visibility.Visible;
-        }
-        public void LoadSolvedProblemData()
-        {
-            TempAnswer = CurrentUserCourseData.StudentAnswers[CurrentMathProblemIndex];
-            DisplayAnswerFeedback(CurrentMathProblem.CheckAnswerIsCorrect(TempAnswer));
-        }
-        public void SaveUCD()
-        {
-            SaveUserList();
         }
         public void CreateNewCourse()
         {
@@ -1206,7 +1122,7 @@ namespace Nezmatematika.ViewModel
         public void UpdateAbilityToContinueCourse()
         {
             var oldValue = Settings.HasCourseToContinue;
-            Settings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
+            Settings.HasCourseToContinue = IsInStudentMode == true ? true : TeacherCoursesToContinueList.Count > 0;
             if (oldValue != Settings.HasCourseToContinue)
                 SaveUserSettings();
         }
