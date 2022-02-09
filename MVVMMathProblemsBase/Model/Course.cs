@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     public class Course
     {
@@ -130,6 +130,7 @@ namespace MVVMMathProblemsBase.Model
             {
                 PublishingStatus = PublishingStatus.PublishedUpToDate;
                 LastPublished = DateTime.Now;
+                Save();
                 Directory.CreateDirectory(coursesDirPath);
                 File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
                 var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     public class CourseSerialisable
     {
@@ -17,6 +17,7 @@ namespace MVVMMathProblemsBase.Model
         public DateTime Created { get; set; }
         public DateTime LastEdited { get; set; }
         public DateTime LastOpened { get; set; }
+        public DateTime LastPublished { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
         public string CourseDesc { get; set; }
@@ -43,6 +44,7 @@ namespace MVVMMathProblemsBase.Model
             Created = course.Created;
             LastOpened = course.LastOpened;
             LastEdited = course.LastEdited;
+            LastPublished = course.LastPublished;
             TimeSpentEditing = course.TimeSpentEditing;
             CourseTitle = course.CourseTitle;
             CourseDesc = course.CourseDesc;

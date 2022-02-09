@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 
-namespace MVVMMathProblemsBase.ViewModel.Helpers
+namespace Nezmatematika.ViewModel.Helpers
 {
     public static class TextRangeHelper
     {

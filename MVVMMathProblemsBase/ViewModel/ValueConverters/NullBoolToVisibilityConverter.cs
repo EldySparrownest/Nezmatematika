@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows; // for Visibility
 using System.Windows.Data; // for IVAlueConverter
 
-namespace MVVMMathProblemsBase.ViewModel.ValueConverters
+namespace Nezmatematika.ViewModel.ValueConverters
 {
     public class NullBoolToVisibilityConverter : IValueConverter
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class DisplayCourseToEditSelectionCommand : ICommand
     {

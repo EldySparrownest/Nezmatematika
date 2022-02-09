@@ -5,11 +5,11 @@ using System.ComponentModel; // for INotifyPropertyChanged
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MVVMMathProblemsBase.Model;
-using MVVMMathProblemsBase.ViewModel.Commands;
-using MVVMMathProblemsBase.ViewModel.ValueConverters;
+using Nezmatematika.Model;
+using Nezmatematika.ViewModel.Commands;
+using Nezmatematika.ViewModel.ValueConverters;
 
-namespace MVVMMathProblemsBase.ViewModel
+namespace Nezmatematika.ViewModel
 {
     public class MathProblemVM : INotifyPropertyChanged
     {

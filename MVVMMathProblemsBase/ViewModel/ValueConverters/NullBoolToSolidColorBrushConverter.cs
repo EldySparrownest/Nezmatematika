@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace MVVMMathProblemsBase.ViewModel.ValueConverters
+namespace Nezmatematika.ViewModel.ValueConverters
 {
     class NullBoolToSolidColorBrushConverter : IValueConverter
     {
