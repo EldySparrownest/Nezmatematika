@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class AddNewCorrectAnswerCommand : ICommand
     {

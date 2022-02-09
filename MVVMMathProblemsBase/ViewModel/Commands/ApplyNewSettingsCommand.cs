@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class ApplyNewSettingsCommand : ICommand
     {

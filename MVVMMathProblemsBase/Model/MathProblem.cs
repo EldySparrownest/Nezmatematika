@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows; // for Visibility
 using System.Windows.Documents;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     public class MathProblem : IMathProblem, INotifyPropertyChanged
     {

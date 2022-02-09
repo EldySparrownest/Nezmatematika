@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     public class MySettings
     {

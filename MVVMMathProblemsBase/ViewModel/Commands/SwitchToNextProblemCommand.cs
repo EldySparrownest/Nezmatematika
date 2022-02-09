@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class SwitchToNextProblemCommand : ICommand
     {
@@ -26,7 +26,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         {
             if (App.WhereInApp != WhereInApp.CourseForStudent)
                 return false;
-            return MMVM.CurrentMathProblem != null && MMVM.CurrentUserCourseData.SolvedProblemsCount > MMVM.CurrentUserCourseData.ResumeOnIndex;
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentProblemSolved;
         }
 
         public void Execute(object parameter)

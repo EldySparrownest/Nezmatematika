@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data; // for IValueConverter
 
-namespace MVVMMathProblemsBase.ViewModel.ValueConverters
+namespace Nezmatematika.ViewModel.ValueConverters
 {
     public class NullBoolToFeedackConverter : IValueConverter
     {
