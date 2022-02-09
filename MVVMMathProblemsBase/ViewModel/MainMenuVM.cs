@@ -1,6 +1,6 @@
-﻿using MVVMMathProblemsBase.Model;
-using MVVMMathProblemsBase.ViewModel.Commands;
-using MVVMMathProblemsBase.ViewModel.ValueConverters;
+﻿using Nezmatematika.Model;
+using Nezmatematika.ViewModel.Commands;
+using Nezmatematika.ViewModel.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
-namespace MVVMMathProblemsBase.ViewModel
+namespace Nezmatematika.ViewModel
 {
     public class MainMenuVM : INotifyPropertyChanged
     {
@@ -1122,7 +1122,7 @@ namespace MVVMMathProblemsBase.ViewModel
         public void UpdateAbilityToContinueCourse()
         {
             var oldValue = Settings.HasCourseToContinue;
-            Settings.HasCourseToContinue = IsInStudentMode == true ? true : TeacherCoursesToContinueList.Count > 0;
+            Settings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
             if (oldValue != Settings.HasCourseToContinue)
                 SaveUserSettings();
         }

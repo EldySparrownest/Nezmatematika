@@ -88,12 +88,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -119,6 +113,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -596,7 +596,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
         "ProductCode" = "8:{260C662E-D92A-45D2-A840-A255F4D2C8E0}"
-        "PackageCode" = "8:{A10D93AC-BB50-401D-9133-23F45ED115B5}"
+        "PackageCode" = "8:{EE22AD9F-74B3-4C94-8FFB-7C5903CD4D42}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -716,7 +716,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_514A7EC6AAE44E7FB4E68C12B3615F25"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7A767C01073342F78B3C18A0EE3640BF"
             {
             "Name" = "8:Nezmatematika"
             "Arguments" = "8:"
