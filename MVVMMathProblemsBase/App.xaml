@@ -1,7 +1,7 @@
-﻿<Application x:Class="MVVMMathProblemsBase.App"
+﻿<Application x:Class="Nezmatematika.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MVVMMathProblemsBase"
+             xmlns:local="clr-namespace:Nezmatematika"
              StartupUri="View/UserTypeSelectWindow.xaml">
     <Application.Resources>
 

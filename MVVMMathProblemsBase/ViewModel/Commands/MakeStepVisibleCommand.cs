@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input; // for ICommand
 using System.Windows; // for Visibility
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class MakeStepVisibleCommand : ICommand
     {

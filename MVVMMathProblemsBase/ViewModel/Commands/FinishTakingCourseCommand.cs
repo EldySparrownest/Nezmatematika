@@ -1,14 +1,10 @@
-﻿using Nezmatematika.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class RestoreDefaultSettingsCommand : ICommand
+    public class FinishTakingCourseCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -18,25 +14,21 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RestoreDefaultSettingsCommand(MainMenuVM vm)
+        public FinishTakingCourseCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            User user = parameter as User;
-            if (user != null)
-            {
-                return true;
-            }
-            return false;
-
+            if (App.WhereInApp != WhereInApp.CourseForStudent)
+                return false;
+            return MMVM.CurrentMathProblem != null && MMVM.BtnFinishCourseVis == Visibility.Visible;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.RestoreDefaultSettingsForCurrentUser();
+
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using MVVMMathProblemsBase.Model;
-using MVVMMathProblemsBase.ViewModel;
-using MVVMMathProblemsBase.ViewModel.Helpers;
+﻿using Nezmatematika.Model;
+using Nezmatematika.ViewModel;
+using Nezmatematika.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MVVMMathProblemsBase.View
+namespace Nezmatematika.View
 {
     /// <summary>
     /// Interakční logika pro MainMenuWindow.xaml

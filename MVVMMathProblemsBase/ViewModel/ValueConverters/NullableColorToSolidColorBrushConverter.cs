@@ -8,7 +8,7 @@ using System.Windows.Data; // for IVAlueConverter
 using System.Globalization;
 using System.Windows;
 
-namespace MVVMMathProblemsBase.ViewModel.ValueConverters
+namespace Nezmatematika.ViewModel.ValueConverters
 {
     public class NullableColorToSolidColorBrushConverter : IValueConverter
     {

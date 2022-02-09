@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     [Serializable]
     public class UserCourseData
@@ -23,6 +23,7 @@ namespace MVVMMathProblemsBase.Model
         public TimeSpan NetCourseTime { get; set; }
         public int ResumeOnIndex { get; set; }
         public int SolvedProblemsCount { get; set; }
+        public int SolvedCorrectly { get; set; }
         public List <int> RequeuedProblems { get; set; }
 
         public UserCourseData()
@@ -42,12 +43,21 @@ namespace MVVMMathProblemsBase.Model
             CourseStarted = startTime;
             ResumeOnIndex = 0;
             SolvedProblemsCount = 0;
+            SolvedCorrectly = 0;
             RequeuedProblems = new List<int>();
+        }
+
+        public void UpdateAtSessionStart()
+        {
+            LastSessionStarted = DateTime.Now;
+            if (!Completed)
+                NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
         }
 
         public void UpdateAfterCorrectAnswer()
         {
             SolvedProblemsCount++;
+            SolvedCorrectly++;
             ResumeOnIndex++;
         }
 
@@ -63,7 +73,15 @@ namespace MVVMMathProblemsBase.Model
         public void UpdateAtSessionEnd()
         {
             LastSessionEnded = DateTime.Now;
-            NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
+            if (!Completed)
+                NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
+        }
+
+        public void UpdateWhenCourseFinished()
+        {
+            UpdateAtSessionEnd();
+            CourseFinished = DateTime.Now;
+            Completed = true;
         }
         
         public int GetIndexToResumeOn()
