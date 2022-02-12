@@ -23,6 +23,7 @@ namespace Nezmatematika.Model
         //Teacher only section
         public bool AutosaveProblemWhenSwitching { get; set; }
         public bool AutosaveCourseBeforePublishing { get; set; }
+        public bool CapitalisationMatters { get; set; }
 
         public void Save(string filename)
         {

@@ -78,7 +78,7 @@ namespace Nezmatematika.ViewModel
             private set
             {
                 studentCoursesCompleted = value;
-                OnPropertyChanged("StudentCoursesCompleted");
+                OnPropertyChanged("StudentCompletedCoursesData");
             }
         }
 
@@ -650,6 +650,7 @@ namespace Nezmatematika.ViewModel
         public EditCorrectAnswerCommand EditCorrectAnswerCommand { get; set; }
         public EditCourseCommand EditCourseCommand { get; set; }
         public EditUserCommand EditUserCommand { get; set; }
+        public FinishTakingCourseCommand FinishTakingCourseCommand { get; set; }
         public OpenCourseForStudentCommand OpenCourseForStudentCommand { get; set; }
         public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
         public PublishCourseCommand PublishCourseCommand { get; set; }
@@ -736,6 +737,7 @@ namespace Nezmatematika.ViewModel
             EditCorrectAnswerCommand = new EditCorrectAnswerCommand(this);
             EditCourseCommand = new EditCourseCommand(this);
             EditUserCommand = new EditUserCommand(this);
+            FinishTakingCourseCommand = new FinishTakingCourseCommand(this);
             OpenCourseForStudentCommand = new OpenCourseForStudentCommand(this);
             PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
             PublishCourseCommand = new PublishCourseCommand(this);
@@ -1022,7 +1024,7 @@ namespace Nezmatematika.ViewModel
         {
             int index = CurrentMathProblemIndex;
             if (CurrentUserCourseData.SolvedProblemsCount >= CurrentUserCourseData.CourseProblemCount)
-                index = CurrentUserCourseData.RequeuedProblems[index];
+                index = CurrentUserCourseData.RequeuedProblems[index - CurrentUserCourseData.SolvedProblemsCount];
             CurrentMathProblem = CurrentCourse.Problems[index];
         }
         private bool CheckUserCouseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id) != null;

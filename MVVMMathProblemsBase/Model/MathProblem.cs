@@ -20,6 +20,7 @@ namespace Nezmatematika.Model
         public string OrderLabel { get; set; }
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }
+        public bool CapitalisationMatters { get; set; }
 
         private ObservableCollection<string> correctAnswers { get; set; }
         public ObservableCollection<string> CorrectAnswers
@@ -79,8 +80,16 @@ namespace Nezmatematika.Model
         }
 
         public bool CheckAnswerIsCorrect(string answerToCheck)
-        {
-            return CorrectAnswers.Contains(answerToCheck.Trim());
+        {            
+            if (CapitalisationMatters)
+                return CorrectAnswers.Contains(answerToCheck.Trim());
+            
+            foreach (string correctAnswer in CorrectAnswers)
+            {
+                if (answerToCheck.ToLower().Equals(correctAnswer.Trim().ToLower()))
+                    return true;
+            }
+            return false;
         }
 
         public int FindLastVisibleStep()

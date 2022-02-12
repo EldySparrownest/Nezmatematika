@@ -23,12 +23,14 @@ namespace Nezmatematika.Model
         public TimeSpan NetCourseTime { get; set; }
         public int ResumeOnIndex { get; set; }
         public int SolvedProblemsCount { get; set; }
-        public int SolvedCorrectly { get; set; }
-        public List <int> RequeuedProblems { get; set; }
+        public int SolvedCorrectlyCount { get; set; }
+        public List<int> RequeuedProblems { get; set; }
+        public List<string> StudentAnswers { get; set; }
 
         public UserCourseData()
         {
             RequeuedProblems = new List<int>();
+            StudentAnswers = new List<string>();
         }
 
         public UserCourseData(Course course, string userId, DateTime startTime)
@@ -43,8 +45,15 @@ namespace Nezmatematika.Model
             CourseStarted = startTime;
             ResumeOnIndex = 0;
             SolvedProblemsCount = 0;
-            SolvedCorrectly = 0;
+            SolvedCorrectlyCount = 0;
             RequeuedProblems = new List<int>();
+            StudentAnswers = new List<string>();
+        }
+
+        public void RecordStudentAnswer(string answer)
+        {
+            if (ResumeOnIndex <= StudentAnswers.Count)
+                StudentAnswers.Add(answer);
         }
 
         public void UpdateAtSessionStart()
@@ -57,7 +66,7 @@ namespace Nezmatematika.Model
         public void UpdateAfterCorrectAnswer()
         {
             SolvedProblemsCount++;
-            SolvedCorrectly++;
+            SolvedCorrectlyCount++;
             ResumeOnIndex++;
         }
 
@@ -77,7 +86,7 @@ namespace Nezmatematika.Model
                 NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
         }
 
-        public void UpdateWhenCourseFinished()
+        public void UpdateWhenCourseCompleted()
         {
             UpdateAtSessionEnd();
             CourseFinished = DateTime.Now;
