@@ -157,6 +157,11 @@ namespace Nezmatematika.View
             ListViewColumnHeader_Click(sender, e, lvContinuableCourses);
         }
 
+        private void lvStudentCoursesFinishedColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            ListViewColumnHeader_Click(sender, e, lvStudentCoursesFinished);
+        }
+
         private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             ListViewColumnHeader_Click(sender, e, lvStartableNewCourses);

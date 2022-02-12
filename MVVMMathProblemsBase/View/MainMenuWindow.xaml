@@ -107,7 +107,7 @@
                             <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding Author.DisplayName}">
-                                <GridViewColumnHeader Tag="Author"
+                                <GridViewColumnHeader Tag="Author.DisplayName"
                                                       Click="lvStartableNewCoursesColumnHeader_Click"
                                                       Content="Autor"
                                                       HorizontalContentAlignment="Left"
@@ -139,10 +139,17 @@
                   Visibility="{Binding StudentCoursesToContinueVis}"
                   Margin="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Label Content="Nedokončené kurzy:"
+                       Grid.Row="0" />
                 <ListView x:Name="lvStudentCoursesInProgress"
+                          Grid.Row="1"
                           SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsSynchronizedWithCurrentItem="True"
                           ItemsSource="{Binding StudentInProgressCoursesData}"
@@ -154,7 +161,7 @@
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseTitle}">
                                 <GridViewColumnHeader Tag="CourseTitle"
-                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Název"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="55" />
@@ -163,7 +170,7 @@
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseAuthor}">
                                 <GridViewColumnHeader Tag="CourseAuthor"
-                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Autor"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="55" />
@@ -171,7 +178,7 @@
                             <GridViewColumn local:GridColumn.MinWidth="105"
                                             Width="Auto">
                                 <GridViewColumnHeader Tag="CourseTitle"
-                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Vyřešené úlohy"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="105" />
@@ -180,7 +187,7 @@
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0}/{1}">
-                                                    <Binding Path="SolvedCorrectly" />
+                                                    <Binding Path="SolvedCorrectlyCount" />
                                                     <Binding Path="CourseProblemCount" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -192,7 +199,7 @@
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding LastSessionStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumnHeader Tag="CourseTitle"
-                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Naposledy otevřeno"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="130" />
@@ -204,11 +211,71 @@
                         Command="{Binding OpenCourseForStudentCommand}"
                         CommandParameter="{Binding CurrentUserCourseData}"
                         Margin="0,10,0,0"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top">
                     <Label Content="Pokračovat" />
                 </Button>
+                <Label Content="Dokončené kurzy:"
+                       Grid.Row="3" />
+                <ListView x:Name="lvStudentCoursesFinished"
+                          Grid.Row="4"
+                          SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsSynchronizedWithCurrentItem="True"
+                          ItemsSource="{Binding StudentCompletedCoursesData}"
+                          Visibility="{Binding StudentCoursesToContinueVis}"
+                          Thumb.DragDelta="Thumb_DragDelta">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn local:GridColumn.MinWidth="55"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding CourseTitle}">
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvStudentCoursesFinishedColumnHeader_Click"
+                                                      Content="Název"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="55"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding CourseAuthor}">
+                                <GridViewColumnHeader Tag="CourseAuthor"
+                                                      Click="lvStudentCoursesFinishedColumnHeader_Click"
+                                                      Content="Autor"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="55" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="105"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding CourseProblemCount}">
+                                <GridViewColumnHeader Tag="CourseProblemCount"
+                                                      Click="lvStudentCoursesFinishedColumnHeader_Click"
+                                                      Content="Počet úloh"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="105" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="130"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding CourseFinished, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Naposledy otevřeno"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="130" />
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button x:Name="btnStudentRevisitCourse"
+                        Command="{Binding OpenCourseForStudentCommand}"
+                        CommandParameter="lvStudentCoursesFinished.SelectedItem"
+                        Margin="0,10,0,0"
+                        Grid.Row="5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                    <Label Content="Otevřít" />
+                </Button>
+
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
@@ -324,7 +391,7 @@
                                Margin="5" />
                     </Button>
                     <Button x:Name="btnFinishCourse"
-                            Command="{Binding SwitchToNextProblemCommand}"
+                            Command="{Binding FinishTakingCourseCommand}"
                             Visibility="{Binding BtnFinishCourseVis}"
                             Grid.Column="2"
                             HorizontalAlignment="Center"
@@ -862,7 +929,7 @@
                         VerticalAlignment="Top">
                     <Label Content="Začít editovat"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center" />
                 </Button>
             </Grid>
             <Grid x:Name="gridCourseEditor"
@@ -888,9 +955,10 @@
                             <Separator />
                             <Button Command="{Binding AddNewProblemCommand}"
                                     Margin="5"
-                                    VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center">
+                                    VerticalAlignment="Center">
                                 <Label Content="+"
+                                       VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
                                        FontStyle="Oblique"
                                        FontSize="20"
                                        FontWeight="Bold"
@@ -1170,15 +1238,16 @@
                                      FontSize="30"
                                      FontFamily="Cambria Math"
                                      MinWidth="100"
-                                     Margin="0,5,5,5" 
-                                     VerticalAlignment="Center"/>
+                                     Margin="0,5,5,5"
+                                     VerticalAlignment="Center" />
                             <Button x:Name="btnAddNewCorrectAnswer"
                                     Background="White"
-                                    VerticalContentAlignment="Center"
                                     Command="{Binding AddNewCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
                                     Margin="5">
                                 <Label Content="+"
+                                       VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
                                        FontWeight="Bold"
                                        FontSize="20"
                                        Background="White"
@@ -1188,12 +1257,21 @@
                             <Button x:Name="btnEditCurrentAnswer"
                                     Background="White"
                                     BorderThickness="0"
-                                    VerticalContentAlignment="Center"
                                     Command="{Binding EditCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
                                     Margin="5">
-                                <Label Content="Upravit" />
+                                <Label Content="Upravit" 
+                                       VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"/>
                             </Button>
+                            <StackPanel x:Name="spProblemCapitalisation"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Stretch">
+                                <Label Content="Odpovědi rozlišují velká a malá písmena: " 
+                                       VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding CurrentMathProblem.CapitalisationMatters}"
+                                          VerticalAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
                         <ListView Name="lvProblemAnswers"
                                   Grid.Row="6"
@@ -1356,6 +1434,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label Content="Nastavení pro učitele"
                            Grid.Row="0"
@@ -1376,6 +1455,14 @@
                         <TextBlock Text="Automaticky ukládat kurzy před zveřejněním: " />
                         <CheckBox x:Name="cbSAutosaveCoursesBeforePublishing"
                                   IsChecked="{Binding Settings.AutosaveCourseBeforePublishing}" />
+                    </StackPanel>
+                    <StackPanel Name="spSCapitalisationMatters"
+                                Grid.Row="3"
+                                Orientation="Horizontal"
+                                Margin="5">
+                        <TextBlock Text="Odpovědi příkladu rozlišují malá a velká písmena (výchozí hodnota): " />
+                        <CheckBox x:Name="cbSCapitalisationMatters"
+                                  IsChecked="{Binding Settings.CapitalisationMatters}" />
                     </StackPanel>
                 </Grid>
                 <StackPanel Orientation="Horizontal"

@@ -32,7 +32,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            string answer = parameter as string;
+            string answer = (parameter as string).Trim();
+            MMVM.CurrentUserCourseData.RecordStudentAnswer(answer);
             var isCorrect = MMVM.CheckIfAnswerIsCorrect(answer);
             MMVM.RespondToAnswer(isCorrect);
         }
