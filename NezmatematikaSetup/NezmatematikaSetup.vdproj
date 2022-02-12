@@ -596,7 +596,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
         "ProductCode" = "8:{260C662E-D92A-45D2-A840-A255F4D2C8E0}"
-        "PackageCode" = "8:{EE22AD9F-74B3-4C94-8FFB-7C5903CD4D42}"
+        "PackageCode" = "8:{C65ADB9F-EEF8-43CD-B58C-44B29F3275ED}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -716,7 +716,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7A767C01073342F78B3C18A0EE3640BF"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D856720D928E4D6F9535A8BE10C4B372"
             {
             "Name" = "8:Nezmatematika"
             "Arguments" = "8:"
