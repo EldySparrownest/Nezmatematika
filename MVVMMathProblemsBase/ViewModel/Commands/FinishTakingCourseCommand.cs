@@ -28,7 +28,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-
+            MMVM.CurrentUserCourseData.UpdateWhenCourseCompleted();
+            MMVM.BackToMainMenu();
         }
     }
 }

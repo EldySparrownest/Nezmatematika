@@ -92,16 +92,6 @@ namespace Nezmatematika.Model
             return false;
         }
 
-        public string GetCorrectAnswersInOneString()
-        {
-            var result = "";
-            foreach (string answer in CorrectAnswers)
-            {
-                result += $"{answer}   ";
-            }
-            return result;
-        }
-
         public int FindLastVisibleStep()
         {
             int i = 0;
