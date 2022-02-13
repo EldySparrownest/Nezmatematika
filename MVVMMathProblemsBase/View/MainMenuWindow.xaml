@@ -63,7 +63,8 @@
                             Margin="5">
                         <Label Content="Pokračovat v kurzu" />
                     </Button>
-                    <Button Margin="5">
+                    <Button Margin="5"
+                            IsEnabled="False">
                         <Label Content="Statistiky" />
                     </Button>
                     <Button Command="{Binding DisplaySettingsCommand}"
@@ -493,7 +494,8 @@
                             Margin="5">
                         <Label Content="Upravit kurz" />
                     </Button>
-                    <Button Margin="5">
+                    <Button Margin="5"
+                            IsEnabled="False">
                         <Label Content="Statistiky" />
                     </Button>
                     <Button Command="{Binding DisplaySettingsCommand}"
@@ -887,7 +889,7 @@
                                      Margin="5"
                                      VerticalAlignment="Center"
                                      Width="150" />
-                            <Label Content="Štítky:"
+                            <!--<Label Content="Štítky:"
                                    Grid.Row="3"
                                    Grid.Column="0"
                                    HorizontalAlignment="Right" />
@@ -899,7 +901,7 @@
                             <ComboBox Grid.Row="4"
                                       Grid.Column="1"
                                       Margin="5">
-                            </ComboBox>
+                            </ComboBox>-->
 
                             <Button x:Name="btnCreateNewCourse"
                                     Click="ResetCourseEditor"
@@ -1547,13 +1549,20 @@
                   Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Content="Použité grafické prvky: "
-                       Grid.Row="0"/>
-                <Grid Grid.Row="2">
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="0">
+                    <Label Content="Úvodem"
+                           FontSize="30"/>
+                    <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce Zdeňka Kolářová."/>
+                    <Label Content="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy příkladů (tzv. 'kurzy'), které si studenti budou moci procvičovat."/>
+                    <Label Content="Program Nezmatematika není určen k použití při známkovaných testech." />
+                </StackPanel>
+                <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
@@ -1563,18 +1572,24 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
+                    <Label Content="Použité grafické prvky: "
+                           Grid.ColumnSpan="3"
+                           Grid.Row="0"
+                           FontSize="30"/>
                     <Label Content="Prvek" 
                            Grid.Column="0"
-                           Grid.Row="0"/>
+                           Grid.Row="1"/>
                     <Label Content="Popis" 
                            Grid.Column="1"
-                           Grid.Row="0"/>
+                           Grid.Row="1"/>
                     <Label Content="Zdroj" 
                            Grid.Column="2"
-                           Grid.Row="0"/>
+                           Grid.Row="1"/>
                     <Image Grid.Column="0"
-                           Grid.Row="1"
+                           Grid.Row="2"
                            MaxHeight="50"
                            MaxWidth="50">
                         <Image.Source>
@@ -1584,13 +1599,13 @@
                     <Label Content="Ikona a logo aplikace"
                            VerticalAlignment="Center"
                            Grid.Column="1"
-                           Grid.Row="1" />
+                           Grid.Row="2" />
                     <Label Content="Upraveno z volně dostupných zdrojů Canva.com"
                            VerticalAlignment="Center"
                            Grid.Column="2"
-                           Grid.Row="1" />
+                           Grid.Row="2" />
                     <Image Grid.Column="0"
-                           Grid.Row="2"
+                           Grid.Row="3"
                            MaxHeight="30"
                            MaxWidth="30">
                         <Image.Source>
@@ -1600,13 +1615,13 @@
                     <Label Content="Fajfka při správné odpovědi"
                            VerticalAlignment="Center"
                            Grid.Column="1"
-                           Grid.Row="2"/>
+                           Grid.Row="3"/>
                     <Label Content="https://icon-library.com/icon/small-check-mark-icon-5.html"
                            VerticalAlignment="Center"
                            Grid.Column="2"
-                           Grid.Row="2"/>
+                           Grid.Row="3"/>
                     <Image Grid.Column="0"
-                           Grid.Row="3"
+                           Grid.Row="4"
                            MaxHeight="30"
                            MaxWidth="30">
                         <Image.Source>
@@ -1616,11 +1631,11 @@
                     <Label Content="Křížek při nesprávné odpovědi"
                            VerticalAlignment="Center"
                            Grid.Column="1"
-                           Grid.Row="3" />
+                           Grid.Row="4" />
                     <Label Content="Vyrobeno vlastními silami"
                            VerticalAlignment="Center"
                            Grid.Column="2"
-                           Grid.Row="3" />
+                           Grid.Row="4" />
                 </Grid>
             </Grid>
         </DockPanel>
