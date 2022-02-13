@@ -35,7 +35,8 @@ namespace Nezmatematika.ViewModel.Commands
             MMVM.ResetAnswerFeedbackVisibility();
             MMVM.CurrentMathProblemIndex++;
             MMVM.SetCurrentMathProblemFromCurrentIndex();
-            MMVM.SaveUCD();
+            if (MMVM.IsThisProblemTheLastOne())
+                MMVM.BtnNextProblemVis = Visibility.Collapsed;
         }
     }
 }

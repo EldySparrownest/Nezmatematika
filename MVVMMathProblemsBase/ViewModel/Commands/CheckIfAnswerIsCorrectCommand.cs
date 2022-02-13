@@ -34,8 +34,12 @@ namespace Nezmatematika.ViewModel.Commands
         {
             string answer = (parameter as string).Trim();
             MMVM.CurrentUserCourseData.RecordStudentAnswer(answer);
+            MMVM.CurrentProblemSolved = true;
             var isCorrect = MMVM.CheckIfAnswerIsCorrect(answer);
-            MMVM.RespondToAnswer(isCorrect);
+            MMVM.UpdateUCDAfterAnswer(isCorrect);
+            MMVM.DisplayAnswerFeedback(isCorrect);
+            if (MMVM.IsThisProblemTheLastOne())
+                MMVM.BtnNextToBtnFinish();
         }
     }
 }

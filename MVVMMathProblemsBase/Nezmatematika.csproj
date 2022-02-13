@@ -27,7 +27,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.2.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -110,6 +110,7 @@
     <Compile Include="ViewModel\Commands\AddNewProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
+    <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayAboutAppCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
