@@ -70,6 +70,10 @@
                             Margin="5">
                         <Label Content="Nastavení" />
                     </Button>
+                    <Button Command="{Binding DisplayAboutAppCommand}"
+                            Margin="5">
+                        <Label Content="O programu"/>
+                    </Button>
                     <Button Click="BackToModeSelection"
                             Margin="5">
                         <Label Content="Zpět na výběr módu" />
@@ -150,7 +154,6 @@
                        Grid.Row="0" />
                 <ListView x:Name="lvStudentCoursesInProgress"
                           Grid.Row="1"
-                          SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsSynchronizedWithCurrentItem="True"
                           ItemsSource="{Binding StudentInProgressCoursesData}"
                           Visibility="{Binding StudentCoursesToContinueVis}"
@@ -209,7 +212,7 @@
                 </ListView>
                 <Button x:Name="btnStudentContinueCourse"
                         Command="{Binding OpenCourseForStudentCommand}"
-                        CommandParameter="{Binding CurrentUserCourseData}"
+                        CommandParameter="{Binding ElementName=lvStudentCoursesInProgress, Path=SelectedItem}"
                         Margin="0,10,0,0"
                         Grid.Row="2"
                         HorizontalAlignment="Right"
@@ -220,7 +223,6 @@
                        Grid.Row="3" />
                 <ListView x:Name="lvStudentCoursesFinished"
                           Grid.Row="4"
-                          SelectedValue="{Binding CurrentUserCourseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsSynchronizedWithCurrentItem="True"
                           ItemsSource="{Binding StudentCompletedCoursesData}"
                           Visibility="{Binding StudentCoursesToContinueVis}"
@@ -268,7 +270,7 @@
                 </ListView>
                 <Button x:Name="btnStudentRevisitCourse"
                         Command="{Binding OpenCourseForStudentCommand}"
-                        CommandParameter="lvStudentCoursesFinished.SelectedItem"
+                        CommandParameter="{Binding ElementName=lvStudentCoursesFinished, Path=SelectedItem}"
                         Margin="0,10,0,0"
                         Grid.Row="5"
                         HorizontalAlignment="Right"
@@ -282,7 +284,10 @@
                   Margin="20">
                 <!--<Grid x:Name="gridTakingCourse"
                   Visibility="Collapsed"
-                  Margin="10">-->
+                  Margin="10">
+                
+                                  Visibility="{Binding CourseForStudentVis}"
+                -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -295,6 +300,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -321,7 +327,7 @@
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}Vyřešeno {0} z {1} příkladů.">
-                                        <Binding Path="CurrentMathProblem.Index" />
+                                        <Binding Path="CurrentUserCourseData.SolvedCorrectlyCount" />
                                         <Binding Path="CurrentCourse.Problems.Count" />
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -364,11 +370,57 @@
                     <Label Content="Potvrdit"
                            Margin="5" />
                 </Button>
+                <StackPanel Orientation="Horizontal"
+                            Grid.ColumnSpan="4"
+                            Grid.Row="5"
+                            Visibility="{Binding AnswerFeedbackCorrectVis}">
+                    <Image MaxHeight="30"
+                           MaxWidth="30"
+                           VerticalAlignment="Center"
+                           Margin="5">
+                        <Image.Source>
+                            <BitmapImage UriSource="/Images/small-check-mark-icon-5.jpg" />
+                        </Image.Source>
+                    </Image>
+                    <Label Content="SPRÁVNĚ!"
+                           VerticalAlignment="Center"
+                           Margin="5" 
+                           FontSize="16"
+                           FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Grid.ColumnSpan="4"
+                            Grid.Row="5"
+                            Visibility="{Binding AnswerFeedbackIncorrectVis}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image MaxHeight="30"
+                               MaxWidth="30"
+                               VerticalAlignment="Center"
+                               Margin="5">
+                            <Image.Source>
+                                <BitmapImage UriSource="/Images/my_red_cross_icon_30x30.png" />
+                            </Image.Source>
+                        </Image>
+                        <Label Content="CHYBA!"
+                               VerticalAlignment="Center"
+                               Margin="5"
+                               FontSize="16"
+                               FontWeight="Bold" />
+                    </StackPanel>
+                    <Label Content="Správné odpovědi: "
+                           VerticalAlignment="Center"
+                           Margin="5"
+                           FontSize="16"/>
+                    <Label Content="{Binding CorrectAnswersDisplayList}"
+                               Margin="5"
+                               FontSize="16"/>
+                </StackPanel>
                 <Grid Grid.Column="0"
                       Grid.ColumnSpan="4"
-                      Grid.Row="5">
+                      Grid.Row="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
@@ -393,7 +445,7 @@
                     <Button x:Name="btnFinishCourse"
                             Command="{Binding FinishTakingCourseCommand}"
                             Visibility="{Binding BtnFinishCourseVis}"
-                            Grid.Column="2"
+                            Grid.Column="3"
                             HorizontalAlignment="Center"
                             Margin="5">
                         <Label Content="Dokončit"
@@ -404,7 +456,8 @@
             <Grid Name="gridTeacherMenu"
                   HorizontalAlignment="Left"
                   Visibility="{Binding Path=TeacherVis,
-                                   Source={StaticResource vm}}">
+                                   Source={StaticResource vm}}"
+                  d:IsHidden="True">
                 <StackPanel x:Name="spTeacherCurrentUser"
                             VerticalAlignment="Top"
                             Margin="20">
@@ -446,6 +499,10 @@
                     <Button Command="{Binding DisplaySettingsCommand}"
                             Margin="5">
                         <Label Content="Nastavení" />
+                    </Button>
+                    <Button Command="{Binding DisplayAboutAppCommand}"
+                            Margin="5">
+                        <Label Content="O programu" />
                     </Button>
                     <Button Click="BackToModeSelection"
                             Margin="5">
@@ -1483,6 +1540,88 @@
                         <Label Content="Uložit" />
                     </Button>
                 </StackPanel>
+            </Grid>
+            <Grid x:Name="gridAbout"
+                  Visibility="{Binding AboutAppVis}"
+                  SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                  Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Content="Použité grafické prvky: "
+                       Grid.Row="0"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label Content="Prvek" 
+                           Grid.Column="0"
+                           Grid.Row="0"/>
+                    <Label Content="Popis" 
+                           Grid.Column="1"
+                           Grid.Row="0"/>
+                    <Label Content="Zdroj" 
+                           Grid.Column="2"
+                           Grid.Row="0"/>
+                    <Image Grid.Column="0"
+                           Grid.Row="1"
+                           MaxHeight="50"
+                           MaxWidth="50">
+                        <Image.Source>
+                            <BitmapImage UriSource="/Images/Logo_500x500.png" />
+                        </Image.Source>
+                    </Image>
+                    <Label Content="Ikona a logo aplikace"
+                           VerticalAlignment="Center"
+                           Grid.Column="1"
+                           Grid.Row="1" />
+                    <Label Content="Upraveno z volně dostupných zdrojů Canva.com"
+                           VerticalAlignment="Center"
+                           Grid.Column="2"
+                           Grid.Row="1" />
+                    <Image Grid.Column="0"
+                           Grid.Row="2"
+                           MaxHeight="30"
+                           MaxWidth="30">
+                        <Image.Source>
+                            <BitmapImage UriSource="/Images/small-check-mark-icon-5.jpg" />
+                        </Image.Source>
+                    </Image>
+                    <Label Content="Fajfka při správné odpovědi"
+                           VerticalAlignment="Center"
+                           Grid.Column="1"
+                           Grid.Row="2"/>
+                    <Label Content="https://icon-library.com/icon/small-check-mark-icon-5.html"
+                           VerticalAlignment="Center"
+                           Grid.Column="2"
+                           Grid.Row="2"/>
+                    <Image Grid.Column="0"
+                           Grid.Row="3"
+                           MaxHeight="30"
+                           MaxWidth="30">
+                        <Image.Source>
+                            <BitmapImage UriSource="/Images/my_red_cross_icon_30x30.png" />
+                        </Image.Source>
+                    </Image>
+                    <Label Content="Křížek při nesprávné odpovědi"
+                           VerticalAlignment="Center"
+                           Grid.Column="1"
+                           Grid.Row="3" />
+                    <Label Content="Vyrobeno vlastními silami"
+                           VerticalAlignment="Center"
+                           Grid.Column="2"
+                           Grid.Row="3" />
+                </Grid>
             </Grid>
         </DockPanel>
     </Grid>
