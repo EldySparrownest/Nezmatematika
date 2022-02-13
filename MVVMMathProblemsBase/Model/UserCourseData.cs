@@ -91,6 +91,7 @@ namespace Nezmatematika.Model
             UpdateAtSessionEnd();
             CourseFinished = DateTime.Now;
             Completed = true;
+            ResumeOnIndex = 0;
         }
         
         public int GetIndexToResumeOn()
@@ -104,9 +105,6 @@ namespace Nezmatematika.Model
             return index;
         }
 
-        public bool GetIsProblemSolved()
-        {
-            return (SolvedProblemsCount > ResumeOnIndex);
-        }
+        public bool GetIsProblemSolved(int currentMathProblemIndex) => StudentAnswers.Count > currentMathProblemIndex;
     }
 }
