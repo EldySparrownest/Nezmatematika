@@ -200,9 +200,7 @@ namespace Nezmatematika.View
                         case WhereInApp.CourseForStudent:
                             rtbProblemTextStudentMode.Document.Blocks.Clear();
                             rtbQuestionStudentMode.Document.Blocks.Clear();
-                            tbStudentsAnswer.Clear();
                             LoadMathProblemIntoRTBs(dicStudentContentLoad);
-                            //tbStudentsAnswer.Text = "";
                             break;
                     }
                 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
@@ -31,8 +32,11 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            MMVM.ResetAnswerFeedbackVisibility();
             MMVM.CurrentMathProblemIndex++;
             MMVM.SetCurrentMathProblemFromCurrentIndex();
+            if (MMVM.IsThisProblemTheLastOne())
+                MMVM.BtnNextProblemVis = Visibility.Collapsed;
         }
     }
 }

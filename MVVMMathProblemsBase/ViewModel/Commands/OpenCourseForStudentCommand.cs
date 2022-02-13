@@ -26,10 +26,21 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && (MMVM.CurrentCourse != null || MMVM.CurrentUserCourseData != null))
-            {
+            if (MMVM.CurrentUser == null)
+                return false;
+            if (!MMVM.IsInStudentMode)
+                return false;
+
+            if (MMVM.CurrentCourse != null)
                 return true;
+            
+            if (parameter != null)
+            {
+                var ucd = parameter as UserCourseData;
+                if (ucd != null)
+                    return true;
             }
+
             return false;
         }
 
@@ -39,7 +50,10 @@ namespace Nezmatematika.ViewModel.Commands
             {
                 var ucd = parameter as UserCourseData;
                 if (ucd != null)
+                {
+                    MMVM.CurrentUserCourseData = ucd;
                     MMVM.CurrentCourse = MMVM.StudentDirCourseList.Find(c => c.Id == ucd.CourseId);
+                }
             }
             
             MMVM.BackToMainMenu();

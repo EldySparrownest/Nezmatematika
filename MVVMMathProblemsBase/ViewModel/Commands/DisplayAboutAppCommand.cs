@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class SwitchToPreviousProblemCommand : ICommand
+    public class DisplayAboutAppCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -18,24 +18,24 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public SwitchToPreviousProblemCommand(MainMenuVM vm)
+        public DisplayAboutAppCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            if (App.WhereInApp != WhereInApp.CourseForStudent)
-                return false;
-            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblem.Index > 0;
+            if (MMVM.CurrentUser != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.ResetAnswerFeedbackVisibility();
-            MMVM.BtnNextProblemVis = Visibility.Visible;
-            MMVM.CurrentMathProblemIndex--;
-            MMVM.SetCurrentMathProblemFromCurrentIndex();
+            MMVM.BackToMainMenu();
+            MMVM.AboutAppVis = Visibility.Visible;
         }
     }
 }

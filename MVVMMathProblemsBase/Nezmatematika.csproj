@@ -111,6 +111,7 @@
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayAboutAppCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\FinishTakingCourseCommand.cs" />
@@ -216,6 +217,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Logo_500x500.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\small-check-mark-icon-5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\my_red_cross_icon_30x30.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
