@@ -576,7 +576,7 @@
                                      Grid.Column="1"
                                      Margin="5"
                                      VerticalAlignment="Center"
-                                     MaxLength="30" />
+                                     MaxLength="50" />
                             <Label x:Name="lblgNULastName"
                                    Content="Příjmení:"
                                    Grid.Row="3"
@@ -588,7 +588,7 @@
                                      Grid.Column="1"
                                      Margin="5"
                                      VerticalAlignment="Center"
-                                     MaxLength="30" />
+                                     MaxLength="50" />
                             <Label x:Name="lblgNUTitleAfter"
                                    Content="Titul za:"
                                    Grid.Row="4"
@@ -611,7 +611,8 @@
                                      Grid.Row="5"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center" />
+                                     VerticalAlignment="Center"
+                                     MaxLength="100" />
                             <Label x:Name="lblgNUClass"
                                    Content="Třída:"
                                    Grid.Row="6"
@@ -619,7 +620,7 @@
                                    HorizontalAlignment="Right" />
                             <TextBox x:Name="tbgNUClass"
                                      Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="10"
+                                     MaxLength="20"
                                      Grid.Row="6"
                                      Grid.Column="1"
                                      Margin="5"
@@ -691,7 +692,7 @@
                                      Grid.Column="1"
                                      Margin="5"
                                      VerticalAlignment="Center"
-                                     MaxLength="30" />
+                                     MaxLength="50" />
                             <Label x:Name="lblgEULastName"
                                    Content="Příjmení:"
                                    Grid.Row="3"
@@ -703,7 +704,7 @@
                                      Grid.Column="1"
                                      Margin="5"
                                      VerticalAlignment="Center"
-                                     MaxLength="30" />
+                                     MaxLength="50" />
                             <Label x:Name="lblgEUTitleAfter"
                                    Content="Titul za:"
                                    Grid.Row="4"
@@ -714,7 +715,8 @@
                                      Grid.Row="4"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center" />
+                                     VerticalAlignment="Center" 
+                                     MaxLength="30" />
                             <Label x:Name="lblgEUSchool"
                                    Content="Škola:"
                                    Grid.Row="5"
@@ -725,7 +727,8 @@
                                      Grid.Row="5"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center" />
+                                     VerticalAlignment="Center"
+                                     MaxLength="100" />
                             <Label x:Name="lblgEUClass"
                                    Content="Třída:"
                                    Grid.Row="6"
@@ -733,7 +736,7 @@
                                    HorizontalAlignment="Right" />
                             <TextBox x:Name="tbgEUClass"
                                      Text="{Binding TempClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     MaxLength="10"
+                                     MaxLength="20"
                                      Grid.Row="6"
                                      Grid.Column="1"
                                      Margin="5"
@@ -878,7 +881,7 @@
                                      Margin="0,5"
                                      VerticalAlignment="Center"
                                      Width="150"
-                                     MaxLength="30" />
+                                     MaxLength="100" />
                             <Label Content="Popis:"
                                    Grid.Row="2"
                                    Grid.Column="0"
@@ -1533,7 +1536,7 @@
                             Margin="5">
                         <Label Content="Obnovit výchozí" />
                     </Button>
-                    <Button Command="{Binding BackToMainMenuWithoutSavingSettingsCommand}"
+                    <Button Command="{Binding BackToMainMenuFromAnywhereCommand}"
                             Margin="5">
                         <Label Content="Zpět" />
                     </Button>
@@ -1558,9 +1561,10 @@
                             Grid.Row="0">
                     <Label Content="Úvodem"
                            FontSize="30"/>
-                    <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce Zdeňka Kolářová."/>
+                    <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce studentka Jihočeské Univerzity v Českých Budějovicích, Zdeňka Kolářová."/>
                     <Label Content="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy příkladů (tzv. 'kurzy'), které si studenti budou moci procvičovat."/>
                     <Label Content="Program Nezmatematika není určen k použití při známkovaných testech." />
+                    <Label Content="Pokud máte připomínky či návrhy ke zlepšení aplikace, můžete je poslat na tuto adresu: nezmatematika@gmail.com"/>
                 </StackPanel>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>

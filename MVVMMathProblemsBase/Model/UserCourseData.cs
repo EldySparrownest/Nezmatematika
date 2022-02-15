@@ -59,8 +59,6 @@ namespace Nezmatematika.Model
         public void UpdateAtSessionStart()
         {
             LastSessionStarted = DateTime.Now;
-            if (!Completed)
-                NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
         }
 
         public void UpdateAfterCorrectAnswer()
@@ -68,6 +66,9 @@ namespace Nezmatematika.Model
             SolvedProblemsCount++;
             SolvedCorrectlyCount++;
             ResumeOnIndex++;
+
+            if (SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count)
+                UpdateWhenCourseCompleted();
         }
 
         public void UpdateAfterIncorrectAnswer(int problemIndex, bool requeue)

@@ -682,7 +682,6 @@ namespace Nezmatematika.ViewModel
         public AddNewProblemCommand AddNewProblemCommand { get; set; }
         public ApplyNewSettingsCommand ApplyNewSettingsCommand { get; set; }
         public BackToMainMenuFromAnywhereCommand BackToMainMenuFromAnywhereCommand { get; set; }
-        public BackToMainMenuWithoutSavingSettingsCommand BackToMainMenuWithoutSavingSettingsCommand { get; set; }
         public CheckIfAnswerIsCorrectCommand CheckIfAnswerIsCorrectCommand { get; set; }
         public CreateNewCourseCommand CreateNewCourseCommand { get; set; }
         public CreateNewUserCommand CreateNewUserCommand { get; set; }
@@ -772,7 +771,6 @@ namespace Nezmatematika.ViewModel
             AddNewProblemCommand = new AddNewProblemCommand(this);
             ApplyNewSettingsCommand = new ApplyNewSettingsCommand(this);
             BackToMainMenuFromAnywhereCommand = new BackToMainMenuFromAnywhereCommand(this);
-            BackToMainMenuWithoutSavingSettingsCommand = new BackToMainMenuWithoutSavingSettingsCommand(this);
             CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
             CreateNewCourseCommand = new CreateNewCourseCommand(this);
             CreateNewUserCommand = new CreateNewUserCommand(this);
@@ -916,6 +914,9 @@ namespace Nezmatematika.ViewModel
 
         public void BackToMainMenu()
         {
+            if (App.WhereInApp == WhereInApp.Settings)
+                RestoreUserSettings();
+            
             App.WhereInApp = WhereInApp.MainMenu;
             
             ClearUserTempValues();
@@ -1060,9 +1061,9 @@ namespace Nezmatematika.ViewModel
             
             if (!CheckUserCouseDataExists())
                 CreateUserCourseData(startTime);
-            
-            CurrentUserCourseData.LastSessionStarted = startTime;
-            SaveUserList();
+
+            CurrentUserCourseData.UpdateAtSessionStart();
+            SaveUCD();
 
             UpdateAbilityToContinueCourse();
 
@@ -1073,7 +1074,8 @@ namespace Nezmatematika.ViewModel
 
             SetCurrentMathProblemFromUCD();
             CourseForStudentVis = Visibility.Visible;
-            BtnNextProblemVis = Visibility.Visible;
+            if (CurrentMathProblemIndex < CurrentUserCourseData.CourseProblemCount + CurrentUserCourseData.RequeuedProblems.Count)
+                BtnNextProblemVis = Visibility.Visible;
         }
         public void SetCurrentMathProblemFromUCD()
         {
@@ -1101,6 +1103,7 @@ namespace Nezmatematika.ViewModel
                 CurrentUserCourseData.UpdateAfterCorrectAnswer();
             else
                 CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, Settings.RequeueOnMistake);
+            SaveUCD();
         }
         public void DisplayAnswerFeedback(bool isCorrect)
         {
@@ -1125,6 +1128,10 @@ namespace Nezmatematika.ViewModel
         {
             TempAnswer = CurrentUserCourseData.StudentAnswers[CurrentMathProblemIndex];
             DisplayAnswerFeedback(CurrentMathProblem.CheckAnswerIsCorrect(TempAnswer));
+        }
+        public void SaveUCD()
+        {
+            SaveUserList();
         }
         public void CreateNewCourse()
         {

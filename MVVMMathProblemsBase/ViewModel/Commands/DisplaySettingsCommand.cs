@@ -35,6 +35,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
+            App.WhereInApp = WhereInApp.Settings;
             
             if (MMVM.IsInStudentMode == true)
                 MMVM.StudentSettingsVis = Visibility.Visible;

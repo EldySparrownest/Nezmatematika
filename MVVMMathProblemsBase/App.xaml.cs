@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Nezmatematika
 {
-    public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor };
+    public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor, Settings };
     public enum AppMode { Student, Teacher, Unselected};
 
     /// <summary>
