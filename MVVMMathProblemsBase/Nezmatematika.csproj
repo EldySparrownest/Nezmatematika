@@ -110,7 +110,6 @@
     <Compile Include="ViewModel\Commands\AddNewProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
-    <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayAboutAppCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
