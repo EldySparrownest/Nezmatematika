@@ -31,7 +31,11 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             if (MMVM.IsInStudentMode == true && App.WhereInApp == WhereInApp.CourseForStudent)
+            {
                 MMVM.CurrentUserCourseData.UpdateAtSessionEnd();
+                MMVM.SaveUCD();
+            }
+            
             MMVM.BackToMainMenu();
             MMVM.ClearCurrentValuesExceptUser();
         }
