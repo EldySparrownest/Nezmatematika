@@ -47,6 +47,7 @@ namespace Nezmatematika.Model
             Author = serialisedCourse.Author;
             Id = serialisedCourse.Id;
             Created = serialisedCourse.Created;
+            LastPublished = serialisedCourse.LastPublished;
             LastOpened = serialisedCourse.LastOpened;
             LastEdited = serialisedCourse.LastEdited;
             TimeSpentEditing = serialisedCourse.TimeSpentEditing;
@@ -135,7 +136,7 @@ namespace Nezmatematika.Model
                 File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
                 var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);
                 Directory.CreateDirectory(newCourseIDDirPath);
-                
+
                 if (Directory.Exists(DirPath) && Directory.Exists(newCourseIDDirPath))
                 {
                     var files = Directory.EnumerateFiles(DirPath);

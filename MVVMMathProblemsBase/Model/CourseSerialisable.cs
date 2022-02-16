@@ -15,9 +15,10 @@ namespace Nezmatematika.Model
         public string FilePath { get; set; }
         public User Author { get; set; }
         public DateTime Created { get; set; }
+        public PublishingStatus PublishingStatus { get; set; }
+        public DateTime LastPublished { get; set; }
         public DateTime LastEdited { get; set; }
         public DateTime LastOpened { get; set; }
-        public DateTime LastPublished { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
         public string CourseDesc { get; set; }
@@ -44,8 +45,10 @@ namespace Nezmatematika.Model
             Created = course.Created;
             LastOpened = course.LastOpened;
             LastEdited = course.LastEdited;
+            TimeSpentEditing = course.TimeSpentEditing;
             LastPublished = course.LastPublished;
             TimeSpentEditing = course.TimeSpentEditing;
+            PublishingStatus = course.PublishingStatus;
             CourseTitle = course.CourseTitle;
             CourseDesc = course.CourseDesc;
             Tags = course.Tags.ToList();
