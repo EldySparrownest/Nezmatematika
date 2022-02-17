@@ -44,7 +44,7 @@ namespace Nezmatematika.ViewModel.Commands
             }
 
             if (publish)
-                MMVM.CurrentCourse.Publish(MMVM._CoursesDirPath());
+                MMVM.CurrentCourse.Publish(MMVM._CoursesDirPath(), MMVM._CoursesArchivedDirPath());
             else
             {
                 MessageBox.Show("Aby kurz mohl být zveřejněn, musí mít každá úloha alespoň 1 správnou odpověď.\n" +

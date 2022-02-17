@@ -52,7 +52,7 @@ namespace Nezmatematika.ViewModel.Commands
                 if (ucd != null)
                 {
                     MMVM.CurrentUserCourseData = ucd;
-                    MMVM.CurrentCourse = MMVM.StudentDirCourseList.Find(c => c.Id == ucd.CourseId);
+                    MMVM.CurrentCourse = MMVM.AllPublishedCoursesList.Find(c => c.Id == ucd.CourseId);
                 }
             }
             

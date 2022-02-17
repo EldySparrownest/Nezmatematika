@@ -10,6 +10,7 @@ namespace Nezmatematika.Model
     public class UserCourseData
     {
         public string CourseId { get; set; }
+        public int Version { get; set; }
         public string CourseTitle { get; set; }
         public string CourseAuthor { get; set; }
         public int CourseProblemCount { get; set; }
@@ -36,6 +37,7 @@ namespace Nezmatematika.Model
         public UserCourseData(Course course, string userId, DateTime startTime)
         {
             CourseId = course.Id;
+            Version = course.Version;
             CourseTitle = course.CourseTitle;
             CourseAuthor = course.Author.DisplayName;
             CourseProblemCount = course.Problems.Count;

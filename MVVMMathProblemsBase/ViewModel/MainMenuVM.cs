@@ -29,7 +29,9 @@ namespace Nezmatematika.ViewModel
         public string _DefaultSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
         public string _UserSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
         public string _CoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses");
-        public string _UserCoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", CurrentUser.Id);
+        public string _CoursesArchivedDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", "Archived");
+        public string _CoursesPublishedDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", "Published");
+        public string _TeacherCoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", CurrentUser.Id);
 
         private MySettings settings;
         public MySettings Settings
@@ -64,11 +66,18 @@ namespace Nezmatematika.ViewModel
             }
         }
 
-        private List<Course> studentDicCourseList;
-        public List<Course> StudentDirCourseList
+        private List<Course> allArchivedCoursesList;
+        public List<Course> AllArchivedCoursesList
         {
-            get { return studentDicCourseList; }
-            set { studentDicCourseList = value; }
+            get { return allArchivedCoursesList; }
+            set { allArchivedCoursesList = value; }
+        }
+
+        private List<Course> allPublishedCoursesList;
+        public List<Course> AllPublishedCoursesList
+        {
+            get { return allPublishedCoursesList; }
+            set { allPublishedCoursesList = value; }
         }
 
         private ObservableCollection<UserCourseData> studentCoursesCompleted;
@@ -760,7 +769,8 @@ namespace Nezmatematika.ViewModel
             GetUsersOfTypeList();
 
             NewCoursesToStartList = new ObservableCollection<Course>();
-            StudentDirCourseList = new List<Course>();
+            AllArchivedCoursesList = new List<Course>();
+            AllPublishedCoursesList = new List<Course>();
             StudentCompletedCoursesData = new ObservableCollection<UserCourseData>();
             StudentInProgressCoursesData = new ObservableCollection<UserCourseData>();
             TeacherCoursesToContinueList = new ObservableCollection<Course>();
@@ -1059,7 +1069,7 @@ namespace Nezmatematika.ViewModel
             App.WhereInApp = WhereInApp.CourseForStudent;
             var startTime = DateTime.Now;
             
-            if (!CheckUserCouseDataExists())
+            if (!CheckUserCourseDataExists())
                 CreateUserCourseData(startTime);
 
             CurrentUserCourseData.UpdateAtSessionStart();
@@ -1090,7 +1100,7 @@ namespace Nezmatematika.ViewModel
             CurrentMathProblem = CurrentCourse.Problems[index];
         }
         public bool IsThisProblemTheLastOne() => CurrentMathProblemIndex == CurrentCourse.Problems.Count + CurrentUserCourseData.RequeuedProblems.Count - 1;
-        private bool CheckUserCouseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id) != null;
+        private bool CheckUserCourseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id && c.Version == CurrentCourse.Version) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
             CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.Id, startTime);
@@ -1136,7 +1146,7 @@ namespace Nezmatematika.ViewModel
         public void CreateNewCourse()
         {
             CurrentCourse = new Course(CurrentUser, TempCourseTitle, TempCourseDesc, TempCourseTags);
-            CurrentCourse.AddNewMathProblem(new MathProblem());
+            CurrentCourse.AddNewMathProblem();
             CurrentMathProblem = CurrentCourse.Problems[0];
 
             Directory.CreateDirectory(CurrentCourse.DirPath);
@@ -1189,7 +1199,7 @@ namespace Nezmatematika.ViewModel
             }
 
             if (publish)
-                CurrentCourse.Publish(_CoursesDirPath());
+                CurrentCourse.Publish(_CoursesPublishedDirPath(), _CoursesArchivedDirPath());
             else
             {
                 MessageBox.Show("Aby kurz mohl být zveřejněn, musí mít každá úloha alespoň 1 správnou odpověď.\n" +
@@ -1215,9 +1225,9 @@ namespace Nezmatematika.ViewModel
         {
             TeacherCoursesToContinueList.Clear();
             List<Course> resultList = new List<Course>();
-            if (Directory.Exists(_UserCoursesDirPath()))
+            if (Directory.Exists(_TeacherCoursesDirPath()))
             {
-                var files = Directory.EnumerateFiles(_UserCoursesDirPath());
+                var files = Directory.EnumerateFiles(_TeacherCoursesDirPath());
 
                 foreach (var file in files)
                 {
@@ -1227,16 +1237,29 @@ namespace Nezmatematika.ViewModel
             TeacherCoursesToContinueList = new ObservableCollection<Course>(resultList.OrderByDescending(c => c.LastEdited));
         }
 
-        private void GetStudentDirCourseList()
+        private void GetAllArchivedCoursesList()
         {
-            StudentDirCourseList.Clear();
-            if (Directory.Exists(_CoursesDirPath()))
+            AllArchivedCoursesList.Clear();
+            if (Directory.Exists(_CoursesArchivedDirPath()))
             {
-                var files = Directory.EnumerateFiles(_CoursesDirPath());
+                var files = Directory.EnumerateFiles(_CoursesArchivedDirPath());
 
                 foreach (var file in files)
                 {
-                    StudentDirCourseList.Add(Course.Read(file));
+                    AllArchivedCoursesList.Add(Course.Read(file));
+                }
+            }
+        }
+        private void GetAllPublishedCoursesList()
+        {
+            AllPublishedCoursesList.Clear();
+            if (Directory.Exists(_CoursesPublishedDirPath()))
+            {
+                var files = Directory.EnumerateFiles(_CoursesPublishedDirPath());
+
+                foreach (var file in files)
+                {
+                    AllPublishedCoursesList.Add(Course.Read(file));
                 }
             }
         }
@@ -1244,16 +1267,14 @@ namespace Nezmatematika.ViewModel
         public void GetListOfNewCoursesToStart()
         {
             NewCoursesToStartList.Clear();
-            GetStudentDirCourseList();
-            List<Course> resultList = new List<Course>(StudentDirCourseList);
+            GetAllPublishedCoursesList();
+            List<Course> resultList = new List<Course>(AllPublishedCoursesList);
 
             foreach (UserCourseData userCourseData in CurrentUser.CoursesData)
             {
-                var courseToRemove = resultList.Find(c => c.Id == userCourseData.CourseId);
+                var courseToRemove = resultList.Find(c => c.Id == userCourseData.CourseId && c.Version == userCourseData.Version);
                 if (courseToRemove != null)
-                {
                     resultList.Remove(courseToRemove);
-                }
             }
             NewCoursesToStartList = new ObservableCollection<Course>(resultList.OrderByDescending(c => c.CourseTitle));
         }
@@ -1262,14 +1283,17 @@ namespace Nezmatematika.ViewModel
         {
             StudentInProgressCoursesData.Clear();
             StudentCompletedCoursesData.Clear();
-            GetStudentDirCourseList();
+            GetAllArchivedCoursesList();
+            GetAllPublishedCoursesList();
             
             var listCoursesCompleted = new List<UserCourseData>();
             var listCoursesInProgress = new List<UserCourseData>();
             
             foreach (UserCourseData userCourseData in CurrentUser.CoursesData)
             {
-                var continuableCourse = StudentDirCourseList.Find(c => c.Id == userCourseData.CourseId);
+                var continuableCourse = AllPublishedCoursesList.Find(c => c.Id == userCourseData.CourseId && c.Version == userCourseData.Version);
+                if (continuableCourse == null)
+                    continuableCourse = AllArchivedCoursesList.Find(c => c.Id == userCourseData.CourseId && c.Version == userCourseData.Version);
                 if (continuableCourse != null)
                 {
                     if (userCourseData.Completed == true)

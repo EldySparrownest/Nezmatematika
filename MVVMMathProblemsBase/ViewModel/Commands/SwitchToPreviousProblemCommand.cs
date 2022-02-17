@@ -27,7 +27,7 @@ namespace Nezmatematika.ViewModel.Commands
         {
             if (App.WhereInApp != WhereInApp.CourseForStudent)
                 return false;
-            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblem.Index > 0;
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblemIndex > 0;
         }
 
         public void Execute(object parameter)

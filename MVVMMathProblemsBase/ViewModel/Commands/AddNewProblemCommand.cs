@@ -31,7 +31,7 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.CurrentCourse.AddNewMathProblem(new MathProblem());
+            MMVM.CurrentCourse.AddNewMathProblem();
         }
     }
 }

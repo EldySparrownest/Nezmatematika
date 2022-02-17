@@ -73,7 +73,7 @@
                     </Button>
                     <Button Command="{Binding DisplayAboutAppCommand}"
                             Margin="5">
-                        <Label Content="O programu"/>
+                        <Label Content="O programu" />
                     </Button>
                     <Button Click="BackToModeSelection"
                             Margin="5">
@@ -108,6 +108,15 @@
                                                       Content="Název"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="55" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="35"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Version}">
+                                <GridViewColumnHeader Tag="Version"
+                                                      Click="lvStartableNewCoursesColumnHeader_Click"
+                                                      Content="Verze"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="35" />
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
@@ -170,6 +179,15 @@
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="55" />
                             </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="35"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Version}">
+                                <GridViewColumnHeader Tag="Version"
+                                                      Click="lvStartableNewCoursesColumnHeader_Click"
+                                                      Content="Verze"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="35" />
+                            </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseAuthor}">
@@ -181,7 +199,7 @@
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="105"
                                             Width="Auto">
-                                <GridViewColumnHeader Tag="CourseTitle"
+                                <GridViewColumnHeader Tag="SolvedCorrectlyCount"
                                                       Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Vyřešené úlohy"
                                                       HorizontalContentAlignment="Left"
@@ -202,7 +220,7 @@
                             <GridViewColumn local:GridColumn.MinWidth="130"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding LastSessionStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                <GridViewColumnHeader Tag="CourseTitle"
+                                <GridViewColumnHeader Tag="LastSessionStarted"
                                                       Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                       Content="Naposledy otevřeno"
                                                       HorizontalContentAlignment="Left"
@@ -239,6 +257,15 @@
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="55" />
                             </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="35"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Version}">
+                                <GridViewColumnHeader Tag="Version"
+                                                      Click="lvStartableNewCoursesColumnHeader_Click"
+                                                      Content="Verze"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="35" />
+                            </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="55"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseAuthor}">
@@ -261,7 +288,7 @@
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseFinished, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumnHeader Tag="CourseTitle"
-                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Click="lvStudentCoursesFinishedColumnHeader_Click"
                                                       Content="Naposledy otevřeno"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="130" />
@@ -282,6 +309,7 @@
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
+                  VerticalAlignment="Stretch"
                   Margin="20">
                 <!--<Grid x:Name="gridTakingCourse"
                   Visibility="Collapsed"
@@ -291,17 +319,17 @@
                 -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -320,6 +348,7 @@
                 </Button>
                 <StackPanel Orientation="Vertical"
                             Grid.Column="1"
+                            Grid.ColumnSpan="3"
                             Grid.Row="0">
                     <Label Content="{Binding CurrentCourse.CourseTitle}" />
                     <Label Content="{Binding CurrentCourse.CourseDesc}" />
@@ -344,6 +373,7 @@
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
                              IsReadOnly="True"
+                             VerticalScrollBarVisibility="Auto"
                              Height="Auto"
                              Margin="5" />
                 <RichTextBox x:Name="rtbQuestionStudentMode"
@@ -385,9 +415,9 @@
                     </Image>
                     <Label Content="SPRÁVNĚ!"
                            VerticalAlignment="Center"
-                           Margin="5" 
+                           Margin="5"
                            FontSize="16"
-                           FontWeight="Bold"/>
+                           FontWeight="Bold" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical"
                             Grid.ColumnSpan="4"
@@ -411,10 +441,10 @@
                     <Label Content="Správné odpovědi: "
                            VerticalAlignment="Center"
                            Margin="5"
-                           FontSize="16"/>
+                           FontSize="16" />
                     <Label Content="{Binding CorrectAnswersDisplayList}"
-                               Margin="5"
-                               FontSize="16"/>
+                           Margin="5"
+                           FontSize="16" />
                 </StackPanel>
                 <Grid Grid.Column="0"
                       Grid.ColumnSpan="4"
@@ -715,7 +745,7 @@
                                      Grid.Row="4"
                                      Grid.Column="1"
                                      Margin="5"
-                                     VerticalAlignment="Center" 
+                                     VerticalAlignment="Center"
                                      MaxLength="30" />
                             <Label x:Name="lblgEUSchool"
                                    Content="Škola:"
@@ -782,12 +812,10 @@
                         <GridView>
                             <GridViewColumn local:GridColumn.MinWidth="70"
                                             Width="Auto">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="LastName"
-                                                          Click="lvUsersColumnHeader_Click">
-                                        Jméno
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="LastName"
+                                                      Click="lvUsersColumnHeader_Click"
+                                                      Content="Jméno"
+                                                      HorizontalContentAlignment="Left" />
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock>
@@ -805,22 +833,18 @@
                             <GridViewColumn local:GridColumn.MinWidth="60"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding ClassName}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="ClassName"
-                                                          Click="lvUsersColumnHeader_Click">
-                                        Třída
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="ClassName"
+                                                      Click="lvUsersColumnHeader_Click"
+                                                      Content="Třída"
+                                                      HorizontalContentAlignment="Left" />
                             </GridViewColumn>
                             <GridViewColumn local:GridColumn.MinWidth="60"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding SchoolName}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="SchoolName"
-                                                          Click="lvUsersColumnHeader_Click">
-                                        Škola
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="SchoolName"
+                                                      Click="lvUsersColumnHeader_Click"
+                                                      Content="Škola"
+                                                      HorizontalContentAlignment="Left" />
                             </GridViewColumn>
                             <!--<GridViewColumn Header="Akce"
                                             Width="Auto">
@@ -952,32 +976,35 @@
                             <GridViewColumn local:GridColumn.MinWidth="70"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding CourseTitle}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="CourseTitle"
-                                                          Click="lvContinuableCoursesColumnHeader_Click">
-                                        Název
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="CourseTitle"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Název"
+                                                      HorizontalContentAlignment="Left" />
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="60"
+                            <GridViewColumn local:GridColumn.MinWidth="35"
+                                            Width="Auto"
+                                            DisplayMemberBinding="{Binding Version}">
+                                <GridViewColumnHeader Tag="Version"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Verze"
+                                                      HorizontalContentAlignment="Left"
+                                                      MinWidth="35" />
+                            </GridViewColumn>
+                            <GridViewColumn local:GridColumn.MinWidth="125"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding LastEdited, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="LastEdited"
-                                                          Click="lvContinuableCoursesColumnHeader_Click">
-                                        Poslední změna
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="LastEdited"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Poslední změna"
+                                                      HorizontalContentAlignment="Left" />
                             </GridViewColumn>
-                            <GridViewColumn local:GridColumn.MinWidth="60"
+                            <GridViewColumn local:GridColumn.MinWidth="125"
                                             Width="Auto"
                                             DisplayMemberBinding="{Binding Created, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Tag="LastEdited"
-                                                          Click="lvContinuableCoursesColumnHeader_Click">
-                                        Vytvořeno
-                                    </GridViewColumnHeader>
-                                </GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="Created"
+                                                      Click="lvContinuableCoursesColumnHeader_Click"
+                                                      Content="Vytvořeno"
+                                                      HorizontalContentAlignment="Left" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -1322,17 +1349,17 @@
                                     Command="{Binding EditCorrectAnswerCommand}"
                                     CommandParameter="{Binding TempCorrectAnswer}"
                                     Margin="5">
-                                <Label Content="Upravit" 
+                                <Label Content="Upravit"
                                        VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"/>
+                                       VerticalContentAlignment="Center" />
                             </Button>
                             <StackPanel x:Name="spProblemCapitalisation"
                                         Orientation="Horizontal"
                                         VerticalAlignment="Stretch">
-                                <Label Content="Odpovědi rozlišují velká a malá písmena: " 
-                                       VerticalAlignment="Center"/>
+                                <Label Content="Odpovědi rozlišují velká a malá písmena: "
+                                       VerticalAlignment="Center" />
                                 <CheckBox IsChecked="{Binding CurrentMathProblem.CapitalisationMatters}"
-                                          VerticalAlignment="Center"/>
+                                          VerticalAlignment="Center" />
                             </StackPanel>
                         </StackPanel>
                         <ListView Name="lvProblemAnswers"
@@ -1560,11 +1587,11 @@
                 <StackPanel Orientation="Vertical"
                             Grid.Row="0">
                     <Label Content="Úvodem"
-                           FontSize="30"/>
-                    <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce studentka Jihočeské Univerzity v Českých Budějovicích, Zdeňka Kolářová."/>
-                    <Label Content="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy příkladů (tzv. 'kurzy'), které si studenti budou moci procvičovat."/>
+                           FontSize="30" />
+                    <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce studentka Jihočeské Univerzity v Českých Budějovicích, Zdeňka Kolářová." />
+                    <Label Content="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy příkladů (tzv. 'kurzy'), které si studenti budou moci procvičovat." />
                     <Label Content="Program Nezmatematika není určen k použití při známkovaných testech." />
-                    <Label Content="Pokud máte připomínky či návrhy ke zlepšení aplikace, můžete je poslat na tuto adresu: nezmatematika@gmail.com"/>
+                    <Label Content="Pokud máte připomínky či návrhy ke zlepšení aplikace, můžete je poslat na tuto adresu: nezmatematika@gmail.com" />
                 </StackPanel>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
@@ -1582,16 +1609,16 @@
                     <Label Content="Použité grafické prvky: "
                            Grid.ColumnSpan="3"
                            Grid.Row="0"
-                           FontSize="30"/>
-                    <Label Content="Prvek" 
+                           FontSize="30" />
+                    <Label Content="Prvek"
                            Grid.Column="0"
-                           Grid.Row="1"/>
-                    <Label Content="Popis" 
+                           Grid.Row="1" />
+                    <Label Content="Popis"
                            Grid.Column="1"
-                           Grid.Row="1"/>
-                    <Label Content="Zdroj" 
+                           Grid.Row="1" />
+                    <Label Content="Zdroj"
                            Grid.Column="2"
-                           Grid.Row="1"/>
+                           Grid.Row="1" />
                     <Image Grid.Column="0"
                            Grid.Row="2"
                            MaxHeight="50"
@@ -1619,11 +1646,11 @@
                     <Label Content="Fajfka při správné odpovědi"
                            VerticalAlignment="Center"
                            Grid.Column="1"
-                           Grid.Row="3"/>
+                           Grid.Row="3" />
                     <Label Content="https://icon-library.com/icon/small-check-mark-icon-5.html"
                            VerticalAlignment="Center"
                            Grid.Column="2"
-                           Grid.Row="3"/>
+                           Grid.Row="3" />
                     <Image Grid.Column="0"
                            Grid.Row="4"
                            MaxHeight="30"

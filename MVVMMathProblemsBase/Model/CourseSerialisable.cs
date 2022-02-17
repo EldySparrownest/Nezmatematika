@@ -11,6 +11,7 @@ namespace Nezmatematika.Model
     public class CourseSerialisable
     {
         public string Id { get; set; }
+        public int Version { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
         public User Author { get; set; }
@@ -42,6 +43,7 @@ namespace Nezmatematika.Model
             FilePath = course.FilePath;
             Author = course.Author;
             Id = course.Id;
+            Version = course.Version;
             Created = course.Created;
             LastOpened = course.LastOpened;
             LastEdited = course.LastEdited;

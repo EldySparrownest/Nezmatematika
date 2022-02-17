@@ -18,6 +18,7 @@ namespace Nezmatematika.Model
         public DateTime Created { get; set; }
         public PublishingStatus PublishingStatus { get; set; }
         public DateTime LastPublished { get; set; }
+        public int Version { get; private set; }
         public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
@@ -46,6 +47,7 @@ namespace Nezmatematika.Model
             FilePath = serialisedCourse.FilePath;
             Author = serialisedCourse.Author;
             Id = serialisedCourse.Id;
+            Version = serialisedCourse.Version;
             Created = serialisedCourse.Created;
             LastPublished = serialisedCourse.LastPublished;
             LastOpened = serialisedCourse.LastOpened;
@@ -66,6 +68,7 @@ namespace Nezmatematika.Model
         {
             Author = author;
             Id = NewCourseId(author.Id);
+            Version = 0;
             DirPath = CourseDirPath();
             FilePath = CourseFilePath();
             CourseTitle = title;
@@ -78,7 +81,7 @@ namespace Nezmatematika.Model
             PublishingStatus = PublishingStatus.NotPublished;
         }
 
-        public void AddNewMathProblem(MathProblem mathProblem)
+        public void AddNewMathProblem()
         {
             string precedingLabel;
             if (Problems.Count == 0)
@@ -122,31 +125,51 @@ namespace Nezmatematika.Model
             cs.Save();
         }
 
-        public void Publish(string coursesDirPath)
+        public void Publish(string publishedCoursesDirPath, string archivedCoursesPath)
         {
             var prevStatus = PublishingStatus;
             var prevPublished = LastPublished;
 
             try
             {
+                Directory.CreateDirectory(publishedCoursesDirPath);
+
+                var prevVerDirName = $"{Id}_{Version}";
+                var prevVersionCourseDir = Path.Combine(publishedCoursesDirPath, prevVerDirName);
+                var archive = Version != 0 && Directory.Exists(prevVersionCourseDir);
+
+                Version++;
                 PublishingStatus = PublishingStatus.PublishedUpToDate;
                 LastPublished = DateTime.Now;
                 Save();
-                Directory.CreateDirectory(coursesDirPath);
-                File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
-                var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);
-                Directory.CreateDirectory(newCourseIDDirPath);
 
+                if (archive)
+                {                   
+                    Directory.CreateDirectory(Path.Combine(archivedCoursesPath, prevVerDirName));
+                    var filesToArchive = Directory.EnumerateFiles(prevVersionCourseDir);
+
+                    foreach (var file in filesToArchive)
+                    {
+                        var newFilePath = file.Replace(publishedCoursesDirPath, archivedCoursesPath);
+                        File.Copy(file, newFilePath, true);
+                    }
+                    Directory.Delete(prevVersionCourseDir, true);
+                    File.Delete(Path.Combine(publishedCoursesDirPath,$"{prevVerDirName}{GlobalValues.CourseFilename}"));   
+                }
+
+                var newCourseIDDirPath = Path.Combine(publishedCoursesDirPath, $"{Id}_{Version}");
+                Directory.CreateDirectory(newCourseIDDirPath);
                 if (Directory.Exists(DirPath) && Directory.Exists(newCourseIDDirPath))
                 {
-                    var files = Directory.EnumerateFiles(DirPath);
+                    var newFiles = Directory.EnumerateFiles(DirPath);
 
-                    foreach (var file in files)
+                    foreach (var file in newFiles)
                     {
                         var newFilePath = file.Replace(DirPath, newCourseIDDirPath);
                         File.Copy(file, newFilePath, true);
                     }
                 }
+                File.Copy(FilePath, Path.Combine(publishedCoursesDirPath, $"{Id}_{Version}{GlobalValues.CourseFilename}"), true);
             }
             catch (Exception e)
             {
