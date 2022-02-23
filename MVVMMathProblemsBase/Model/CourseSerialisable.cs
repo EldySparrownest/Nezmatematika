@@ -65,7 +65,6 @@ namespace Nezmatematika.Model
 
         public void Save()
         {
-            Directory.CreateDirectory(DirPath);
             using (StreamWriter sw = new StreamWriter(FilePath))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(CourseSerialisable));

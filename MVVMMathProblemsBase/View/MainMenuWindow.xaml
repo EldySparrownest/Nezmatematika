@@ -222,7 +222,7 @@
                                             DisplayMemberBinding="{Binding LastSessionStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumnHeader Tag="LastSessionStarted"
                                                       Click="lvStudentCoursesInProgressColumnHeader_Click"
-                                                      Content="Naposledy otevřeno"
+                                                      Content="Naposledy otevřen"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="130" />
                             </GridViewColumn>
@@ -289,7 +289,7 @@
                                             DisplayMemberBinding="{Binding CourseFinished, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                 <GridViewColumnHeader Tag="CourseTitle"
                                                       Click="lvStudentCoursesFinishedColumnHeader_Click"
-                                                      Content="Naposledy otevřeno"
+                                                      Content="Dokončen"
                                                       HorizontalContentAlignment="Left"
                                                       MinWidth="130" />
                             </GridViewColumn>
@@ -311,28 +311,20 @@
                   Visibility="{Binding CourseForStudentVis}"
                   VerticalAlignment="Stretch"
                   Margin="20">
-                <!--<Grid x:Name="gridTakingCourse"
-                  Visibility="Collapsed"
-                  Margin="10">
-                
-                                  Visibility="{Binding CourseForStudentVis}"
-                -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-
                 <Button Command="{Binding BackToMainMenuFromAnywhereCommand}"
                         Grid.Column="0"
                         Grid.Row="0"
@@ -357,7 +349,8 @@
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}Vyřešeno {0} z {1} příkladů.">
-                                        <Binding Path="CurrentUserCourseData.SolvedCorrectlyCount" />
+                                        <Binding Path="CurrentUserCourseData.SolvedCorrectlyCount"
+                                                 UpdateSourceTrigger="PropertyChanged" />
                                         <Binding Path="CurrentCourse.Problems.Count" />
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -365,45 +358,53 @@
                         </Label.Content>
                     </Label>
                 </StackPanel>
-
-                <RichTextBox x:Name="rtbProblemTextStudentMode"
-                             Grid.ColumnSpan="4"
-                             Grid.Column="0"
-                             Grid.Row="1"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Stretch"
-                             IsReadOnly="True"
-                             VerticalScrollBarVisibility="Auto"
-                             Height="Auto"
-                             Margin="5" />
-                <RichTextBox x:Name="rtbQuestionStudentMode"
-                             Grid.ColumnSpan="4"
-                             Grid.Column="0"
-                             Grid.Row="2"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Stretch"
-                             IsReadOnly="True"
-                             Height="Auto"
-                             Margin="5" />
+                <DockPanel Grid.ColumnSpan="4"
+                           Grid.Row="1">
+                    <Grid x:Name="gridRTBsStudentMode"
+                          DockPanel.Dock="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <RichTextBox x:Name="rtbProblemTextStudentMode"
+                                     Grid.Column="0"
+                                     Grid.Row="0"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     IsReadOnly="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Height="Auto"
+                                     Margin="5" />
+                        <RichTextBox x:Name="rtbQuestionStudentMode"
+                                     Grid.Column="0"
+                                     Grid.Row="1"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     IsReadOnly="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Height="Auto"
+                                     Margin="5" />
+                    </Grid>
+                </DockPanel>
                 <TextBox x:Name="tbStudentsAnswer"
-                         Text="{Binding TempAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Grid.Column="0"
+                         Grid.Row="2"
                          Grid.ColumnSpan="3"
-                         Grid.Row="4"
+                         Text="{Binding TempAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalContentAlignment="Center"
                          Margin="5" />
                 <Button x:Name="btnConfirmAnswer"
+                        Grid.Column="3"
+                        Grid.Row="2"
                         Command="{Binding CheckIfAnswerIsCorrectCommand}"
                         CommandParameter="{Binding TempAnswer}"
-                        Grid.Column="3"
-                        Grid.Row="4"
                         Margin="5">
                     <Label Content="Potvrdit"
                            Margin="5" />
                 </Button>
-                <StackPanel Orientation="Horizontal"
+                <StackPanel x:Name="spCorrectFeedback"
+                            Orientation="Horizontal"
                             Grid.ColumnSpan="4"
-                            Grid.Row="5"
+                            Grid.Row="4"
                             Visibility="{Binding AnswerFeedbackCorrectVis}">
                     <Image MaxHeight="30"
                            MaxWidth="30"
@@ -419,9 +420,10 @@
                            FontSize="16"
                            FontWeight="Bold" />
                 </StackPanel>
-                <StackPanel Orientation="Vertical"
+                <StackPanel x:Name="spIncorrectFeedback"
+                            Orientation="Vertical"
                             Grid.ColumnSpan="4"
-                            Grid.Row="5"
+                            Grid.Row="4"
                             Visibility="{Binding AnswerFeedbackIncorrectVis}">
                     <StackPanel Orientation="Horizontal">
                         <Image MaxHeight="30"
@@ -446,9 +448,9 @@
                            Margin="5"
                            FontSize="16" />
                 </StackPanel>
-                <Grid Grid.Column="0"
+                <Grid x:Name="gridProblemNavigation"
                       Grid.ColumnSpan="4"
-                      Grid.Row="6">
+                      Grid.Row="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />

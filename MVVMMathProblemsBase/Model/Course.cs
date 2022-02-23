@@ -53,6 +53,7 @@ namespace Nezmatematika.Model
             LastOpened = serialisedCourse.LastOpened;
             LastEdited = serialisedCourse.LastEdited;
             TimeSpentEditing = serialisedCourse.TimeSpentEditing;
+            PublishingStatus = serialisedCourse.PublishingStatus;
             CourseTitle = serialisedCourse.CourseTitle;
             CourseDesc = serialisedCourse.CourseDesc;
             Tags = new ObservableCollection<string>(serialisedCourse.Tags);
@@ -118,64 +119,101 @@ namespace Nezmatematika.Model
         public void Save()
         {
             ReorderProblemIndexes();
-            TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited) - DateTime.Now);
+            TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now));
             LastEdited = DateTime.Now;
             CourseSerialisable cs = new CourseSerialisable(this);
 
             cs.Save();
         }
 
-        public void Publish(string publishedCoursesDirPath, string archivedCoursesPath)
+        public void Publish(string publishedCoursesDirPath, string archivedCoursesDirPath)
         {
+            var prevVerDirName = $"{Id}_{Version}"; //adresářové jméno poslední publikované verze
+
             var prevStatus = PublishingStatus;
             var prevPublished = LastPublished;
 
             try
             {
-                Directory.CreateDirectory(publishedCoursesDirPath);
-
-                var prevVerDirName = $"{Id}_{Version}";
-                var prevVersionCourseDir = Path.Combine(publishedCoursesDirPath, prevVerDirName);
-                var archive = Version != 0 && Directory.Exists(prevVersionCourseDir);
-
+                var teacherCoursesDirPath = publishedCoursesDirPath.Replace("Published", Author.Id);
+                var prevVersion = Version;
                 Version++;
                 PublishingStatus = PublishingStatus.PublishedUpToDate;
                 LastPublished = DateTime.Now;
                 Save();
 
+                var prevVersionCourseDir = Path.Combine(publishedCoursesDirPath, prevVerDirName); //adresářová cesta poslední publikované verze
+                var archive = prevVersion != 0 && Directory.Exists(prevVersionCourseDir);
+
                 if (archive)
-                {                   
-                    Directory.CreateDirectory(Path.Combine(archivedCoursesPath, prevVerDirName));
-                    var filesToArchive = Directory.EnumerateFiles(prevVersionCourseDir);
+                    Course.ArchiveCourse(Id, prevVersion, publishedCoursesDirPath, archivedCoursesDirPath);
 
-                    foreach (var file in filesToArchive)
-                    {
-                        var newFilePath = file.Replace(publishedCoursesDirPath, archivedCoursesPath);
-                        File.Copy(file, newFilePath, true);
-                    }
-                    Directory.Delete(prevVersionCourseDir, true);
-                    File.Delete(Path.Combine(publishedCoursesDirPath,$"{prevVerDirName}{GlobalValues.CourseFilename}"));   
-                }
-
-                var newCourseIDDirPath = Path.Combine(publishedCoursesDirPath, $"{Id}_{Version}");
-                Directory.CreateDirectory(newCourseIDDirPath);
-                if (Directory.Exists(DirPath) && Directory.Exists(newCourseIDDirPath))
-                {
-                    var newFiles = Directory.EnumerateFiles(DirPath);
-
-                    foreach (var file in newFiles)
-                    {
-                        var newFilePath = file.Replace(DirPath, newCourseIDDirPath);
-                        File.Copy(file, newFilePath, true);
-                    }
-                }
-                File.Copy(FilePath, Path.Combine(publishedCoursesDirPath, $"{Id}_{Version}{GlobalValues.CourseFilename}"), true);
+                PublishCourse(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
             }
             catch (Exception e)
             {
                 PublishingStatus = prevStatus;
                 LastPublished = prevPublished;
                 MessageBox.Show(e.Message);
+            }
+        }
+
+        public static void ArchiveCourse(string courseId, int courseVersion, string publishedCoursesDirPath, string archivedCoursesDirPath)
+        {
+            var problemsDirName = $"{courseId}_{courseVersion}";
+            var publishedFilePath = Path.Combine(publishedCoursesDirPath, $"{problemsDirName}{GlobalValues.CourseFilename}");
+            var course = Course.Read(publishedFilePath);
+
+            if (course == null)
+                return;
+
+            course.UpdatePathsToAdjustForMovingFiles(publishedCoursesDirPath, archivedCoursesDirPath);
+            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má
+
+            //přesun adresáře s RTF soubory úloh
+            Directory.Move(Path.Combine(publishedCoursesDirPath, problemsDirName), Path.Combine(archivedCoursesDirPath, problemsDirName));
+
+            //výmaz hlavního souboru z publikovaných
+            File.Delete(publishedFilePath);
+        }
+
+        private void PublishCourse(string courseId, int courseVersion, string teacherCoursesDirPath, string publishedCoursesDirPath)
+        {
+            var problemsDirName = $"{courseId}_{courseVersion}";
+            var teacherFilePath = Path.Combine(teacherCoursesDirPath, $"{courseId}{GlobalValues.CourseFilename}");
+            var course = Course.Read(teacherFilePath);
+
+            if (course == null)
+                return;
+
+            course.UpdatePathsToAdjustForMovingFiles(teacherCoursesDirPath, publishedCoursesDirPath);
+            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má (a případně si i dovytvoří adresáře)
+
+            //kopírování adresáře s RTF soubory úloh
+            var courseDirPublished = Path.Combine(publishedCoursesDirPath, problemsDirName);
+            Directory.CreateDirectory(courseDirPublished);
+            if (Directory.Exists(DirPath) && Directory.Exists(courseDirPublished))
+            {
+                var newFiles = Directory.EnumerateFiles(DirPath);
+                foreach (var file in newFiles)
+                {
+                    var newFilePath = file.Replace(DirPath, courseDirPublished);
+                    File.Copy(file, newFilePath, true);
+                }
+            }
+        }
+
+        public void UpdatePathsToAdjustForMovingFiles(string oldCoursesDir, string newCoursesDir, bool addVersionSuffix = false)
+        {
+            var versionSuffix = $"_{Version}";
+            //DirPath = DirPath.Replace(oldCoursesDir, newCoursesDir) + versionSuffix;
+            DirPath = Path.Combine(newCoursesDir, String.Join("", Id, versionSuffix));
+            FilePath = Path.Combine(newCoursesDir, String.Join("",Id,versionSuffix, GlobalValues.CourseFilename));
+
+            foreach (var mathProblem in Problems)
+            {
+                mathProblem.DirPath = DirPath;
+                mathProblem.FilePath = Path.Combine(DirPath, $"{mathProblem.Id}.rtf");
             }
         }
 
