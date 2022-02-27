@@ -26,11 +26,13 @@ namespace Nezmatematika.Model
         public int SolvedProblemsCount { get; set; }
         public int SolvedCorrectlyCount { get; set; }
         public List<int> RequeuedProblems { get; set; }
+        public List<int> VisibleStepsCounts { get; set; }
         public List<string> StudentAnswers { get; set; }
 
         public UserCourseData()
         {
             RequeuedProblems = new List<int>();
+            VisibleStepsCounts = new List<int>();
             StudentAnswers = new List<string>();
         }
 
@@ -49,6 +51,7 @@ namespace Nezmatematika.Model
             SolvedProblemsCount = 0;
             SolvedCorrectlyCount = 0;
             RequeuedProblems = new List<int>();
+            VisibleStepsCounts = new List<int>();
             StudentAnswers = new List<string>();
         }
 
@@ -109,5 +112,15 @@ namespace Nezmatematika.Model
         }
 
         public bool GetIsProblemSolved(int currentMathProblemIndex) => StudentAnswers.Count > currentMathProblemIndex;
+
+        public void AddNewVisibleStepsCounter()
+        {
+            VisibleStepsCounts.Add(0);
+        }
+
+        public void RecordStepReveal(int problemIndex)
+        {
+            VisibleStepsCounts[problemIndex]++;
+        }
     }
 }

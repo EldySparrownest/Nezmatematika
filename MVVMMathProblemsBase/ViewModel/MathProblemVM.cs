@@ -36,9 +36,9 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("CurrentMathProblem");
             }
         }
-        private ObservableCollection<SolutionStep> visibleSteps;
+        private ObservableCollection<string> visibleSteps;
 
-        public ObservableCollection<SolutionStep> VisibleSteps
+        public ObservableCollection<string> VisibleSteps
         {
             get { return visibleSteps; }
             set
@@ -86,8 +86,8 @@ namespace Nezmatematika.ViewModel
 
             //            }
             Solved = null;
-            VisibleSteps = new ObservableCollection<SolutionStep>();
-            ChangeStepVisibilityCommand = new MakeStepVisibleCommand(this);
+            VisibleSteps = new ObservableCollection<string>();
+            //ChangeStepVisibilityCommand = new MakeStepVisibleCommand(this);
             //CheckIfAnswerIsCorrectCommand = new CheckIfAnswerIsCorrectCommand(this);
         }
 

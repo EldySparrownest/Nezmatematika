@@ -17,7 +17,7 @@
                 <Button x:Name="btnStudent"
                         Margin="10"
                         Click="btnStudent_Click">
-                    <Label Content="JSEM STUDENT"
+                    <Label Content="JSEM STUDENT(KA)"
                            FontSize="50"
                            FontWeight="Bold" />
                 </Button>

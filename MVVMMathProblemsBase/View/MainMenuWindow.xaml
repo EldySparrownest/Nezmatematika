@@ -12,7 +12,7 @@
         Height="Auto"
         Width="Auto"
         MinHeight="450"
-        MinWidth="450"
+        MinWidth="1150"
         d:DesignWidth="5000">
     <Window.Resources>
         <vm:MainMenuVM x:Key="vm" />
@@ -68,7 +68,8 @@
                         <Label Content="Statistiky" />
                     </Button>
                     <Button Command="{Binding DisplaySettingsCommand}"
-                            Margin="5">
+                            Margin="5"
+                            Click="LoadComboBoxesForSettings">
                         <Label Content="Nastavení" />
                     </Button>
                     <Button Command="{Binding DisplayAboutAppCommand}"
@@ -316,11 +317,12 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -338,11 +340,13 @@
                                Margin="3,0" />
                     </StackPanel>
                 </Button>
-                <StackPanel Orientation="Vertical"
+                <StackPanel x:Name="spCourseInfo"
+                            Orientation="Vertical"
                             Grid.Column="1"
                             Grid.ColumnSpan="3"
                             Grid.Row="0">
-                    <Label Content="{Binding CurrentCourse.CourseTitle}" />
+                    <Label x:Name="lblCourseTitle"
+                           Content="{Binding CurrentCourse.CourseTitle}" />
                     <Label Content="{Binding CurrentCourse.CourseDesc}" />
                     <Label>
                         <Label.Content>
@@ -358,7 +362,8 @@
                         </Label.Content>
                     </Label>
                 </StackPanel>
-                <DockPanel Grid.ColumnSpan="4"
+                <DockPanel x:Name="dpProblemArea"
+                           Grid.ColumnSpan="5"
                            Grid.Row="1">
                     <Grid x:Name="gridRTBsStudentMode"
                           DockPanel.Dock="Top">
@@ -369,36 +374,115 @@
                         <RichTextBox x:Name="rtbProblemTextStudentMode"
                                      Grid.Column="0"
                                      Grid.Row="0"
-                                     HorizontalAlignment="Stretch"
-                                     VerticalAlignment="Stretch"
                                      IsReadOnly="True"
+                                     HorizontalScrollBarVisibility="Auto"
                                      VerticalScrollBarVisibility="Auto"
-                                     Height="Auto"
                                      Margin="5" />
                         <RichTextBox x:Name="rtbQuestionStudentMode"
                                      Grid.Column="0"
                                      Grid.Row="1"
-                                     HorizontalAlignment="Stretch"
-                                     VerticalAlignment="Stretch"
                                      IsReadOnly="True"
+                                     HorizontalScrollBarVisibility="Auto"
                                      VerticalScrollBarVisibility="Auto"
-                                     Height="Auto"
                                      Margin="5" />
                     </Grid>
                 </DockPanel>
+                <ListView Name="lvDisplayedProblemSolutionSteps"
+                          Grid.ColumnSpan="5"
+                          Grid.Row="2"
+                          ItemsSource="{Binding SolutionStepsShownToStudent}"
+                          Margin="5,5,5,10"
+                          Background="Transparent"
+                          BorderThickness="0">
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </Style>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable"
+                                    Value="false" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border x:Name="Bd"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Background="{TemplateBinding Background}"
+                                                Padding="{TemplateBinding Padding}"
+                                                SnapsToDevicePixels="true">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <!--<Trigger Property="IsSelected"
+                                                     Value="true">
+                                                <Setter Property="Background"
+                                                        TargetName="Bd"
+                                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                                <Setter Property="Foreground"
+                                                        Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                            </Trigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsSelected"
+                                                               Value="true" />
+                                                    <Condition Property="Selector.IsSelectionActive"
+                                                               Value="false" />
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background"
+                                                        TargetName="Bd"
+                                                        Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+                                                <Setter Property="Foreground"
+                                                        Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}" />
+                                            </MultiTrigger>
+                                            <Trigger Property="IsEnabled"
+                                                     Value="false">
+                                                <Setter Property="Foreground"
+                                                        Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                            </Trigger>-->
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter Property="Background"
+                                                        Value="Transparent" />
+                                                <Setter Property="Foreground"
+                                                        Value="{DynamicResource White_200}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Margin="2.5"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
                 <TextBox x:Name="tbStudentsAnswer"
-                         Grid.Row="2"
+                         Grid.Row="3"
                          Grid.ColumnSpan="3"
                          Text="{Binding TempAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalContentAlignment="Center"
                          Margin="5" />
                 <Button x:Name="btnConfirmAnswer"
                         Grid.Column="3"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Command="{Binding CheckIfAnswerIsCorrectCommand}"
                         CommandParameter="{Binding TempAnswer}"
                         Margin="5">
                     <Label Content="Potvrdit"
+                           Margin="5" />
+                </Button>
+                <Button x:Name="btnShowHint"
+                        Grid.Column="4"
+                        Grid.Row="3"
+                        Command="{Binding MakeStepVisibleCommand}"
+                        Margin="5">
+                    <Label Content="Nápověda"
                            Margin="5" />
                 </Button>
                 <StackPanel x:Name="spCorrectFeedback"
@@ -531,6 +615,7 @@
                         <Label Content="Statistiky" />
                     </Button>
                     <Button Command="{Binding DisplaySettingsCommand}"
+                            Click="LoadComboBoxesForSettings"
                             Margin="5">
                         <Label Content="Nastavení" />
                     </Button>
@@ -1050,7 +1135,6 @@
                                 <Label Content="+"
                                        VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       FontStyle="Oblique"
                                        FontSize="20"
                                        FontWeight="Bold"
                                        Foreground="LimeGreen" />
@@ -1295,111 +1379,134 @@
                     <Grid x:Name="gridCourseEditorMathProblemUserMode"
                           Visibility="{Binding CourseEditorMathProblemUserModeVis}"
                           VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
                           Margin="10,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label Content="Zadání"
                                Grid.Row="0" />
                         <RichTextBox x:Name="rtbProblemText"
+                                     Grid.ColumnSpan="3"
                                      Grid.Row="1"
                                      GotFocus="SetRTBWithFocus"
-                                     SelectionChanged="RTBWithFcs_SelectionChanged" />
+                                     SelectionChanged="RTBWithFcs_SelectionChanged"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalScrollBarVisibility="Auto" />
                         <Label Content="Otázka"
                                Grid.Row="2" />
                         <RichTextBox x:Name="rtbQuestion"
+                                     Grid.ColumnSpan="3"
                                      Grid.Row="3"
                                      GotFocus="SetRTBWithFocus"
-                                     SelectionChanged="RTBWithFcs_SelectionChanged" />
-                        <Label x:Name="lblCorrectAnswers"
-                               Grid.Row="4"
-                               Content="Správné odpovědi"
-                               VerticalContentAlignment="Center" />
-                        <StackPanel x:Name="spCEAnswerEdit"
-                                    Orientation="Horizontal"
-                                    Grid.Row="5">
-                            <TextBox x:Name="tbNewCorrectAnswer"
-                                     Text="{Binding TempCorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="30"
-                                     FontFamily="Cambria Math"
-                                     MinWidth="100"
-                                     Margin="0,5,5,5"
-                                     VerticalAlignment="Center" />
-                            <Button x:Name="btnAddNewCorrectAnswer"
-                                    Background="White"
-                                    Command="{Binding AddNewCorrectAnswerCommand}"
-                                    CommandParameter="{Binding TempCorrectAnswer}"
-                                    Margin="5">
-                                <Label Content="+"
-                                       VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       FontWeight="Bold"
-                                       FontSize="20"
-                                       Background="White"
-                                       BorderThickness="0"
-                                       Foreground="LimeGreen" />
-                            </Button>
-                            <Button x:Name="btnEditCurrentAnswer"
-                                    Background="White"
-                                    BorderThickness="0"
-                                    Command="{Binding EditCorrectAnswerCommand}"
-                                    CommandParameter="{Binding TempCorrectAnswer}"
-                                    Margin="5">
-                                <Label Content="Upravit"
-                                       VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center" />
-                            </Button>
+                                     SelectionChanged="RTBWithFcs_SelectionChanged"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalScrollBarVisibility="Auto" />
+                        <Grid x:Name="gridCourseEditorBottom"
+                              Grid.ColumnSpan="4"
+                              Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="100" />
+                            </Grid.RowDefinitions>
+                            <Label x:Name="lblCorrectAnswers"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   Content="Správné odpovědi"
+                                   VerticalContentAlignment="Center"
+                                   Margin="0,5,0,0" />
+                            <DockPanel x:Name="dpCEAnswerEdit"
+                                        Grid.Column="0"
+                                        Grid.Row="1">
+                                <Button x:Name="btnEditCurrentAnswer"
+                                        DockPanel.Dock="Right"
+                                        Command="{Binding EditCorrectAnswerCommand}"
+                                        CommandParameter="{Binding TempCorrectAnswer}">
+                                    <Label Content="Upravit"/>
+                                </Button>
+                                <Button x:Name="btnAddNewCorrectAnswer"
+                                        DockPanel.Dock="Right"
+                                        Command="{Binding AddNewCorrectAnswerCommand}"
+                                        CommandParameter="{Binding TempCorrectAnswer}"
+                                        Background="White"
+                                        Margin="5,0">
+                                    <Label Content="+"
+                                           VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Background="Transparent"
+                                           Foreground="LimeGreen"/>
+                                </Button>
+                                <TextBox x:Name="tbNewCorrectAnswer"
+                                         DockPanel.Dock="Left"
+                                         Text="{Binding TempCorrectAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="26"
+                                         MinWidth="100"
+                                         VerticalAlignment="Center" />
+                            </DockPanel>
                             <StackPanel x:Name="spProblemCapitalisation"
                                         Orientation="Horizontal"
-                                        VerticalAlignment="Stretch">
+                                        VerticalAlignment="Stretch"
+                                        Grid.Column="0"
+                                        Grid.Row="2">
                                 <Label Content="Odpovědi rozlišují velká a malá písmena: "
                                        VerticalAlignment="Center" />
                                 <CheckBox IsChecked="{Binding CurrentMathProblem.CapitalisationMatters}"
                                           VerticalAlignment="Center" />
                             </StackPanel>
-                        </StackPanel>
-                        <ListView Name="lvProblemAnswers"
-                                  Grid.Row="6"
-                                  SelectedValue="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding CurrentMathProblem.CorrectAnswers}"
-                                  IsSynchronizedWithCurrentItem="True">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid x:Name="gridAnswersList"
-                                          HorizontalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                               Margin="2.5"
-                                               Grid.Column="0"
-                                               MinWidth="15">
-                                            <!--<i:Interaction.Triggers>
+
+                            <ListView Name="lvProblemAnswers"
+                                      Grid.Column="0"
+                                      Grid.Row="3"
+                                      SelectedValue="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding CurrentMathProblem.CorrectAnswers}"
+                                      IsSynchronizedWithCurrentItem="True">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid x:Name="gridAnswersList"
+                                              HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   Margin="2.5"
+                                                   Grid.Column="0"
+                                                   MinWidth="15">
+                                                <!--<i:Interaction.Triggers>
                                             <i:EventTrigger EventName="LostFocus">
                                                 <i:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=RenameEndCommand}"
                                                                        CommandParameter="{Binding}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>-->
-                                        </Label>
-                                        <Button Grid.Column="1"
-                                                HorizontalAlignment="Left"
-                                                Command="{Binding Source={StaticResource vm}, Path=RemoveCorrectAnswerCommand}"
-                                                CommandParameter="{Binding .}">
-                                            <Label Content="Odebrat" />
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.Resources>
-                                <!--<ContextMenu x:Key="resourceContextMenu">
+                                            </Label>
+                                            <Button Grid.Column="1"
+                                                    HorizontalAlignment="Left"
+                                                    Command="{Binding Source={StaticResource vm}, Path=RemoveCorrectAnswerCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                <Label Content="Odebrat" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.Resources>
+                                    <!--<ContextMenu x:Key="resourceContextMenu">
                                 <MenuItem Header="Upravit profil"
                                           Command="{Binding Source={StaticResource vm}, Path=PrepUserForEditingCommand}"
                                           CommandParameter="{Binding}" />
@@ -1407,8 +1514,74 @@
                                           Command="{Binding Source={StaticResource vm}, Path=DeleteUserCommand}"
                                           CommandParameter="{Binding}" />
                             </ContextMenu>-->
-                            </ListView.Resources>
-                        </ListView>
+                                </ListView.Resources>
+                            </ListView>
+                            <Label x:Name="lblSolutionHints"
+                                   Grid.Column="1"
+                                   Grid.Row="0"
+                                   Content="Nápovědné kroky"
+                                   VerticalContentAlignment="Center"
+                                   Margin="10,5,0,0" />
+                            <DockPanel x:Name="dpCEStepEdit"
+                                       Grid.Column="1"
+                                       Grid.Row="1"
+                                       Margin="10,0,0,0">
+                                <Button x:Name="btnEditCurrentSolutionStep"
+                                        DockPanel.Dock="Right"
+                                        Command="{Binding EditSolutionStepCommand}"
+                                        CommandParameter="{Binding TempSolutionStepText}">
+                                    <Label Content="Upravit"/>
+                                </Button>
+                                <Button x:Name="btnAddNewSolutionStep"
+                                        DockPanel.Dock="Right"
+                                        Command="{Binding AddNewSolutionStepCommand}"
+                                        CommandParameter="{Binding TempSolutionStepText}"
+                                        Background="White"
+                                        Margin="5,0">
+                                    <Label Content="+"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Background="Transparent"
+                                           Foreground="LimeGreen"/>
+                                </Button>
+                                <TextBox x:Name="tbNewSolutionStep"
+                                         DockPanel.Dock="Left"
+                                         Text="{Binding TempSolutionStepText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="26"
+                                         MinWidth="200"/>
+                            </DockPanel>
+                            <ListView Name="lvProblemSolutionSteps"
+                                      Grid.Column="1"
+                                      Grid.Row="3"
+                                      SelectedValue="{Binding CurrentSolutionStepText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding TempSolutionStepsTexts}"
+                                      IsSynchronizedWithCurrentItem="True"
+                                      Margin="10,0,0,0">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid x:Name="gridSolutionStepsList"
+                                              HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   Margin="2.5"
+                                                   Grid.Column="0"
+                                                   MinWidth="15">
+                                            </Label>
+                                            <Button Grid.Column="1"
+                                                    HorizontalAlignment="Left"
+                                                    Command="{Binding Source={StaticResource vm}, Path=RemoveSolutionStepCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                <Label Content="Odebrat" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </Grid>
                     <Grid x:Name="gridCourseEditorMathProblemCodeMode"
                           Visibility="{Binding CourseEditorMathProblemCodeModeVis}"
@@ -1419,7 +1592,9 @@
                         </Grid.RowDefinitions>
                         <RichTextBox x:Name="rtbCodeMode"
                                      IsReadOnly="True"
-                                     Focusable="False" />
+                                     Focusable="False"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     VerticalScrollBarVisibility="Auto" />
                     </Grid>
                 </DockPanel>
             </Grid>
@@ -1526,6 +1701,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label Content="Nastavení pro učitele"
                            Grid.Row="0"
@@ -1554,6 +1730,22 @@
                         <TextBlock Text="Odpovědi příkladu rozlišují malá a velká písmena (výchozí hodnota): " />
                         <CheckBox x:Name="cbSCapitalisationMatters"
                                   IsChecked="{Binding Settings.CapitalisationMatters}" />
+                    </StackPanel>
+                    <StackPanel Name="spSDefaultFontFamily"
+                                Grid.Row="5"
+                                Orientation="Horizontal"
+                                Margin="5">
+                        <TextBlock Text="Výchozí písmo v editoru kurzů: "
+                                   VerticalAlignment="Center" />
+                        <ComboBox x:Name="cbSEditorFontFamily"
+                                  MaxHeight="25"
+                                  Width="150"
+                                  Text="{Binding Settings.DefaultFontFamily, UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox x:Name="cbSEditorFontSize"
+                                  MaxHeight="25"
+                                  Width="50"
+                                  IsEditable="True"
+                                  Text="{Binding Settings.DefaultFontSize, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                 </Grid>
                 <StackPanel Orientation="Horizontal"

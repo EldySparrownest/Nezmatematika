@@ -27,12 +27,21 @@ namespace Nezmatematika.Model
         {
             get { return correctAnswers; }
             set
-            { 
+            {
                 correctAnswers = value;
                 OnPropertyChanged("CorrectAnswers");
             }
         }
-        public ObservableCollection<SolutionStep> SolutionSteps { get; set; }
+        private ObservableCollection<string> solutionSteps { get; set; }
+        public ObservableCollection<string> SolutionSteps
+        {
+            get { return solutionSteps; }
+            set
+            {
+                solutionSteps = value;
+                OnPropertyChanged("SolutionSteps");
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -54,8 +63,8 @@ namespace Nezmatematika.Model
         public void TrimAndPruneCorrectAnswers()
         {
             var trimmedAndPruned = new ObservableCollection<string>();
-            
-            for (int i =  0; i < CorrectAnswers.Count; i++)
+
+            for (int i = 0; i < CorrectAnswers.Count; i++)
             {
                 var answer = CorrectAnswers[i].Trim();
                 if (!String.IsNullOrEmpty(answer) && !trimmedAndPruned.Contains(answer))
@@ -69,21 +78,21 @@ namespace Nezmatematika.Model
         public bool ValidateMathProblem()
         {
             var pocetSpravnychOdpovedi = CorrectAnswers.Count;
-            
+
             if (pocetSpravnychOdpovedi == 0)
                 return false;
-            
+
             if (pocetSpravnychOdpovedi == 1 && String.IsNullOrEmpty(CorrectAnswers[0].Trim()))
                 return false;
-            
+
             return true;
         }
 
         public bool CheckAnswerIsCorrect(string answerToCheck)
-        {            
+        {
             if (CapitalisationMatters)
                 return CorrectAnswers.Contains(answerToCheck.Trim());
-            
+
             foreach (string correctAnswer in CorrectAnswers)
             {
                 if (answerToCheck.ToLower().Equals(correctAnswer.Trim().ToLower()))
@@ -92,36 +101,7 @@ namespace Nezmatematika.Model
             return false;
         }
 
-        public string GetCorrectAnswersInOneString()
-        {
-            var result = "";
-            foreach (string answer in CorrectAnswers)
-            {
-                result += $"{answer}   ";
-            }
-            return result;
-        }
-
-        public int FindLastVisibleStep()
-        {
-            int i = 0;
-            for (; i < SolutionSteps.Count; i++)
-            {
-                if (SolutionSteps[i].StepVisibility != Visibility.Visible)
-                {
-                    break;
-                }
-            }
-            return i;
-        }
-
-        public void SetVisibilityOfStepOnIndex(int stepindex, Visibility newVis)
-        {
-            if (SolutionSteps.Count > stepindex)
-            {
-                SolutionSteps[stepindex].StepVisibility = newVis;
-            }
-        }
+        public string GetCorrectAnswersInOneString() => string.Join("   ", CorrectAnswers);
 
         private void OnPropertyChanged(string propertyName)
         {

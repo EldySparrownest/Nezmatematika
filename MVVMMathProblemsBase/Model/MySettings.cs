@@ -24,6 +24,8 @@ namespace Nezmatematika.Model
         public bool AutosaveProblemWhenSwitching { get; set; }
         public bool AutosaveCourseBeforePublishing { get; set; }
         public bool CapitalisationMatters { get; set; }
+        public string DefaultFontFamily { get; set; }
+        public int DefaultFontSize { get; set; }
 
         public void Save(string filename)
         {

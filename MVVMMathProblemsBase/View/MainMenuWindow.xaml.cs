@@ -81,39 +81,16 @@ namespace Nezmatematika.View
                 { "Question", rtbQuestion }
             };
 
-            var initFontFamily = new FontFamily("Cambria Math");
-            var initFontSize = 16;
-
-            rtbProblemText.FontFamily = initFontFamily;
-            rtbProblemText.FontSize = initFontSize;
-
-            rtbQuestion.FontFamily = initFontFamily;
-            rtbQuestion.FontSize = initFontSize;
-
-            rtbCodeMode.FontFamily = initFontFamily;
-            rtbCodeMode.FontSize = initFontSize;
-
-            var p = new Paragraph();
-            p.FontFamily = initFontFamily;
-            p.FontSize = initFontSize;
-            p.Margin = new Thickness(0);
-
-            rtbProblemText.Document.Blocks.Clear();
-            rtbProblemText.Document.Blocks.Add(p);
-
-            rtbQuestion.Document.Blocks.Clear();
-            rtbQuestion.Document.Blocks.Add(p);
-
-            rtbCodeMode.Document.Blocks.Clear();
-            rtbCodeMode.Document.Blocks.Add(p);
-
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cbEditorFontFamily.ItemsSource = fontFamilies;
-            cbEditorFontFamily.SelectedItem = initFontFamily;
+
+            cbSEditorFontFamily.ItemsSource = fontFamilies;
 
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 40, 44, 48, 72 };
             cbEditorFontSize.ItemsSource = fontSizes;
-            cbEditorFontSize.Text = initFontSize.ToString();
+            cbSEditorFontSize.ItemsSource = fontSizes;
+            
+            ResetCourseEditor(this, new RoutedEventArgs());
 
             lvUsers.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
         }
@@ -174,6 +151,35 @@ namespace Nezmatematika.View
 
         private void ResetCourseEditor(object sender, RoutedEventArgs e)
         {
+            var initFontFamily = !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            var initFontSize = vM.Settings.DefaultFontSize != 0 ? vM.Settings.DefaultFontSize : 16;
+
+            cbEditorFontFamily.SelectedItem = initFontFamily;
+            cbEditorFontSize.Text = initFontSize.ToString();
+
+            rtbProblemText.FontFamily = initFontFamily;
+            rtbProblemText.FontSize = initFontSize;
+
+            rtbQuestion.FontFamily = initFontFamily;
+            rtbQuestion.FontSize = initFontSize;
+
+            rtbCodeMode.FontFamily = initFontFamily;
+            rtbCodeMode.FontSize = initFontSize;
+
+            var p = new Paragraph();
+            p.FontFamily = initFontFamily;
+            p.FontSize = initFontSize;
+            p.Margin = new Thickness(0);
+
+            rtbProblemText.Document.Blocks.Clear();
+            rtbProblemText.Document.Blocks.Add(p);
+
+            rtbQuestion.Document.Blocks.Clear();
+            rtbQuestion.Document.Blocks.Add(p);
+
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbCodeMode.Document.Blocks.Add(p);
+
             btnCodeMode.IsChecked = false;
         }
 
@@ -502,24 +508,16 @@ namespace Nezmatematika.View
             if (RTBWithFcs != null)
             {
                 if (!RTBWithFcs.Selection.IsEmpty)
-                { RTBWithFcs.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush); }
-                else
-                { NewParagraphWhenSelectionIsEmpty(); }
+                    RTBWithFcs.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush);
             }
         }
 
         private void cbEditorFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbEditorFontFamily.SelectedItem != null)
+            if (cbEditorFontFamily.SelectedItem != null && RTBWithFcs != null && !RTBWithFcs.Selection.IsEmpty)
             {
-                if (RTBWithFcs != null)
-                {
-                    if (!RTBWithFcs.Selection.IsEmpty)
-                    { RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem); }
-                    else
-                    { NewParagraphWhenSelectionIsEmpty(); }
-                    RTBWithFcs.Focus();
-                }
+                RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem);
+                RTBWithFcs.Focus();
             }
         }
 
@@ -532,9 +530,8 @@ namespace Nezmatematika.View
                 if (RTBWithFcs != null)
                 {
                     if (!RTBWithFcs.Selection.IsEmpty)
-                    { RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text); }
-                    else
-                    { NewParagraphWhenSelectionIsEmpty(); }
+                        RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text);
+
                 }
             }
             RTBWithFcs.Focus();
@@ -614,6 +611,14 @@ namespace Nezmatematika.View
             }
         }
 
+        private void LoadComboBoxesForSettings(object sender, RoutedEventArgs e)
+        {
+            cbSEditorFontFamily.SelectedItem = !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            int fontSize = vM.Settings.DefaultFontSize != 0 ? vM.Settings.DefaultFontSize : 16;
+            cbSEditorFontSize.SelectedItem = fontSize;
+            cbSEditorFontSize.Text = fontSize.ToString();
+        }
+
         private void BackToModeSelection(object sender, RoutedEventArgs e)
         {
             App.WhereInApp = WhereInApp.ModeSelection;
@@ -636,13 +641,10 @@ namespace Nezmatematika.View
         private void InsertTextFromButtonClick(string textToInsert)
         {
             if (!RTBWithFcs.Selection.IsEmpty)
-            {
                 RTBWithFcs.Selection.Text = textToInsert;
-            }
             else
-            {
                 NewParagraphWhenSelectionIsEmpty(textToInsert);
-            }
+            
             RTBWithFcs.CaretPosition = RTBWithFcs.CaretPosition.GetPositionAtOffset(textToInsert.Length);
         }
 

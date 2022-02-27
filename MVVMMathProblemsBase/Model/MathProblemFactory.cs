@@ -16,7 +16,7 @@ namespace Nezmatematika.Model
             {
                 default:
                     mathProblem = new MathProblem();
-                    ((MathProblem)mathProblem).SolutionSteps = new ObservableCollection<SolutionStep>();
+                    ((MathProblem)mathProblem).SolutionSteps = new ObservableCollection<string>();
                     ((MathProblem)mathProblem).CorrectAnswers = new ObservableCollection<string>();
                     break;
             }
@@ -39,19 +39,8 @@ namespace Nezmatematika.Model
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
             mathProblem.ProblemText = serialisedMathProblem.ProblemText;
             mathProblem.ProblemQuestion = serialisedMathProblem.ProblemQuestion;
-            mathProblem.CorrectAnswers = new ObservableCollection<string>();
-
-            foreach (var answer in serialisedMathProblem.CorrectAnswers)
-            {
-                mathProblem.CorrectAnswers.Add(answer);
-            }
-
-            mathProblem.SolutionSteps = new ObservableCollection<SolutionStep>();
-
-            foreach (var step in serialisedMathProblem.SolutionSteps)
-            {
-                mathProblem.SolutionSteps.Add(new SolutionStep(step));
-            }
+            mathProblem.CorrectAnswers = new ObservableCollection<string>(serialisedMathProblem.CorrectAnswers);
+            mathProblem.SolutionSteps = new ObservableCollection<string>(serialisedMathProblem.SolutionSteps);
             return mathProblem;
         }
 
@@ -67,12 +56,7 @@ namespace Nezmatematika.Model
             serialisedMathProblem.ProblemText = mathProblem.ProblemText;
             serialisedMathProblem.ProblemQuestion = mathProblem.ProblemQuestion;
             serialisedMathProblem.CorrectAnswers = mathProblem.CorrectAnswers.ToList();
-            serialisedMathProblem.SolutionSteps = new List<SolutionStepSerialisable>();
-
-            foreach (var step in mathProblem.SolutionSteps)
-            {
-                serialisedMathProblem.SolutionSteps.Add(new SolutionStepSerialisable(step));
-            }
+            serialisedMathProblem.SolutionSteps = mathProblem.SolutionSteps.ToList();
             return serialisedMathProblem;
         }
 

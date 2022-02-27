@@ -17,6 +17,6 @@ namespace Nezmatematika.Model
         string ProblemText { get; set; }
         string ProblemQuestion { get; set; }
         ObservableCollection<string> CorrectAnswers { get; set; }
-        ObservableCollection<SolutionStep> SolutionSteps { get; set; }
+        ObservableCollection<string> SolutionSteps { get; set; }
     }
 }

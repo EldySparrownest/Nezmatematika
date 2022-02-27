@@ -10,33 +10,39 @@ namespace Nezmatematika.ViewModel.Commands
 {
     public class MakeStepVisibleCommand : ICommand
     {
-        public MathProblemVM MPVM { get; set; }
+        public MainMenuVM MMVM { get; set; }
 
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public MakeStepVisibleCommand(MathProblemVM vm)
+        public MakeStepVisibleCommand(MainMenuVM vm)
         {
-            MPVM = vm;
+            MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            int lastvis = MPVM.CurrentMathProblem.FindLastVisibleStep();
-            if (lastvis < MPVM.CurrentMathProblem.SolutionSteps.Count)
-            {
-                return true;
-            }
-            return false;
+            if (App.WhereInApp != WhereInApp.CourseForStudent)
+                return false;
+
+            if (MMVM.CurrentMathProblem == null || MMVM.CurrentUserCourseData == null
+                || MMVM.CurrentUserCourseData.VisibleStepsCounts == null
+                || MMVM.SolutionStepsShownToStudent == null)
+                return false;
+            
+            if (!(MMVM.CurrentUserCourseData.VisibleStepsCounts.Count > MMVM.CurrentMathProblemIndex))
+                return false;
+
+            return MMVM.SolutionStepsShownToStudent.Count < MMVM.CurrentMathProblem.SolutionSteps.Count;
         }
 
         public void Execute(object parameter)
         {
-            int lastvis = MPVM.CurrentMathProblem.FindLastVisibleStep();
-            MPVM.VisibleSteps.Add(MPVM.CurrentMathProblem.SolutionSteps[lastvis]);
-            MPVM.CurrentMathProblem.SetVisibilityOfStepOnIndex(lastvis, Visibility.Visible);
+            MMVM.CurrentUserCourseData.RecordStepReveal(MMVM.CurrentMathProblemIndex);
+            MMVM.SaveUCD();
+            MMVM.ReloadShownSolutionSteps();
         }
     }
 }

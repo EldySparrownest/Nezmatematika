@@ -16,7 +16,7 @@ namespace Nezmatematika.Model
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }
         public List<string> CorrectAnswers { get; set; }
-        public List<SolutionStepSerialisable> SolutionSteps { get; set; }
+        public List<string> SolutionSteps { get; set; }
 
     }
 }
