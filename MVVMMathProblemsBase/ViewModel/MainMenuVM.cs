@@ -1159,6 +1159,10 @@ namespace Nezmatematika.ViewModel
             if (CurrentMathProblemIndex < CurrentUserCourseData.CourseProblemCount + CurrentUserCourseData.RequeuedProblems.Count)
                 BtnNextProblemVis = Visibility.Visible;
         }
+        private void UpdateStats()
+        {
+
+        }
         public void SetCurrentMathProblemFromUCD()
         {
             CurrentMathProblemIndex = CurrentUserCourseData.GetIndexToResumeOn();

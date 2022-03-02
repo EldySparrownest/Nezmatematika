@@ -30,7 +30,7 @@ namespace Nezmatematika.Model
         public UserStats()
         {
             TimeSpentInCourses = TimeSpan.Zero;
-            
+
             ProblemsSolvedTotal = 0;
             ProblemsSolvedFirstTry = 0;
             ProblemsSolvedFirstTryNoHints = 0;
@@ -45,6 +45,6 @@ namespace Nezmatematika.Model
             CoursesCreated = 0;
             VersionsPublished = 0;
             UniqueCoursesPublished = 0;
-    }
+        }
     }
 }

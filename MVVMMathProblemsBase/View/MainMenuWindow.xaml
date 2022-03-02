@@ -1132,12 +1132,10 @@
                             <Button Command="{Binding AddNewProblemCommand}"
                                     Margin="5"
                                     VerticalAlignment="Center">
-                                <Label Content="+"
+                                <Label Content="Přidat příklad"
                                        VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       FontSize="20"
-                                       FontWeight="Bold"
-                                       Foreground="LimeGreen" />
+                                       FontSize="20"/>
                             </Button>
                             <Button Name="btnSaveCourse"
                                     Click="btnSaveCourse_Click"
@@ -1244,6 +1242,14 @@
                                 <Label Content="π" />
                             </Button>
                             <Separator />
+                            <Button x:Name="btnImport"
+                                    Click="btnImportProblem_Click">
+                                <Label Content="Import" />
+                            </Button>
+                            <Button x:Name="btnExport"
+                                    Click="btnExportProblem_Click">
+                                <Label Content="Export" />
+                            </Button>
                             <ToggleButton x:Name="btnCodeMode"
                                           Margin="5"
                                           Click="btnCodeMode_Click"

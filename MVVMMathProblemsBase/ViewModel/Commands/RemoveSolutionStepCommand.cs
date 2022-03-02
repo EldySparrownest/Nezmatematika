@@ -31,7 +31,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.TempSolutionStepsTexts.Remove(MMVM.CurrentSolutionStepText);
-            MMVM.ReloadSolutionSteps();
+            MMVM.ReloadTempSolutionSteps();
         }
     }
 }

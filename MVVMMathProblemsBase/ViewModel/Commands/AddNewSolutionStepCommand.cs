@@ -34,7 +34,6 @@ namespace Nezmatematika.ViewModel.Commands
         {
             MMVM.TempSolutionStepsTexts.Add(parameter.ToString());
             MMVM.ReloadSolutionSteps();
-            MMVM.ReloadTempSolutionSteps();
             MMVM.TempSolutionStepText = string.Empty;
         }
     }

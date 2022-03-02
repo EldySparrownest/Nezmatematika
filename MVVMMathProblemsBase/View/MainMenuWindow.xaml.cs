@@ -1,8 +1,10 @@
-﻿using Nezmatematika.Model;
+﻿using Microsoft.Win32;
+using Nezmatematika.Model;
 using Nezmatematika.ViewModel;
 using Nezmatematika.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -48,8 +50,9 @@ namespace Nezmatematika.View
 
         private GridViewColumnHeader listViewSortCol = null;
         private SortAdorner listViewSortAdorner = null;
-        private Dictionary<string, RichTextBox> dicTeacherContentLoad;
-        private Dictionary<string, RichTextBox> dicStudentContentLoad;
+        private Dictionary<string, IEnumerable<string>> dicTeacherTagCollection;
+        private Dictionary<string, RichTextBox> dicTeacherTagRTB;
+        private Dictionary<string, RichTextBox> dicStudentTagRTB;
         private RichTextBox RTBWithFcs;
 
         public MainMenuWindow()
@@ -69,18 +72,22 @@ namespace Nezmatematika.View
 
             RTBWithFcs = new RichTextBox { Visibility = Visibility.Collapsed };
 
-            dicStudentContentLoad = new Dictionary<string, RichTextBox>()
+            dicStudentTagRTB = new Dictionary<string, RichTextBox>()
             {
                 { "ProblemText", rtbProblemTextStudentMode},
                 { "Question", rtbQuestionStudentMode }
             };
 
-            dicTeacherContentLoad = new Dictionary<string, RichTextBox>()
+            dicTeacherTagRTB = new Dictionary<string, RichTextBox>()
             {
                 { "ProblemText", rtbProblemText},
                 { "Question", rtbQuestion }
             };
-
+            dicTeacherTagCollection = new Dictionary<string, IEnumerable<string>>()
+            {
+                { "Answer", vM.TempAnswers },
+                { "Step", vM.TempSolutionStepsTexts }
+            };
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cbEditorFontFamily.ItemsSource = fontFamilies;
 
@@ -89,7 +96,7 @@ namespace Nezmatematika.View
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 40, 44, 48, 72 };
             cbEditorFontSize.ItemsSource = fontSizes;
             cbSEditorFontSize.ItemsSource = fontSizes;
-            
+
             ResetCourseEditor(this, new RoutedEventArgs());
 
             lvUsers.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
@@ -206,7 +213,7 @@ namespace Nezmatematika.View
                         case WhereInApp.CourseForStudent:
                             rtbProblemTextStudentMode.Document.Blocks.Clear();
                             rtbQuestionStudentMode.Document.Blocks.Clear();
-                            LoadMathProblemIntoRTBs(dicStudentContentLoad);
+                            LoadMathProblemFromFile(vM.CurrentMathProblem.FilePath, dicStudentTagRTB);
                             break;
                     }
                 }
@@ -227,7 +234,7 @@ namespace Nezmatematika.View
                         rtbProblemText.Document.Blocks.Clear();
                         rtbQuestion.Document.Blocks.Clear();
                         if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
-                            LoadMathProblemIntoRTBs(dicTeacherContentLoad);
+                            LoadMathProblemFromFile(vM.CurrentMathProblem.FilePath, dicTeacherTagRTB);
                         break;
                 }
             }
@@ -565,16 +572,32 @@ namespace Nezmatematika.View
         private FlowDocument FlowDocumentOfCurrentMathProblem()
         {
             FlowDocument newdocument = new FlowDocument();
-            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
 
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<ProblemText>"));
-            AddDocument(rtbProblemText.Document, newdocument);
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</ProblemText>\n"));
-            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<Question>"));
-            AddDocument(rtbQuestion.Document, newdocument);
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</Question>"));
+            foreach (var tagRTBPair in dicTeacherTagRTB)
+            {
+                newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
+                newdocument = AddRTBContentWithTagsToFlowDoc(newdocument, tagRTBPair.Key, tagRTBPair.Value);
+            }
+
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Answer", vM.CurrentMathProblem.CorrectAnswers)));
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Step", vM.CurrentMathProblem.SolutionSteps)));
+
             return newdocument;
+        }
+
+        private FlowDocument AddRTBContentWithTagsToFlowDoc(FlowDocument originalFlowDoc, string tagName, RichTextBox rtb)
+        {
+            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"<{tagName}>"));
+            AddDocument(rtb.Document, originalFlowDoc);
+            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"</{tagName}>\n"));
+            return originalFlowDoc;
+        }
+
+        private string StringCollectionWrappedInTags(string itemTagName, IEnumerable<string> collection)
+        {
+            return $"<{itemTagName}s>\n"
+                + string.Join("\n", collection.Select(s => $"<{itemTagName}>{s}</{itemTagName}>"))
+                + $"\n</{itemTagName}s>\n";
         }
 
         public static void AddDocument(FlowDocument from, FlowDocument to)
@@ -597,7 +620,7 @@ namespace Nezmatematika.View
             SaveRTF(questionPath, new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd));
             SaveRTF(codeModePath, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
         }
-        private static void SaveRTF(string path, TextRange tr) //only used when debugging
+        private static void SaveRTF(string path, TextRange tr) //used for exporting current problem (and when debugging)
         {
             try
             {
@@ -644,20 +667,33 @@ namespace Nezmatematika.View
                 RTBWithFcs.Selection.Text = textToInsert;
             else
                 NewParagraphWhenSelectionIsEmpty(textToInsert);
-            
+
             RTBWithFcs.CaretPosition = RTBWithFcs.CaretPosition.GetPositionAtOffset(textToInsert.Length);
         }
 
-        private void LoadMathProblemIntoRTBs(Dictionary<string, RichTextBox> tagRTBDictionary)
+        private void LoadMathProblemFromFile(string filepath, Dictionary<string, RichTextBox> tagRTBDictionary, bool loadCollections = false)
         {
-            FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
+            var trCodeMode = LoadRTBCodeModeContentFromFile(filepath);
+            LoadMathProblemIntoRTBs(trCodeMode, tagRTBDictionary);
+            if (loadCollections)
+                LoadMathProblemCollections(trCodeMode);
+        }
+
+        private TextRange LoadRTBCodeModeContentFromFile(string filepath)
+        {
+            FileStream fileStream = new FileStream(filepath, FileMode.Open);
             var trCodeMode = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
             trCodeMode.Load(fileStream, DataFormats.Rtf);
             fileStream.Close();
 
-            var tpContentStart = rtbCodeMode.Document.ContentStart;
+            return trCodeMode;
+        }
 
-            for (int i = 0; i < dicTeacherContentLoad.Count; i++)
+        private void LoadMathProblemIntoRTBs(TextRange trCodeMode, Dictionary<string, RichTextBox> tagRTBDictionary)
+        {
+            var tpContentStart = trCodeMode.Start;
+
+            for (int i = 0; i < dicTeacherTagRTB.Count; i++)
             {
                 var openTag = $"<{tagRTBDictionary.ElementAt(i).Key}>";
                 var closeTag = $"</{tagRTBDictionary.ElementAt(i).Key}>";
@@ -687,9 +723,51 @@ namespace Nezmatematika.View
                 using (var stream = new MemoryStream())
                 {
                     new TextRange(tpStart, tpEnd).Save(stream, DataFormats.XamlPackage);
+                    rtbTarget.Document.Blocks.Clear();
                     new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd).Load(stream, DataFormats.XamlPackage);
                 }
             }
+        }
+
+        private void LoadMathProblemCollections(TextRange trCodeMode)
+        {
+            vM.CurrentMathProblem.CorrectAnswers = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
+            vM.TempSolutionStepsTexts = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
+        }
+
+        private List<string> ParseTaggedTextIntoList(string textToParse, string tagItemName)
+        {
+            var collectionOpenTag = $"<{tagItemName}s>";
+            var collectionCloseTag = $"</{tagItemName}s>";
+            var itemOpenTag = $"<{tagItemName}>";
+            var itemCloseTag = $"</{tagItemName}>";
+            var newCollection = new List<string>();
+
+            var collectionStart = textToParse.IndexOf(collectionOpenTag);
+            var collectionEnd = textToParse.IndexOf(collectionCloseTag);
+            if (collectionStart == -1 || collectionEnd == -1)
+                return newCollection;
+
+            try
+            {
+                textToParse = textToParse.Substring(textToParse.IndexOf(collectionOpenTag));
+                textToParse = textToParse.Substring(0, textToParse.IndexOf(collectionCloseTag) - 1);
+                textToParse = textToParse.Replace(collectionOpenTag, "");
+
+                while (textToParse.Contains(itemOpenTag) && textToParse.Contains(itemCloseTag))
+                {
+                    var item = textToParse.Substring(0, textToParse.IndexOf(itemCloseTag));
+                    newCollection.Add(item.Replace(itemOpenTag, ""));
+                    textToParse = textToParse.Substring(item.Length + itemCloseTag.Length);
+                }
+                return newCollection;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         private void btnPublishCourse_Click(object sender, RoutedEventArgs e)
@@ -709,8 +787,7 @@ namespace Nezmatematika.View
             {
                 vM.CurrentMathProblem.CorrectAnswers = vM.TempAnswers;
 
-                rtbCodeMode.Document.Blocks.Clear();
-                rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+                UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
                 vM.CurrentMathProblem.ProblemText = problem.Text.Trim();
@@ -720,6 +797,45 @@ namespace Nezmatematika.View
 
                 vM.SaveCurrentCourse();
                 vM.SaveCurrentMathProblem(contents);
+            }
+        }
+
+        private void UpdateCodeMode()
+        {
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+        }
+
+        private void btnImportProblem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "RTF soubory (*.rtf)|*.rtf",
+                RestoreDirectory = true,
+                Title = "Nezmatematika - import úlohy"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+                LoadMathProblemFromFile(openFileDialog.FileName, dicTeacherTagRTB, true);
+        }
+
+        private void btnExportProblem_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".rtf",
+                Filter = "RTF soubory (*.rtf)|*.rtf",
+                OverwritePrompt = true,
+                Title = "Nezmatematika - export úlohy",
+                ValidateNames = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                UpdateCodeMode();
+                SaveRTF(saveFileDialog.FileName, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
             }
         }
     }
