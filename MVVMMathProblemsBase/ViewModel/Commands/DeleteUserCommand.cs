@@ -25,8 +25,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            User selectedUser = parameter as User;
-            if (selectedUser != null && MMVM.UsersOfTypeList.Count > 1)
+            UserBase selectedUserBase = parameter as UserBase;
+            if (selectedUserBase != null && MMVM.UserBasesOfTypeList.Count > 1)
             {
                 return true;
             }
@@ -35,8 +35,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            User userToDelete = parameter as User;
-            MMVM.DeleteUser(userToDelete);
+            UserBase userBaseToDelete = parameter as UserBase;
+            MMVM.DeleteUser(userBaseToDelete);
         }
     }
 }

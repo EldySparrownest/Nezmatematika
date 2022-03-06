@@ -31,7 +31,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.CreateNewCourse();
-            MMVM.TeacherVis = Visibility.Collapsed;
+            MMVM.MainMenuVis = Visibility.Collapsed;
             MMVM.NewCourseVis = Visibility.Collapsed;
             MMVM.EditCourseVis = Visibility.Visible;
             MMVM.CourseEditorMathProblemUserModeVis = Visibility.Visible;

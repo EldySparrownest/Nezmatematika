@@ -14,7 +14,7 @@ namespace Nezmatematika.Model
         public int Version { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
-        public User Author { get; set; }
+        public UserBase Author { get; set; }
         public DateTime Created { get; set; }
         public PublishingStatus PublishingStatus { get; set; }
         public DateTime LastPublished { get; set; }
@@ -23,7 +23,6 @@ namespace Nezmatematika.Model
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
         public string CourseDesc { get; set; }
-        public List<string> Tags { get; set; }
 
         public List<MathProblemSerialisable> Problems;
 
@@ -33,7 +32,6 @@ namespace Nezmatematika.Model
             LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
             TimeSpentEditing = TimeSpan.Zero;
-            Tags = new List<string>();
             Problems = new List<MathProblemSerialisable>();
         }
 
@@ -53,7 +51,6 @@ namespace Nezmatematika.Model
             PublishingStatus = course.PublishingStatus;
             CourseTitle = course.CourseTitle;
             CourseDesc = course.CourseDesc;
-            Tags = course.Tags.ToList();
             Problems = new List<MathProblemSerialisable>();
 
             var factory = new MathProblemFactory();

@@ -14,10 +14,11 @@ namespace Nezmatematika.Model
     public class Course
     {
         public string Id { get; set; }
-        public User Author { get; set; }
+        public UserBase Author { get; set; }
         public DateTime Created { get; set; }
         public PublishingStatus PublishingStatus { get; set; }
         public DateTime LastPublished { get; set; }
+        public int PublishedProblemCount { get; set; }
         public int Version { get; private set; }
         public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
@@ -26,7 +27,6 @@ namespace Nezmatematika.Model
         public string CourseDesc { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
-        public ObservableCollection<string> Tags { get; set; }
 
         private ObservableCollection<MathProblem> problems;
         public ObservableCollection<MathProblem> Problems
@@ -56,7 +56,6 @@ namespace Nezmatematika.Model
             PublishingStatus = serialisedCourse.PublishingStatus;
             CourseTitle = serialisedCourse.CourseTitle;
             CourseDesc = serialisedCourse.CourseDesc;
-            Tags = new ObservableCollection<string>(serialisedCourse.Tags);
             Problems = new ObservableCollection<MathProblem>();
 
             var factory = new MathProblemFactory();
@@ -65,7 +64,7 @@ namespace Nezmatematika.Model
                 Problems.Add(factory.CreateFromSerialised(problem));
             }
         }
-        public Course(User author, string title, string desc, ObservableCollection<string> tags)
+        public Course(UserBase author, string title, string desc)
         {
             Author = author;
             Id = NewCourseId(author.Id);
@@ -74,12 +73,12 @@ namespace Nezmatematika.Model
             FilePath = CourseFilePath();
             CourseTitle = title;
             CourseDesc = desc;
-            Tags = tags;
             Problems = new ObservableCollection<MathProblem>();
             Created = DateTime.Now;
             LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
             PublishingStatus = PublishingStatus.NotPublished;
+            PublishedProblemCount = 0;
         }
 
         public void AddNewMathProblem()
@@ -126,12 +125,14 @@ namespace Nezmatematika.Model
             cs.Save();
         }
 
-        public void Publish(string publishedCoursesDirPath, string archivedCoursesDirPath)
+        public void Publish(string publishedCoursesDirPath, string archivedCoursesDirPath, out int problemCountChange)
         {
             var prevVerDirName = $"{Id}_{Version}"; //adresářové jméno poslední publikované verze
 
             var prevStatus = PublishingStatus;
             var prevPublished = LastPublished;
+            var prevPublishedProblemCount = PublishedProblemCount;
+            problemCountChange = 0;
 
             try
             {
@@ -140,6 +141,7 @@ namespace Nezmatematika.Model
                 Version++;
                 PublishingStatus = PublishingStatus.PublishedUpToDate;
                 LastPublished = DateTime.Now;
+                PublishedProblemCount = Problems.Count;
                 Save();
 
                 var prevVersionCourseDir = Path.Combine(publishedCoursesDirPath, prevVerDirName); //adresářová cesta poslední publikované verze
@@ -148,12 +150,15 @@ namespace Nezmatematika.Model
                 if (archive)
                     Course.ArchiveCourse(Id, prevVersion, publishedCoursesDirPath, archivedCoursesDirPath);
 
+                problemCountChange = PublishedProblemCount - prevPublishedProblemCount;
                 PublishCourse(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
             }
             catch (Exception e)
             {
                 PublishingStatus = prevStatus;
                 LastPublished = prevPublished;
+                PublishedProblemCount = prevPublishedProblemCount;
+                Save();
                 MessageBox.Show(e.Message);
             }
         }

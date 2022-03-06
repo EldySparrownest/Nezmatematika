@@ -1,5 +1,6 @@
 ﻿using Nezmatematika.Model;
 using Nezmatematika.ViewModel.Commands;
+using static Nezmatematika.ViewModel.Helpers.FilePathHelper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,24 +11,69 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using Nezmatematika.ViewModel.Helpers;
 
 namespace Nezmatematika.ViewModel
 {
     public class MainMenuVM : INotifyPropertyChanged
     {
-        public const string CourseFilename = "Course.xml";
-        public const string UserSettingsFilename = "Settings.xml";
-        public string _MySettingsDirectoryPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings");
-        //_UserListPath bude obsahovat seznam uživatelů
-        //na indexu [0] bude vždy poslední použitý student (pokud existuje)
-        //na indexu [Count-1] bude vždy poslední použitý učitel (pokud existuje)
-        public string _UserListPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", "UserList.xml");
-        public string _DefaultSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
-        public string _UserSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"Default{UserSettingsFilename}");
-        public string _CoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses");
-        public string _CoursesArchivedDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", "Archived");
-        public string _CoursesPublishedDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", "Published");
-        public string _TeacherCoursesDirPath() => System.IO.Path.Combine(App.MyBaseDirectory, "Courses", CurrentUser.Id);
+        #region SettingsValues
+        private bool isInStudentMode;
+        public bool IsInStudentMode
+        {
+            get { return isInStudentMode; }
+            set
+            {
+                isInStudentMode = value;
+                StudentVis = isInStudentMode ? Visibility.Visible : Visibility.Collapsed;
+                TeacherVis = isInStudentMode ? Visibility.Collapsed : Visibility.Visible;
+                OnPropertyChanged("IsInStudentMode");
+            }
+        }
+
+        private UserBase lastStudentUserBase;
+        public UserBase LastStudentUserBase
+        {
+            get { return lastStudentUserBase; }
+            set
+            {
+                lastStudentUserBase = value;
+                OnPropertyChanged("LastStudentUserBase");
+            }
+        }
+
+        private UserBase lastTeacherUserBase;
+        public UserBase LastTeacherUserBase
+        {
+            get { return lastTeacherUserBase; }
+            set
+            {
+                lastTeacherUserBase = value;
+                OnPropertyChanged("LastTeacherUserBase");
+            }
+        }
+
+        private Brush selectedColour;
+        public Brush SelectedColour
+        {
+            get { return selectedColour; }
+            set
+            {
+                selectedColour = value;
+                OnPropertyChanged("SelectedColour");
+            }
+        }
+
+        private Color selectedTextColour;
+        public Color SelectedTextColour
+        {
+            get { return selectedTextColour; }
+            set
+            {
+                selectedTextColour = value;
+                OnPropertyChanged("SelectedTextColour");
+            }
+        }
 
         private MySettings settings;
         public MySettings Settings
@@ -39,26 +85,28 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("Settings");
             }
         }
+        #endregion SettingsValues
 
-        private ObservableCollection<User> allUsersList;
-        public ObservableCollection<User> AllUsersList
+        #region Collections
+        private ObservableCollection<UserBase> allUserBasesList;
+        public ObservableCollection<UserBase> AllUserBasesList
         {
-            get { return allUsersList; }
+            get { return allUserBasesList; }
             set
             {
-                allUsersList = value;
-                OnPropertyChanged("AllUsersList");
+                allUserBasesList = value;
+                OnPropertyChanged("AllUserBasesList");
             }
         }
 
-        private ObservableCollection<User> usersOfTypeList;
-        public ObservableCollection<User> UsersOfTypeList
+        private ObservableCollection<UserBase> userBasesOfTypeList;
+        public ObservableCollection<UserBase> UserBasesOfTypeList
         {
-            get { return usersOfTypeList; }
+            get { return userBasesOfTypeList; }
             private set
             {
-                usersOfTypeList = value;
-                OnPropertyChanged("UsersOfTypeList");
+                userBasesOfTypeList = value;
+                OnPropertyChanged("UserBasesOfTypeList");
             }
         }
 
@@ -120,31 +168,19 @@ namespace Nezmatematika.ViewModel
             }
         }
 
-
-        private User lastStudentUser;
-
-        public User LastStudentUser
+        private ObservableCollection<string> solutionStepsShownToStudent;
+        public ObservableCollection<string> SolutionStepsShownToStudent
         {
-            get { return lastStudentUser; }
+            get { return solutionStepsShownToStudent; }
             set
             {
-                lastStudentUser = value;
-                OnPropertyChanged("LastStudentUser");
+                solutionStepsShownToStudent = value;
+                OnPropertyChanged("SolutionStepsShownToStudent");
             }
         }
-        private User lastTeacherUser;
+        #endregion Collections
 
-        public User LastTeacherUser
-        {
-            get { return lastTeacherUser; }
-            set
-            {
-                lastTeacherUser = value;
-                OnPropertyChanged("LastTeacherUser");
-            }
-        }
-
-
+        #region CurrentValues
         private User currentUser;
         public User CurrentUser
         {
@@ -155,31 +191,34 @@ namespace Nezmatematika.ViewModel
 
                 if (value != null)
                 {
-                    if (IsInStudentMode == true && CurrentUser.UserType == AppMode.Student)
-                    {
-                        LastStudentUser = CurrentUser;
-                    }
-                    else if (IsInStudentMode == false && CurrentUser.UserType == AppMode.Teacher)
-                    {
-                        LastTeacherUser = CurrentUser;
-                    }
+                    if (IsInStudentMode == true && CurrentUser.UserBase.UserType == AppMode.Student)
+                        LastStudentUserBase = CurrentUser.UserBase;
+                    else if (IsInStudentMode == false && CurrentUser.UserBase.UserType == AppMode.Teacher)
+                        LastTeacherUserBase = CurrentUser.UserBase;
+
                     ArchiveLastUsedUsers();
 
-                    _UserSettingsPath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"{CurrentUser.Id}{UserSettingsFilename}");
-
                     if (EditUserVis == Visibility.Visible)
-                    {
-                        PopulateUserTempValues(CurrentUser);
-                    }
+                        PopulateUserTempValues(CurrentUser.UserBase);
                 }
-                else
-                {
-                    _UserSettingsPath = _DefaultSettingsPath;
-                }
-                LoadSettingsForUser(CurrentUser);
+                LoadSettingsForCurrentUser();
+                ReloadCurrentUserStats();
                 OnPropertyChanged("CurrentUser");
             }
         }
+
+        private UserBase currentUserBase;
+        public UserBase CurrentUserBase
+        {
+            get { return currentUserBase; }
+            set
+            {
+                currentUserBase = value;
+                SetCurrentUserFromUserBase(currentUserBase);
+                OnPropertyChanged("CurrentUserBase");
+            }
+        }
+
 
         private Course currentCourse;
         public Course CurrentCourse
@@ -202,23 +241,27 @@ namespace Nezmatematika.ViewModel
                 {
                     TeacherNotNullCurrentMathProblemAboutToChange?.Invoke(this, new EventArgs());
                 }
-                
+
                 currentMathProblem = value;
-                
+
                 if (IsInStudentMode == false)
                 {
                     PopulateTempAnswersFromCurrentMathProblem();
                     PopulateTempSolutionStepsFromCurrentMathProblem();
                 }
-                
+
                 if (App.WhereInApp == WhereInApp.CourseForStudent && CurrentUserCourseData != null)
                 {
+                    BtnHintVis = Visibility.Visible;
                     TempAnswer = string.Empty;
                     TempSolutionStepText = string.Empty;
                     CurrentProblemSolved = CurrentUserCourseData.GetIsProblemSolved(CurrentMathProblemIndex);
 
                     if (CurrentProblemSolved)
+                    {
+                        BtnHintVis = Visibility.Collapsed;
                         LoadSolvedProblemData();
+                    }
                     else if (CurrentUserCourseData.VisibleStepsCounts.Count == CurrentMathProblemIndex)
                         CurrentUserCourseData.AddNewVisibleStepsCounter();
 
@@ -232,7 +275,6 @@ namespace Nezmatematika.ViewModel
         }
 
         private int currentMathProblemIndex;
-
         public int CurrentMathProblemIndex
         {
             get { return currentMathProblemIndex; }
@@ -240,17 +282,6 @@ namespace Nezmatematika.ViewModel
             {
                 currentMathProblemIndex = value;
                 OnPropertyChanged("CurrentMathProblemIndex");
-            }
-        }
-
-        private ObservableCollection<string> solutionStepsShownToStudent;
-        public ObservableCollection<string> SolutionStepsShownToStudent
-        {
-            get { return solutionStepsShownToStudent; }
-            set
-            {
-                solutionStepsShownToStudent = value;
-                OnPropertyChanged("SolutionStepsShownToStudent");
             }
         }
 
@@ -300,7 +331,38 @@ namespace Nezmatematika.ViewModel
             }
         }
 
+        private string correctAnswersAsOneString;
+        public string CorrectAnswersAsOneString
+        {
+            get { return correctAnswersAsOneString; }
+            set
+            {
+                correctAnswersAsOneString = value;
+                OnPropertyChanged("CorrectAnswersAsOneString");
+            }
+        }
 
+        private string currentTimeTakingCourses;
+        public string CurrentTimeTakingCourses { get { return currentTimeTakingCourses; } set { currentTimeTakingCourses = value; OnPropertyChanged("CurrentTimeTakingCourses"); } }
+
+        private string currentAnswersSentTotal;
+        public string CurrentAnswersSentTotal { get { return currentAnswersSentTotal; } set { currentAnswersSentTotal = value; OnPropertyChanged("CurrentAnswersSentTotal"); } }
+        private string currentProblemsSolvedTotal;
+        public string CurrentProblemsSolvedTotal { get { return currentProblemsSolvedTotal; } set { currentProblemsSolvedTotal = value; OnPropertyChanged("CurrentProblemsSolvedTotal"); } }
+        private string currentProblemsSolvedFirstTry;
+        public string CurrentProblemsSolvedFirstTry { get { return currentProblemsSolvedFirstTry; } set { currentProblemsSolvedFirstTry = value; OnPropertyChanged("CurrentProblemsSolvedFirstTry"); } }
+        private string currentProblemsSolvedFirstTryNoHints;
+        public string CurrentProblemsSolvedFirstTryNoHints { get { return currentProblemsSolvedFirstTryNoHints; } set { currentProblemsSolvedFirstTryNoHints = value; OnPropertyChanged("CurrentProblemsSolvedFirstTryNoHints"); } }
+        private string currentHintsDisplayed;
+        public string CurrentHintsDisplayed { get { return currentHintsDisplayed; } set { currentHintsDisplayed = value; OnPropertyChanged("CurrentHintsDisplayed"); } }
+        private string currentCoursesStarted;
+        public string CurrentCoursesStarted { get { return currentCoursesStarted; } set { currentCoursesStarted = value; OnPropertyChanged("CurrentCoursesStarted"); } }
+        private string currentCoursesCompleted;
+        public string CurrentCoursesCompleted { get { return currentCoursesCompleted; } set { currentCoursesCompleted = value; OnPropertyChanged("CurrentCoursesCompleted"); } }
+
+        #endregion CurrentValues
+
+        #region Temp
         private string tempTitleBefore;
         public string TempTitleBefore
         {
@@ -314,10 +376,7 @@ namespace Nezmatematika.ViewModel
         private string tempFirstName;
         public string TempFirstName
         {
-            get
-            {
-                return tempFirstName;
-            }
+            get { return tempFirstName; }
             set
             {
                 tempFirstName = value;
@@ -327,10 +386,7 @@ namespace Nezmatematika.ViewModel
         private string tempLastName;
         public string TempLastName
         {
-            get
-            {
-                return tempLastName;
-            }
+            get { return tempLastName; }
             set
             {
                 tempLastName = value;
@@ -350,19 +406,14 @@ namespace Nezmatematika.ViewModel
         private string tempClassName;
         public string TempClassName
         {
-            get
-            {
-                return tempClassName;
-            }
+            get { return tempClassName; }
             set
             {
                 tempClassName = value;
                 OnPropertyChanged("TempClassName");
             }
         }
-
         private string tempSchoolName;
-
         public string TempSchoolName
         {
             get { return tempSchoolName; }
@@ -373,7 +424,6 @@ namespace Nezmatematika.ViewModel
             }
         }
         private string tempCourseTitle;
-
         public string TempCourseTitle
         {
             get { return tempCourseTitle; }
@@ -384,7 +434,6 @@ namespace Nezmatematika.ViewModel
             }
         }
         private string tempCourseDesc;
-
         public string TempCourseDesc
         {
             get { return tempCourseDesc; }
@@ -394,18 +443,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempCourseDesc");
             }
         }
-        private ObservableCollection<string> tempCourseTags;
-
-        public ObservableCollection<string> TempCourseTags
-        {
-            get { return tempCourseTags; }
-            set
-            {
-                tempCourseTags = value;
-                OnPropertyChanged("TempCourseTags");
-            }
-        }
-
         private string tempAnswer;
         public string TempAnswer
         {
@@ -416,7 +453,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempAnswer");
             }
         }
-
         private string tempCorrectAnswer;
         public string TempCorrectAnswer
         {
@@ -427,7 +463,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempCorrectAnswer");
             }
         }
-
         private ObservableCollection<string> tempAnswers;
         public ObservableCollection<string> TempAnswers
         {
@@ -438,7 +473,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempAnswers");
             }
         }
-
         private string tempSolutionStepText;
         public string TempSolutionStepText
         {
@@ -449,7 +483,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempSolutionStepText");
             }
         }
-
         private ObservableCollection<string> tempSolutionStepsTexts;
         public ObservableCollection<string> TempSolutionStepsTexts
         {
@@ -460,25 +493,17 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TempSolutionStepsTexts");
             }
         }
+        #endregion Temp
 
-        private bool isInStudentMode;
-        public bool IsInStudentMode
+        #region Visibilities
+        private Visibility mainMenuVis;
+        public Visibility MainMenuVis
         {
-            get { return isInStudentMode; }
+            get { return mainMenuVis; }
             set
             {
-                isInStudentMode = value;
-                if (isInStudentMode == true)
-                {
-                    StudentVis = Visibility.Visible;
-                    TeacherVis = Visibility.Collapsed;
-                }
-                else
-                {
-                    StudentVis = Visibility.Collapsed;
-                    TeacherVis = Visibility.Visible;
-                }
-                OnPropertyChanged("IsInStudentMode");
+                mainMenuVis = value;
+                OnPropertyChanged("MainMenuVis");
             }
         }
 
@@ -492,7 +517,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("StudentVis");
             }
         }
-
         private Visibility teacherVis;
         public Visibility TeacherVis
         {
@@ -503,7 +527,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TeacherVis");
             }
         }
-
         private Visibility newUserVis;
         public Visibility NewUserVis
         {
@@ -524,7 +547,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("EditUserVis");
             }
         }
-
         private Visibility userSelVis;
         public Visibility UserSelVis
         {
@@ -555,7 +577,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("EditCourseVis");
             }
         }
-
         private Visibility studentCoursesToContinueVis;
         public Visibility StudentCoursesToContinueVis
         {
@@ -566,7 +587,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("StudentCoursesToContinueVis");
             }
         }
-
         private Visibility teacherCoursesToContinueVis;
         public Visibility TeacherCoursesToContinueVis
         {
@@ -577,7 +597,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("TeacherCoursesToContinueVis");
             }
         }
-
         private Visibility courseEditorMathProblemUserModeVis;
         public Visibility CourseEditorMathProblemUserModeVis
         {
@@ -588,7 +607,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("CourseEditorMathProblemUserModeVis");
             }
         }
-
         private Visibility courseEditorMathProblemCodeModeVis;
         public Visibility CourseEditorMathProblemCodeModeVis
         {
@@ -599,7 +617,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("CourseEditorMathProblemCodeModeVis");
             }
         }
-
         private Visibility studentNewCourseSelVis;
         public Visibility StudentNewCourseSelVis
         {
@@ -610,7 +627,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("StudentNewCourseSelVis");
             }
         }
-
         private Visibility courseForStudentVis;
         public Visibility CourseForStudentVis
         {
@@ -621,7 +637,16 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("CourseForStudentVis");
             }
         }
-
+        private Visibility btnHintVis;
+        public Visibility BtnHintVis
+        {
+            get { return btnHintVis; }
+            set
+            {
+                btnHintVis = value;
+                OnPropertyChanged("BtnHintVis");
+            }
+        }
         private Visibility answerFeedbackCorrectVis;
         public Visibility AnswerFeedbackCorrectVis
         {
@@ -642,18 +667,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("AnswerFeedbackIncorrectVis");
             }
         }
-        private string correctAnswersDisplayList;
-        public string CorrectAnswersDisplayList
-        {
-            get { return correctAnswersDisplayList; }
-            set
-            {
-                correctAnswersDisplayList = value;
-                OnPropertyChanged("CorrectAnswersDisplayList");
-            }
-        }
-
-
         private Visibility btnNextProblemVis;
         public Visibility BtnNextProblemVis
         {
@@ -674,6 +687,36 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("BtnFinishCourseVis");
             }
         }
+        private Visibility statsVis;
+        public Visibility StatsVis
+        {
+            get { return statsVis; }
+            set
+            {
+                statsVis = value;
+                OnPropertyChanged("StatsVis");
+            }
+        }
+        private Visibility studentStatsVis;
+        public Visibility StudentStatsVis
+        {
+            get { return studentStatsVis; }
+            set
+            {
+                studentStatsVis = value;
+                OnPropertyChanged("StudentStatsVis");
+            }
+        }
+        private Visibility teacherStatsVis;
+        public Visibility TeacherStatsVis
+        {
+            get { return teacherStatsVis; }
+            set
+            {
+                teacherStatsVis = value;
+                OnPropertyChanged("TeacherStatsVis");
+            }
+        }
         private Visibility settingsVis;
         public Visibility SettingsVis
         {
@@ -684,7 +727,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("SettingsVis");
             }
         }
-
         private Visibility studentSettingsVis;
         public Visibility StudentSettingsVis
         {
@@ -695,7 +737,6 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("StudentSettingsVis");
             }
         }
-
         private Visibility teacherSettingsVis;
         public Visibility TeacherSettingsVis
         {
@@ -716,29 +757,9 @@ namespace Nezmatematika.ViewModel
                 OnPropertyChanged("AboutAppVis");
             }
         }
+        #endregion Visibilities
 
-        private Brush selectedColour;
-        public Brush SelectedColour
-        {
-            get { return selectedColour; }
-            set
-            {
-                selectedColour = value;
-                OnPropertyChanged("SelectedColour");
-            }
-        }
-
-        private Color selectedTextColour;
-        public Color SelectedTextColour
-        {
-            get { return selectedTextColour; }
-            set
-            {
-                selectedTextColour = value;
-                OnPropertyChanged("SelectedTextColour");
-            }
-        }
-
+        #region Commands
         public AddNewCorrectAnswerCommand AddNewCorrectAnswerCommand { get; set; }
         public AddNewProblemCommand AddNewProblemCommand { get; set; }
         public AddNewSolutionStepCommand AddNewSolutionStepCommand { get; set; }
@@ -755,6 +776,7 @@ namespace Nezmatematika.ViewModel
         public DisplayNewCourseSelectionCommand DisplayNewCourseSelectionCommand { get; set; }
         public DisplayProfileSelectionCommand DisplayProfileSelectionCommand { get; set; }
         public DisplaySettingsCommand DisplaySettingsCommand { get; set; }
+        public DisplayStatisticsCommand DisplayStatisticsCommand { get; set; }
         public DisplayStudentCoursesToContinue DisplayStudentCoursesToContinue { get; set; }
         public EditCorrectAnswerCommand EditCorrectAnswerCommand { get; set; }
         public EditCourseCommand EditCourseCommand { get; set; }
@@ -771,23 +793,27 @@ namespace Nezmatematika.ViewModel
         public SwitchBetweenUserAndCodeModeCommand SwitchBetweenUserAndCodeModeCommand { get; set; }
         public SwitchToNextProblemCommand SwitchToNextProblemCommand { get; set; }
         public SwitchToPreviousProblemCommand SwitchToPreviousProblemCommand { get; set; }
+        #endregion Commands
 
+        #region Events
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler StudentCurrentMathProblemChanged;
         public event EventHandler TeacherNotNullCurrentMathProblemAboutToChange;
         public event EventHandler TeacherCurrentMathProblemChanged;
+        #endregion Events
+
+        #region Constructors
         public MainMenuVM()
         {
             IsInStudentMode = App.AppMode == AppMode.Student;
             LoadDefaultSettings();
-            AllUsersList = new ObservableCollection<User>();
+            AllUserBasesList = new ObservableCollection<UserBase>();
             GetListOfAllUsers();
             SetLastUsedUserFromAllUsers();
             SetCurrentUserToLastUsedUser();
-            LoadSettingsForUser(CurrentUser);
+            LoadSettingsForCurrentUser();
             TempAnswers = new ObservableCollection<string>();
             TempSolutionStepsTexts = new ObservableCollection<string>();
-            TempCourseTags = new ObservableCollection<string>();
             TempSolutionStepText = string.Empty;
             SolutionStepsShownToStudent = new ObservableCollection<string>();
             EditUserVis = Visibility.Collapsed;
@@ -801,31 +827,20 @@ namespace Nezmatematika.ViewModel
             StudentNewCourseSelVis = Visibility.Collapsed;
             CourseForStudentVis = Visibility.Collapsed;
             ResetAnswerFeedbackVisibility();
+            BtnHintVis = Visibility.Collapsed;
             BtnNextProblemVis = Visibility.Collapsed;
             BtnFinishCourseVis = Visibility.Collapsed;
+            StatsVis = Visibility.Collapsed;
             SettingsVis = Visibility.Collapsed;
             AboutAppVis = Visibility.Collapsed;
-            if (IsInStudentMode)
-            {
-                StudentVis = Visibility.Visible;
-                TeacherVis = Visibility.Collapsed;
-            }
-            else
-            {
-                StudentVis = Visibility.Collapsed;
-                TeacherVis = Visibility.Visible;
-            }
 
             if (CurrentUser == null)
-            {
                 NewUserVis = Visibility.Visible;
-            }
             else
-            {
                 NewUserVis = Visibility.Collapsed;
-            }
-            UsersOfTypeList = new ObservableCollection<User>();
-            GetUsersOfTypeList();
+
+            UserBasesOfTypeList = new ObservableCollection<UserBase>();
+            GetUserBasesOfTypeList();
 
             NewCoursesToStartList = new ObservableCollection<Course>();
             AllArchivedCoursesList = new List<Course>();
@@ -852,6 +867,7 @@ namespace Nezmatematika.ViewModel
             DisplayNewCourseSelectionCommand = new DisplayNewCourseSelectionCommand(this);
             DisplayProfileSelectionCommand = new DisplayProfileSelectionCommand(this);
             DisplaySettingsCommand = new DisplaySettingsCommand(this);
+            DisplayStatisticsCommand = new DisplayStatisticsCommand(this);
             DisplayStudentCoursesToContinue = new DisplayStudentCoursesToContinue(this);
             EditCorrectAnswerCommand = new EditCorrectAnswerCommand(this);
             EditCourseCommand = new EditCourseCommand(this);
@@ -869,83 +885,214 @@ namespace Nezmatematika.ViewModel
             SwitchToNextProblemCommand = new SwitchToNextProblemCommand(this);
             SwitchToPreviousProblemCommand = new SwitchToPreviousProblemCommand(this);
         }
+        #endregion Constructors
 
+        #region SettingAndLoadingMethods
         public void LoadDefaultSettings()
         {
             if (File.Exists(_DefaultSettingsPath))
-            {
                 this.Settings = new MySettings().Read(_DefaultSettingsPath);
-            }
         }
         public void SetLastUsedUserFromAllUsers()
         {
-            if (AllUsersList.Count >= 1)
+            if (AllUserBasesList.Count >= 1)
             {
                 if (IsInStudentMode)
                 {
-                    if (AllUsersList[0].UserType == AppMode.Student)
-                        LastStudentUser = AllUsersList[0];
+                    if (AllUserBasesList[0].UserType == AppMode.Student)
+                        LastStudentUserBase = AllUserBasesList[0];
                     else
-                        LastStudentUser = null;
+                        LastStudentUserBase = null;
                 }
                 else
                 {
-                    if (AllUsersList[AllUsersList.Count - 1].UserType == AppMode.Teacher)
-                        LastTeacherUser = AllUsersList[AllUsersList.Count - 1];
+                    if (AllUserBasesList[AllUserBasesList.Count - 1].UserType == AppMode.Teacher)
+                        LastTeacherUserBase = AllUserBasesList[AllUserBasesList.Count - 1];
                     else
-                        LastTeacherUser = null;
+                        LastTeacherUserBase = null;
                 }
             }
             else
             {
-                LastStudentUser = null;
-                LastTeacherUser = null;
+                LastStudentUserBase = null;
+                LastTeacherUserBase = null;
             }
             SaveUserList();
         }
+        public void SetCurrentUserFromUserBase(UserBase userBase)
+        {
+            CurrentUser = userBase == null ? null : new User(userBase, _UserCoursesDataPath(userBase), _UserStatsPath(userBase));
+        }
         public void SetCurrentUserToLastUsedUser()
         {
-            if (IsInStudentMode == true)
-                CurrentUser = LastStudentUser;
-            else
-                CurrentUser = LastTeacherUser;
+            var userBase = IsInStudentMode ? LastStudentUserBase : LastTeacherUserBase;
+            SetCurrentUserFromUserBase(userBase);
         }
-        public void LoadSettingsForUser(User user)
+        public void LoadSettingsForCurrentUser()
         {
-            var settingsPath = user != null ? Path.Combine(App.MyBaseDirectory, "Settings", $"{user.Id}{UserSettingsFilename}") : _DefaultSettingsPath;
+            var settingsPath = CurrentUser != null ? _UserSettingsPath(CurrentUser.UserBase) : _DefaultSettingsPath;
             if (File.Exists(settingsPath))
                 this.Settings = new MySettings().Read(settingsPath);
         }
+        public void UpdateAbilityToContinueCourse()
+        {
+            var oldValue = Settings.HasCourseToContinue;
+            Settings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
+            if (oldValue != Settings.HasCourseToContinue)
+                SaveUserSettings();
+        }
+        public void OpenCurrentCourseForStudent()
+        {
+            App.WhereInApp = WhereInApp.CourseForStudent;
+            var startTime = DateTime.Now;
+
+            if (!CheckUserCourseDataExists())
+            {
+                CreateUserCourseData(startTime);
+                CurrentUser.UserStats.NewCourseStartedUpdate();
+            }
+
+            CurrentUserCourseData.UpdateAtSessionStart();
+            SaveDataAndStats();
+
+            UpdateAbilityToContinueCourse();
+
+            BtnFinishCourseVis = CurrentUserCourseData.Completed ? Visibility.Visible : Visibility.Collapsed;
+
+            SetCurrentMathProblemFromUCD();
+            CourseForStudentVis = Visibility.Visible;
+            if (CurrentMathProblemIndex < CurrentUserCourseData.CourseProblemCount + CurrentUserCourseData.RequeuedProblems.Count)
+                BtnNextProblemVis = Visibility.Visible;
+        }
+        public void SetCurrentMathProblemFromUCD()
+        {
+            CurrentMathProblemIndex = CurrentUserCourseData.GetIndexToResumeOn();
+            SetCurrentMathProblemFromCurrentIndex();
+        }
+        public void PopulateUserTempValues(UserBase userBaseToEdit)
+        {
+            TempTitleBefore = userBaseToEdit.TitleBefore;
+            TempFirstName = userBaseToEdit.FirstName;
+            TempLastName = userBaseToEdit.LastName;
+            TempTitleAfter = userBaseToEdit.TitleAfter;
+            TempSchoolName = userBaseToEdit.SchoolName;
+            TempClassName = userBaseToEdit.ClassName;
+        }
+        public void PopulateTempAnswersFromCurrentMathProblem()
+        {
+            if (CurrentMathProblem != null && CurrentMathProblem.CorrectAnswers != null)
+                TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
+            else
+                TempAnswers = new ObservableCollection<string>();
+        }
+        public void PopulateTempSolutionStepsFromCurrentMathProblem()
+        {
+            if (CurrentMathProblem != null && CurrentMathProblem.SolutionSteps != null)
+                TempSolutionStepsTexts = new ObservableCollection<string>(CurrentMathProblem.SolutionSteps);
+            else
+                TempSolutionStepsTexts = new ObservableCollection<string>();
+        }
+        public void ReloadCurrentUserStats()
+        {
+            if (CurrentUser == null || CurrentUserBase == null)
+                return;
+            var stats = UserStats.Read(_UserStatsPath(CurrentUserBase));
+            if (stats == null)
+                stats = new UserStats();
+
+            var timeSpan = stats.TimeTakingCourses;
+            var hoursTakingCourses = timeSpan.Days * 24 + timeSpan.Hours;
+            var restOfTimeSpan = timeSpan.ToString(@"mm\:ss");
+            CurrentTimeTakingCourses = $"{hoursTakingCourses}:{restOfTimeSpan}";
+            CurrentAnswersSentTotal = stats.AnswersSentTotal.ToString();
+            CurrentProblemsSolvedTotal = stats.ProblemsSolvedTotal.ToString();
+            CurrentProblemsSolvedFirstTry = stats.ProblemsSolvedFirstTry.ToString();
+            CurrentProblemsSolvedFirstTryNoHints = stats.ProblemsSolvedFirstTryNoHints.ToString();
+            CurrentHintsDisplayed = stats.HintsDisplayed.ToString();
+            CurrentCoursesStarted = stats.CoursesStarted.ToString();
+            CurrentCoursesCompleted = stats.CoursesCompleted.ToString();
+        }
+        public void ReloadShownSolutionSteps()
+        {
+            SolutionStepsShownToStudent.Clear();
+            for (int i = 0; i < CurrentUserCourseData.VisibleStepsCounts[CurrentMathProblemIndex]; i++)
+            {
+                SolutionStepsShownToStudent.Add(CurrentMathProblem.SolutionSteps[i]);
+            }
+        }
+        #endregion SettingAndLoadingMethods
+
+        #region SavingMethods
         public void SaveUserSettings()
         {
-            Settings.Save(_UserSettingsPath);
+            Settings.Save(_UserSettingsPath(CurrentUser.UserBase));
         }
-        public void RestoreDefaultSettingsForCurrentUser()
+        public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
-            var usersNewSettings = new MySettings().Read(_DefaultSettingsPath);
-            usersNewSettings.HasCourseToContinue = this.Settings.HasCourseToContinue;
-            usersNewSettings.Save(_UserSettingsPath);
-            LoadSettingsForUser(CurrentUser);
+            CurrentUser = new User(titBef, fName, lName, titAft, sName, cName);
+
+            this.Settings.ThisUser = CurrentUser.UserBase;
+            this.Settings.HasCourseToContinue = false;
+            RestoreDefaultSettingsForCurrentUser();
+            SaveUserSettings();
+            AllUserBasesList.Add(CurrentUser.UserBase);
+            SaveUserList();
+            UserBasesOfTypeList.Add(CurrentUser.UserBase);
+            ClearUserTempValues();
         }
-        public void RestoreUserSettings()
+        public void DeleteUser(UserBase userBaseToDelete)
         {
-            LoadSettingsForUser(CurrentUser);
+            File.Delete(_UserStatsPath(userBaseToDelete));
+            File.Delete(_UserCoursesDataPath(userBaseToDelete));
+            File.Delete(_UserSettingsPath(userBaseToDelete));
+            UserBasesOfTypeList.Remove(userBaseToDelete);
+            AllUserBasesList.Remove(userBaseToDelete);
+            SaveUserList();
+            SetCurrentUserFromUserBase(UserBasesOfTypeList[0]);
+        }
+        public void EditUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
+        {
+            CurrentUser.UserBase.Edit(titBef, fName, lName, titAft, sName, cName);
+            SaveUserList();
+            ClearUserTempValues();
+        }
+        public void SaveCurrentMathProblem(TextRange textRange)
+        {
+            SaveMathProblem(CurrentMathProblem, textRange);
+            TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
+            PopulateTempSolutionStepsFromCurrentMathProblem();
+        }
+        public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
+        {
+            mathProblem.CorrectAnswers = new ObservableCollection<string>(TempAnswers);
+            mathProblem.SolutionSteps = new ObservableCollection<string>(TempSolutionStepsTexts);
+            mathProblem.TrimAndPruneCorrectAnswers();
+            try
+            {
+                FileStream fileStream = new FileStream(mathProblem.FilePath, FileMode.Create);
+                textRange.Save(fileStream, DataFormats.Rtf);
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
         public void ArchiveLastUsedUsers()
         {
-            if (CurrentUser != null && AllUsersList.Count >= 1)
+            if (CurrentUser != null && AllUserBasesList.Count >= 1)
             {
                 int index;
                 if (IsInStudentMode == true)
                     index = 0;
                 else
-                    index = AllUsersList.Count - 1;
-                for (int i = 0; i < AllUsersList.Count; i++)
+                    index = AllUserBasesList.Count - 1;
+                for (int i = 0; i < AllUserBasesList.Count; i++)
                 {
-                    if (AllUsersList[i] == CurrentUser)
+                    if (AllUserBasesList[i].Equals(CurrentUser.UserBase))
                     {
-                        AllUsersList.RemoveAt(i);
-                        AllUsersList.Insert(index, CurrentUser);
+                        AllUserBasesList.RemoveAt(i);
+                        AllUserBasesList.Insert(index, CurrentUser.UserBase);
                         SaveUserList();
                         return;
                     }
@@ -954,41 +1101,19 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveUserList()
         {
-            using (StreamWriter sw = new StreamWriter(_UserListPath))
+            using (StreamWriter sw = new StreamWriter(_UserListPath()))
             {
-                XmlSerializer xmls = new XmlSerializer(typeof(List<User>));
-                xmls.Serialize(sw, new List<User>(this.AllUsersList));
+                XmlSerializer xmls = new XmlSerializer(typeof(List<UserBase>));
+                xmls.Serialize(sw, new List<UserBase>(this.AllUserBasesList));
             }
         }
-        public void ClearUserTempValues()
-        {
-            TempTitleBefore = string.Empty;
-            TempFirstName = string.Empty;
-            TempLastName = string.Empty;
-            TempTitleAfter = string.Empty;
-            TempSchoolName = string.Empty;
-            TempClassName = string.Empty;
-        }
+        #endregion SavingMethods
 
-        public void ClearCourseTempValues()
-        {
-            TempCourseTitle = string.Empty;
-            TempCourseDesc = string.Empty;
-            TempCourseTags.Clear();
-        }
-
-        public void ClearCurrentValuesExceptUser()
-        {
-            CurrentAnswer = null;
-            CurrentMathProblem = null;
-            CurrentCourse = null;
-            CurrentUserCourseData = null;
-        }
-
+        #region ClearingAndResettingMethods
         public void BackToMainMenu()
         {
             if (App.WhereInApp == WhereInApp.Settings)
-                RestoreUserSettings();
+                LoadSettingsForCurrentUser();
 
             App.WhereInApp = WhereInApp.MainMenu;
 
@@ -1013,6 +1138,11 @@ namespace Nezmatematika.ViewModel
             CourseForStudentVis = Visibility.Collapsed;
             ResetAnswerFeedbackVisibility();
 
+            //výběry statistik
+            StatsVis = Visibility.Collapsed;
+            StudentStatsVis = Visibility.Collapsed;
+            TeacherStatsVis = Visibility.Collapsed;
+
             //výběry nastavení
             SettingsVis = Visibility.Collapsed;
             StudentSettingsVis = Visibility.Collapsed;
@@ -1021,163 +1151,41 @@ namespace Nezmatematika.ViewModel
             //sekce o programu
             AboutAppVis = Visibility.Collapsed;
 
-            if (IsInStudentMode == true)
-            {
-                StudentVis = Visibility.Visible;
-                TeacherVis = Visibility.Collapsed;
-            }
-            else
-            {
-                StudentVis = Visibility.Collapsed;
-                TeacherVis = Visibility.Visible;
-            }
+            MainMenuVis = Visibility.Visible;
+            StudentVis = IsInStudentMode ? Visibility.Visible : Visibility.Collapsed;
+            TeacherVis = IsInStudentMode ? Visibility.Collapsed : Visibility.Visible;
         }
-
-        public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
+        public void RestoreDefaultSettingsForCurrentUser()
         {
-            CurrentUser = new User();
-
-            CurrentUser.TitleBefore = titBef;
-            CurrentUser.FirstName = fName;
-            CurrentUser.LastName = lName;
-            CurrentUser.TitleAfter = titAft;
-            CurrentUser.SchoolName = sName;
-            CurrentUser.ClassName = cName;
-            CurrentUser.UserType = App.AppMode;
-            CurrentUser.UpdateDisplayName();
-            this.Settings.ThisUser = CurrentUser;
-            this.Settings.HasCourseToContinue = false;
-            RestoreDefaultSettingsForCurrentUser();
-            SaveUserSettings();
-            AllUsersList.Add(CurrentUser);
-            SaveUserList();
-            UsersOfTypeList.Add(CurrentUser);
-            ClearUserTempValues();
+            var usersNewSettings = new MySettings().Read(_DefaultSettingsPath);
+            usersNewSettings.HasCourseToContinue = this.Settings.HasCourseToContinue;
+            usersNewSettings.Save(_UserSettingsPath(CurrentUser.UserBase));
+            LoadSettingsForCurrentUser();
         }
-
-        public void GetListOfAllUsers()
+        public void ClearUserTempValues()
         {
-            AllUsersList.Clear();
-            List<User> resultList = new List<User>();
-            if (File.Exists(_UserListPath))
-            {
-                using (StreamReader sw = new StreamReader(_UserListPath))
-                {
-                    XmlSerializer xmls = new XmlSerializer(typeof(List<User>));
-                    resultList = xmls.Deserialize(sw) as List<User>;
-                }
-            }
-            AllUsersList = new ObservableCollection<User>(resultList);
+            TempTitleBefore = string.Empty;
+            TempFirstName = string.Empty;
+            TempLastName = string.Empty;
+            TempTitleAfter = string.Empty;
+            TempSchoolName = string.Empty;
+            TempClassName = string.Empty;
         }
-
-        public void GetUsersOfTypeList()
+        public void ClearCourseTempValues()
         {
-            var curUser = CurrentUser;
-            UsersOfTypeList.Clear();
-            var resultList = new List<User>();
-            foreach (User user in AllUsersList)
-            {
-                if (user.UserType == App.AppMode)
-                    resultList.Add(user);
-            }
-            UsersOfTypeList = new ObservableCollection<User>(resultList.OrderBy(u => u.SchoolName)
-                                                                        .ThenBy(u => u.ClassName)
-                                                                        .ThenBy(u => u.LastName)
-                                                                        .ThenBy(u => u.FirstName));
-            CurrentUser = curUser;
+            TempCourseTitle = string.Empty;
+            TempCourseDesc = string.Empty;
         }
-
-        public void DeleteUser(User userToDelete)
+        public void ClearCurrentValuesExceptUser()
         {
-            string filePath = System.IO.Path.Combine(App.MyBaseDirectory, "Settings", $"{userToDelete.Id}{UserSettingsFilename}");
-            File.Delete(filePath);
-            UsersOfTypeList.Remove(userToDelete);
-            AllUsersList.Remove(userToDelete);
-            SaveUserList();
-            CurrentUser = UsersOfTypeList[0];
+            CurrentAnswer = null;
+            CurrentMathProblem = null;
+            CurrentCourse = null;
+            CurrentUserCourseData = null;
         }
+        #endregion ClearingAndResettingMethods
 
-        public void PopulateUserTempValues(User userToEdit)
-        {
-            TempTitleBefore = userToEdit.TitleBefore;
-            TempFirstName = userToEdit.FirstName;
-            TempLastName = userToEdit.LastName;
-            TempTitleAfter = userToEdit.TitleAfter;
-            TempSchoolName = userToEdit.SchoolName;
-            TempClassName = userToEdit.ClassName;
-        }
-
-        public void PopulateTempAnswersFromCurrentMathProblem()
-        {
-            if (CurrentMathProblem != null && CurrentMathProblem.CorrectAnswers != null)
-                TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
-            else
-                TempAnswers = new ObservableCollection<string>();
-        }
-
-        public void PopulateTempSolutionStepsFromCurrentMathProblem()
-        {
-            if (CurrentMathProblem != null && CurrentMathProblem.SolutionSteps != null)
-                TempSolutionStepsTexts = new ObservableCollection<string>(CurrentMathProblem.SolutionSteps);
-            else
-                TempSolutionStepsTexts = new ObservableCollection<string>();
-        }
-
-        public void EditUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
-        {
-            CurrentUser.TitleBefore = titBef;
-            CurrentUser.FirstName = fName;
-            CurrentUser.LastName = lName;
-            CurrentUser.TitleAfter = titAft;
-            CurrentUser.UpdateDisplayName();
-            CurrentUser.SchoolName = sName;
-            CurrentUser.ClassName = cName;
-            SaveUserSettings();
-            SaveUserList();
-            ClearUserTempValues();
-        }
-        public void OpenCurrentCourseForStudent()
-        {
-            App.WhereInApp = WhereInApp.CourseForStudent;
-            var startTime = DateTime.Now;
-
-            if (!CheckUserCourseDataExists())
-                CreateUserCourseData(startTime);
-
-            CurrentUserCourseData.UpdateAtSessionStart();
-            SaveUCD();
-
-            UpdateAbilityToContinueCourse();
-
-            if (CurrentUserCourseData.Completed)
-                BtnFinishCourseVis = Visibility.Visible;
-            else
-                BtnFinishCourseVis = Visibility.Collapsed;
-
-            SetCurrentMathProblemFromUCD();
-            CourseForStudentVis = Visibility.Visible;
-            if (CurrentMathProblemIndex < CurrentUserCourseData.CourseProblemCount + CurrentUserCourseData.RequeuedProblems.Count)
-                BtnNextProblemVis = Visibility.Visible;
-        }
-        private void UpdateStats()
-        {
-
-        }
-        public void SetCurrentMathProblemFromUCD()
-        {
-            CurrentMathProblemIndex = CurrentUserCourseData.GetIndexToResumeOn();
-            SetCurrentMathProblemFromCurrentIndex();
-        }
-
-        public void ReloadShownSolutionSteps()
-        {
-            SolutionStepsShownToStudent.Clear();
-            for (int i = 0; i < CurrentUserCourseData.VisibleStepsCounts[CurrentMathProblemIndex]; i++)
-            {
-                SolutionStepsShownToStudent.Add(CurrentMathProblem.SolutionSteps[i]);
-            }
-        }
-
+        #region MethodForCoursesInStudentMode
         public void SetCurrentMathProblemFromCurrentIndex()
         {
             int index = CurrentMathProblemIndex;
@@ -1189,21 +1197,34 @@ namespace Nezmatematika.ViewModel
         private bool CheckUserCourseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id && c.Version == CurrentCourse.Version) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
-            CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.Id, startTime);
+            CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.UserBase.Id, startTime);
             CurrentUser.CoursesData.Add(CurrentUserCourseData);
         }
         public bool CheckIfAnswerIsCorrect(string answerToCheck) => CurrentMathProblem.CheckAnswerIsCorrect(answerToCheck);
-        public void UpdateUCDAfterAnswer(bool isCorrect)
+        public void UpdateUCDAndStatsAfterAnswer(bool isCorrect)
         {
             if (isCorrect)
-                CurrentUserCourseData.UpdateAfterCorrectAnswer();
+            {
+                CurrentUserCourseData.UpdateAfterCorrectAnswer(out var completed);
+                if (completed)
+                {
+                    CurrentUserCourseData.UpdateWhenCourseCompleted(out var sessionDuration);
+                    CurrentUser.UserStats.SessionEndUpdate(sessionDuration);
+                    CurrentUser.UserStats.CourseCompletedUpdate();
+                }
+
+            }
             else
                 CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, Settings.RequeueOnMistake);
-            SaveUCD();
+
+            var firstTry = CurrentMathProblemIndex < CurrentCourse.Problems.Count;
+            var withoutHints = SolutionStepsShownToStudent.Count == 0;
+            CurrentUser.UserStats.AnswerSentUpdate(isCorrect, firstTry, withoutHints);
+            SaveDataAndStats();
         }
         public void DisplayAnswerFeedback(bool isCorrect)
         {
-            CorrectAnswersDisplayList = CurrentMathProblem.GetCorrectAnswersInOneString();
+            CorrectAnswersAsOneString = CurrentMathProblem.GetCorrectAnswersInOneString();
 
             if (isCorrect)
                 AnswerFeedbackCorrectVis = Visibility.Visible;
@@ -1225,19 +1246,25 @@ namespace Nezmatematika.ViewModel
             TempAnswer = CurrentUserCourseData.StudentAnswers[CurrentMathProblemIndex];
             DisplayAnswerFeedback(CurrentMathProblem.CheckAnswerIsCorrect(TempAnswer));
         }
-        public void SaveUCD()
+        public void SaveDataAndStats()
         {
-            SaveUserList();
+            CurrentUser.SaveDataAndStats(_UserCoursesDataPath(CurrentUser.UserBase), _UserStatsPath(CurrentUser.UserBase));
         }
+        #endregion MethodForCoursesInStudentMode
+
+        #region MethodsForCoursesInEditor
         public void CreateNewCourse()
         {
-            CurrentCourse = new Course(CurrentUser, TempCourseTitle, TempCourseDesc, TempCourseTags);
+            CurrentCourse = new Course(CurrentUser.UserBase, TempCourseTitle, TempCourseDesc);
             CurrentCourse.AddNewMathProblem();
             CurrentMathProblem = CurrentCourse.Problems[0];
+            CurrentUser.UserStats.CourseCreatedUpdate();
 
             Directory.CreateDirectory(CurrentCourse.DirPath);
             TeacherCoursesToContinueList.Add(CurrentCourse);
             UpdateAbilityToContinueCourse();
+
+            SaveCurrentCourse();
         }
 
         public void StartEditingCurrentCourse()
@@ -1305,7 +1332,10 @@ namespace Nezmatematika.ViewModel
             }
 
             if (publish)
-                CurrentCourse.Publish(_CoursesPublishedDirPath(), _CoursesArchivedDirPath());
+            {
+                CurrentCourse.Publish(_CoursesPublishedDirPath(), _CoursesArchivedDirPath(), out int problemCountChange);
+                CurrentUser.UserStats.CoursePublishedUpdate(CurrentCourse.Version, problemCountChange);
+            }
             else
             {
                 MessageBox.Show("Aby kurz mohl být zveřejněn, musí mít každá úloha alespoň 1 správnou odpověď.\n" +
@@ -1318,22 +1348,48 @@ namespace Nezmatematika.ViewModel
         {
             CurrentCourse.Save();
         }
+        #endregion MethodsForCoursesInEditor
 
-        public void UpdateAbilityToContinueCourse()
+        #region GetMethods
+        public void GetListOfAllUsers()
         {
-            var oldValue = Settings.HasCourseToContinue;
-            Settings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
-            if (oldValue != Settings.HasCourseToContinue)
-                SaveUserSettings();
+            AllUserBasesList.Clear();
+            List<UserBase> resultList = new List<UserBase>();
+            if (File.Exists(_UserListPath()))
+            {
+                using (StreamReader sw = new StreamReader(_UserListPath()))
+                {
+                    XmlSerializer xmls = new XmlSerializer(typeof(List<UserBase>));
+                    resultList = xmls.Deserialize(sw) as List<UserBase>;
+                }
+            }
+            AllUserBasesList = new ObservableCollection<UserBase>(resultList);
+        }
+
+        public void GetUserBasesOfTypeList()
+        {
+            var curUser = CurrentUser;
+            UserBasesOfTypeList.Clear();
+            var resultList = new List<UserBase>();
+            foreach (UserBase user in AllUserBasesList)
+            {
+                if (user.UserType == App.AppMode)
+                    resultList.Add(user);
+            }
+            UserBasesOfTypeList = new ObservableCollection<UserBase>(resultList.OrderBy(u => u.LastName)
+                                                                        .ThenBy(u => u.FirstName)
+                                                                        .ThenBy(u => u.ClassName)
+                                                                        .ThenBy(u => u.SchoolName));
+            CurrentUser = curUser;
         }
 
         public void GetListOfTeacherCoursesToContinue()
         {
             TeacherCoursesToContinueList.Clear();
             List<Course> resultList = new List<Course>();
-            if (Directory.Exists(_TeacherCoursesDirPath()))
+            if (Directory.Exists(_TeacherCoursesDirPath(CurrentUser.UserBase)))
             {
-                var files = Directory.EnumerateFiles(_TeacherCoursesDirPath());
+                var files = Directory.EnumerateFiles(_TeacherCoursesDirPath(CurrentUser.UserBase));
 
                 foreach (var file in files)
                 {
@@ -1412,30 +1468,7 @@ namespace Nezmatematika.ViewModel
             StudentCompletedCoursesData = new ObservableCollection<UserCourseData>(listCoursesCompleted.OrderByDescending(c => c.CourseFinished));
             StudentInProgressCoursesData = new ObservableCollection<UserCourseData>(listCoursesInProgress.OrderByDescending(c => c.LastSessionStarted));
         }
-
-        public void SaveCurrentMathProblem(TextRange textRange)
-        {
-            SaveMathProblem(CurrentMathProblem, textRange);
-            TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
-            PopulateTempSolutionStepsFromCurrentMathProblem();
-        }
-
-        public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
-        {
-            mathProblem.CorrectAnswers = new ObservableCollection<string>(TempAnswers);
-            mathProblem.SolutionSteps = new ObservableCollection<string>(TempSolutionStepsTexts);
-            mathProblem.TrimAndPruneCorrectAnswers();
-            try
-            {
-                FileStream fileStream = new FileStream(mathProblem.FilePath, FileMode.Create);
-                textRange.Save(fileStream, DataFormats.Rtf);
-                fileStream.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
+        #endregion GetMethods
 
         private void OnPropertyChanged(string propertyName)
         {

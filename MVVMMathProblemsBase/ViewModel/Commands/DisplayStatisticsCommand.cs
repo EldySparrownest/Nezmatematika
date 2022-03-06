@@ -1,5 +1,4 @@
-﻿using Nezmatematika.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,7 @@ using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class PrepUserForEditingCommand : ICommand
+    public class DisplayStatisticsCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -19,31 +18,32 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public PrepUserForEditingCommand(MainMenuVM vm)
+        public DisplayStatisticsCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            UserBase user = parameter as UserBase;
-            if (user != null)
+            if (MMVM.CurrentUser != null)
+            {
                 return true;
-
+            }
             return false;
-            
         }
 
         public void Execute(object parameter)
         {
-            UserBase user = parameter as UserBase;
             MMVM.BackToMainMenu();
-            MMVM.UserSelVis = Visibility.Visible;
-            MMVM.NewUserVis = Visibility.Collapsed;
+            MMVM.ReloadCurrentUserStats();
+            App.WhereInApp = WhereInApp.Statistics;
 
-            MMVM.PopulateUserTempValues(user);
+            if (MMVM.IsInStudentMode == true)
+                MMVM.StudentStatsVis = Visibility.Visible;
+            else
+                MMVM.TeacherStatsVis = Visibility.Visible;
 
-            MMVM.EditUserVis = Visibility.Visible;
+            MMVM.StatsVis = Visibility.Visible;
         }
     }
 }

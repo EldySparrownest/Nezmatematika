@@ -41,7 +41,8 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.CurrentUserCourseData.RecordStepReveal(MMVM.CurrentMathProblemIndex);
-            MMVM.SaveUCD();
+            MMVM.CurrentUser.UserStats.HintDisplayedUpdate();
+            MMVM.SaveDataAndStats();
             MMVM.ReloadShownSolutionSteps();
         }
     }

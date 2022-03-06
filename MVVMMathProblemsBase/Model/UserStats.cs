@@ -1,50 +1,126 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
     public class UserStats
     {
         //shared
-        public TimeSpan TimeSpentInCourses;
+        [XmlIgnore]
+        public TimeSpan TimeTakingCourses;
+
+        // XmlSerializer does not support TimeSpan, so use this property for serialization instead.
+        [Browsable(false)]
+        [XmlElement(DataType = "duration", ElementName = "TimeTakingCourses")]
+        public string TimeTakingCoursesString
+        {
+            get
+            {
+                return XmlConvert.ToString(TimeTakingCourses);
+            }
+            set
+            {
+                TimeTakingCourses = string.IsNullOrEmpty(value) ? TimeSpan.Zero : XmlConvert.ToTimeSpan(value);
+            }
+        }
 
         //student only
+        public int AnswersSentTotal;
         public int ProblemsSolvedTotal;
         public int ProblemsSolvedFirstTry;
         public int ProblemsSolvedFirstTryNoHints;
-        public int UniqueProblemsSolvedTotal;
-        public int UniqueProblemsSolvedFirstTry;
-        public int UniqueProblemsSolvedFirstTryNoHints;
         public int HintsDisplayed;
         public int CoursesStarted;
         public int CoursesCompleted;
 
         //teacher only
+        public int ProblemsPublished;
         public int CoursesCreated;
         public int VersionsPublished;
         public int UniqueCoursesPublished;
 
         public UserStats()
         {
-            TimeSpentInCourses = TimeSpan.Zero;
+            TimeTakingCourses = TimeSpan.Zero;
 
+            AnswersSentTotal = 0;
             ProblemsSolvedTotal = 0;
             ProblemsSolvedFirstTry = 0;
             ProblemsSolvedFirstTryNoHints = 0;
-            CoursesCompleted = 0;
-            UniqueProblemsSolvedTotal = 0;
-            UniqueProblemsSolvedFirstTry = 0;
-            UniqueProblemsSolvedFirstTryNoHints = 0;
             HintsDisplayed = 0;
             CoursesStarted = 0;
             CoursesCompleted = 0;
 
+            ProblemsPublished = 0;
             CoursesCreated = 0;
             VersionsPublished = 0;
             UniqueCoursesPublished = 0;
+        }
+
+        public void NewCourseStartedUpdate()
+        {
+            CoursesStarted++;
+        }
+        public void HintDisplayedUpdate()
+        {
+            HintsDisplayed++;
+        }
+        public void AnswerSentUpdate(bool wasCorrect, bool wasFirstTry, bool withoutHints)
+        {
+            AnswersSentTotal++;
+            if (wasCorrect)
+            {
+                ProblemsSolvedTotal++;
+                if (wasFirstTry)
+                {
+                    ProblemsSolvedFirstTry++;
+                    if (withoutHints)
+                        ProblemsSolvedFirstTryNoHints++;
+                }
+            }
+        }
+        public void CourseCompletedUpdate()
+        {
+            CoursesCompleted++;
+        }
+        public void SessionEndUpdate(TimeSpan sessionDuration)
+        {
+            TimeTakingCourses = TimeTakingCourses.Add(sessionDuration);
+        }
+        public void CourseCreatedUpdate()
+        {
+            CoursesCreated++;
+        }
+        public void CoursePublishedUpdate(int version, int newProblems)
+        {
+            ProblemsPublished += newProblems;
+            VersionsPublished++;
+            if (version == 1)
+                UniqueCoursesPublished++;
+        }
+
+        public void Save(string filename)
+        {
+            using (StreamWriter sw = new StreamWriter(filename))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
+                xmls.Serialize(sw, this);
+            }
+        }
+        public static UserStats Read(string filename)
+        {
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
+                return xmls.Deserialize(sr) as UserStats;
+            }
         }
     }
 }

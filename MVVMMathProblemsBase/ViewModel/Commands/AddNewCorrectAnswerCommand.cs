@@ -24,7 +24,9 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return App.WhereInApp == WhereInApp.CourseEditor
+                && MMVM.CurrentMathProblem != null
+                && !String.IsNullOrWhiteSpace(parameter?.ToString());
         }
 
         public void Execute(object parameter)

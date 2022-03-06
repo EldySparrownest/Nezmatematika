@@ -11,11 +11,10 @@ namespace Nezmatematika.Model
 {
     public class MySettings
     {
-        public User ThisUser { get; set; }
+        public UserBase ThisUser { get; set; }
         public bool HasCourseToContinue { get; set; }
         public Color MainBackgroundColour { get; set; }
         public Color SecondaryBackgroundColour { get; set; }
-        public List<string> Setting2 { get; set; }
 
         //Student only section
         public bool RequeueOnMistake { get; set; }

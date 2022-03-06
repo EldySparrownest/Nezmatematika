@@ -1,42 +1,90 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
     public class User
     {
-        public string Id { get; set; }
-        public AppMode UserType { get; set; }
-        public string TitleBefore { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string TitleAfter { get; set; }
-        public string SchoolName { get; set; }
-        public string ClassName { get; set; }
-        public string DisplayName { get; set; }
+        public UserBase UserBase { get; set; }
         public UserStats UserStats { get; set; }
         public List<UserCourseData> CoursesData { get; set; }
 
         public User()
         {
-            Id = NewId();
-            UserType = App.AppMode;  
+            UserBase = new UserBase();
             CoursesData = new List<UserCourseData>();
             UserStats = new UserStats(); 
         }
 
-        public void UpdateDisplayName()
+        public User(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
-            DisplayName = $"{TitleBefore} {FirstName} {LastName} {TitleAfter}".Trim();
+            UserBase = new UserBase(titBef, fName, lName, titAft, sName, cName);
+            CoursesData = new List<UserCourseData>();
+            UserStats = new UserStats();
         }
 
-        private string NewId()
+        public User(UserBase userBase, string coursesDataFilename, string statsFilename)
         {
-            var modeName = App.AppMode.ToString();
-            return modeName + string.Join(string.Empty, (DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+            UserBase = userBase;
+            ReadCoursesData(coursesDataFilename);
+            ReadStats(statsFilename);
+        }
+
+        public void SaveDataAndStats(string coursesDataFilename, string statsFilename)
+        {
+            SaveCoursesData(coursesDataFilename);
+            SaveStats(statsFilename);
+        }
+
+        public void SaveCoursesData(string coursesDataFilename)
+        {
+            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);
+            
+            //using (StreamWriter sw = new StreamWriter(coursesDataFilename))
+            //{
+            //    XmlSerializer xmls = new XmlSerializer(typeof(List<UserCourseData>));
+            //    xmls.Serialize(sw, CoursesData);
+            //}
+        }
+        public void SaveStats(string statsFilename)
+        {
+            XmlHelper.Save(statsFilename, typeof(UserStats), UserStats);
+            //using (StreamWriter sw = new StreamWriter(statsFilename))
+            //{
+            //    XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
+            //    xmls.Serialize(sw, UserStats);
+            //}
+        }
+
+        public void ReadCoursesData(string coursesDataFilename)
+        {
+            if (File.Exists(coursesDataFilename))
+            {
+                using (StreamReader sw = new StreamReader(coursesDataFilename))
+                {
+                    XmlSerializer xmls = new XmlSerializer(typeof(List<UserCourseData>));
+                    CoursesData = xmls.Deserialize(sw) as List<UserCourseData>;
+                }
+            }
+            else CoursesData = new List<UserCourseData>();
+        }
+        public void ReadStats(string statsFilename)
+        {
+            if (File.Exists(statsFilename))
+            {
+                using (StreamReader sw = new StreamReader(statsFilename))
+                {
+                    XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
+                    UserStats = xmls.Deserialize(sw) as UserStats;
+                }
+            }
+            else UserStats = new UserStats();
         }
     }
 }

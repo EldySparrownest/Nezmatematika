@@ -35,7 +35,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
-            MMVM.TeacherVis = Visibility.Collapsed;
+            MMVM.MainMenuVis = Visibility.Collapsed;
             App.WhereInApp = WhereInApp.CourseEditor;
             MMVM.StartEditingCurrentCourse();
         }

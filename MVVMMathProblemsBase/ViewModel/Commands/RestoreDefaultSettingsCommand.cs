@@ -26,10 +26,9 @@ namespace Nezmatematika.ViewModel.Commands
         public bool CanExecute(object parameter)
         {
             User user = parameter as User;
-            if (user != null)
-            {
+            if (user != null && user.UserBase != null)
                 return true;
-            }
+
             return false;
 
         }

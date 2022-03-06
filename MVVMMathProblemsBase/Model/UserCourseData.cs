@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
@@ -66,14 +68,13 @@ namespace Nezmatematika.Model
             LastSessionStarted = DateTime.Now;
         }
 
-        public void UpdateAfterCorrectAnswer()
+        public void UpdateAfterCorrectAnswer(out bool completed)
         {
             SolvedProblemsCount++;
             SolvedCorrectlyCount++;
             ResumeOnIndex++;
 
-            if (SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count)
-                UpdateWhenCourseCompleted();
+            completed = (SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count);
         }
 
         public void UpdateAfterIncorrectAnswer(int problemIndex, bool requeue)
@@ -85,16 +86,17 @@ namespace Nezmatematika.Model
                 RequeuedProblems.Add(problemIndex);
         }
 
-        public void UpdateAtSessionEnd()
+        public void UpdateAtSessionEnd(out TimeSpan sessionDuration)
         {
             LastSessionEnded = DateTime.Now;
+            sessionDuration = LastSessionEnded.Subtract(LastSessionStarted);
             if (!Completed)
-                NetCourseTime = NetCourseTime.Add(LastSessionEnded.Subtract(LastSessionStarted));
+                NetCourseTime = NetCourseTime.Add(sessionDuration);
         }
 
-        public void UpdateWhenCourseCompleted()
+        public void UpdateWhenCourseCompleted(out TimeSpan sessionDuration)
         {
-            UpdateAtSessionEnd();
+            UpdateAtSessionEnd(out sessionDuration);
             CourseFinished = DateTime.Now;
             Completed = true;
             ResumeOnIndex = 0;
@@ -121,6 +123,23 @@ namespace Nezmatematika.Model
         public void RecordStepReveal(int problemIndex)
         {
             VisibleStepsCounts[problemIndex]++;
+        }
+
+        public void Save(string filename)
+        {
+            using (StreamWriter sw = new StreamWriter(filename))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(UserCourseData));
+                xmls.Serialize(sw, this);
+            }
+        }
+        public UserCourseData Read(string filename)
+        {
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(UserCourseData));
+                return xmls.Deserialize(sr) as UserCourseData;
+            }
         }
     }
 }

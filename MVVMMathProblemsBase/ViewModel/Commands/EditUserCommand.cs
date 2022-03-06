@@ -49,7 +49,7 @@ namespace Nezmatematika.ViewModel.Commands
             MMVM.EditUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.EditUserVis = Visibility.Collapsed;
             MMVM.NewUserVis = Visibility.Visible;
-            MMVM.GetUsersOfTypeList();
+            MMVM.GetUserBasesOfTypeList();
         }
     }
 }

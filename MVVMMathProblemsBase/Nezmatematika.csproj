@@ -102,6 +102,7 @@
     <Compile Include="Model\MySettings.cs" />
     <Compile Include="Model\TextStyling.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserBase.cs" />
     <Compile Include="Model\UserCourseData.cs" />
     <Compile Include="Model\UserStats.cs" />
     <Compile Include="ViewModel\Commands\AddNewCorrectAnswerCommand.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayAboutAppCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayStatisticsCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\EditSolutionStepCommand.cs" />
@@ -136,7 +138,9 @@
     <Compile Include="ViewModel\Commands\SwitchBetweenUserAndCodeModeCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchToNextProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchToPreviousProblemCommand.cs" />
+    <Compile Include="ViewModel\Helpers\FilePathHelper.cs" />
     <Compile Include="ViewModel\Helpers\TextRangeHelper.cs" />
+    <Compile Include="ViewModel\Helpers\XmlHelper.cs" />
     <Compile Include="ViewModel\MainMenuVM.cs" />
     <Compile Include="ViewModel\MathProblemVM.cs" />
     <Compile Include="ViewModel\UserTypeSelectVM.cs" />

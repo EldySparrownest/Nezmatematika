@@ -41,7 +41,7 @@ namespace Nezmatematika.ViewModel.Commands
         {
             MMVM.CreateNewUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.BackToMainMenu();
-            MMVM.GetUsersOfTypeList();
+            MMVM.GetUserBasesOfTypeList();
         }
     }
 }

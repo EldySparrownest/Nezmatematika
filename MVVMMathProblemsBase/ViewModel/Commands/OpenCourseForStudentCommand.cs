@@ -57,7 +57,7 @@ namespace Nezmatematika.ViewModel.Commands
             }
             
             MMVM.BackToMainMenu();
-            MMVM.StudentVis = Visibility.Collapsed;
+            MMVM.MainMenuVis = Visibility.Collapsed;
             MMVM.OpenCurrentCourseForStudent();
         }
     }

@@ -158,8 +158,9 @@ namespace Nezmatematika.View
 
         private void ResetCourseEditor(object sender, RoutedEventArgs e)
         {
-            var initFontFamily = !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
-            var initFontSize = vM.Settings.DefaultFontSize != 0 ? vM.Settings.DefaultFontSize : 16;
+            var settingsLoadedProperly = !(vM.Settings == null);
+            var initFontFamily = (settingsLoadedProperly && !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily)) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            var initFontSize = (settingsLoadedProperly && vM.Settings.DefaultFontSize != 0) ? vM.Settings.DefaultFontSize : 16;
 
             cbEditorFontFamily.SelectedItem = initFontFamily;
             cbEditorFontSize.Text = initFontSize.ToString();
@@ -777,7 +778,7 @@ namespace Nezmatematika.View
                 if (vM.Settings.AutosaveCourseBeforePublishing)
                     btnSaveCourse_Click(sender, e);
 
-                vM.PublishCurrentCourse();
+                //vM.PublishCurrentCourse();
             }
         }
 

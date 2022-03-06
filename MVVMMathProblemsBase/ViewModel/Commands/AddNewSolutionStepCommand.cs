@@ -27,7 +27,7 @@ namespace Nezmatematika.ViewModel.Commands
         {
             return App.WhereInApp == WhereInApp.CourseEditor 
                 && MMVM.CurrentMathProblem != null
-                && !String.IsNullOrWhiteSpace(MMVM.TempSolutionStepText);
+                && !String.IsNullOrWhiteSpace(parameter.ToString());
         }
 
         public void Execute(object parameter)
