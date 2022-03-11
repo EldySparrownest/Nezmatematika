@@ -1182,7 +1182,7 @@ namespace Nezmatematika.ViewModel
             CurrentMathProblem = CurrentCourse.Problems[index];
         }
         public bool IsThisProblemTheLastOne() => CurrentMathProblemIndex == CurrentCourse.Problems.Count + CurrentUserCourseData.RequeuedProblems.Count - 1;
-        private bool CheckUserCourseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse.Id && c.Version == CurrentCourse.Version) != null;
+        private bool CheckUserCourseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse?.Id && c.Version == CurrentCourse?.Version) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
             CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.UserBase.Id, startTime);
@@ -1322,7 +1322,7 @@ namespace Nezmatematika.ViewModel
 
             if (publish)
             {
-                CurrentCourse.Publish(_CoursesPublishedDirPath(), _CoursesArchivedDirPath(), out int problemCountChange);
+                CurrentCourse.PublishCourse(_CoursesPublishedDirPath(), _CoursesArchivedDirPath(), out int problemCountChange);
                 CurrentUser.UserStats.CoursePublishedUpdate(CurrentCourse.Version, problemCountChange);
                 SaveDataAndStats();
             }

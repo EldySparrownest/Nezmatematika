@@ -53,12 +53,21 @@ namespace Nezmatematika.ViewModel.Commands
                 {
                     MMVM.CurrentUserCourseData = ucd;
                     MMVM.CurrentCourse = MMVM.AllPublishedCoursesList.Find(c => c.Id == ucd.CourseId);
+
+                    if (MMVM.CurrentCourse == null)
+                        MMVM.CurrentCourse = MMVM.AllArchivedCoursesList.Find(c => c.Id == ucd.CourseId);
                 }
             }
             
             MMVM.BackToMainMenu();
-            MMVM.MainMenuVis = Visibility.Collapsed;
-            MMVM.OpenCurrentCourseForStudent();
+
+            if (MMVM.CurrentCourse == null)
+                MessageBox.Show("Vybraný kurz se nepodařilo načíst. Vyberte si, prosím, jiný.");
+            else
+            {
+                MMVM.MainMenuVis = Visibility.Collapsed;
+                MMVM.OpenCurrentCourseForStudent();
+            }
         }
     }
 }

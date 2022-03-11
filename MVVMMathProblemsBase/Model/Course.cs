@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -122,7 +123,7 @@ namespace Nezmatematika.Model
             cs.Save();
         }
 
-        public void Publish(string publishedCoursesDirPath, string archivedCoursesDirPath, out int problemCountChange)
+        public void PublishCourse(string publishedCoursesDirPath, string archivedCoursesDirPath, out int problemCountChange)
         {
             var prevVerDirName = $"{Id}_{Version}"; //adresářové jméno poslední publikované verze
 
@@ -148,7 +149,7 @@ namespace Nezmatematika.Model
                     Course.ArchiveCourse(Id, prevVersion, publishedCoursesDirPath, archivedCoursesDirPath);
 
                 problemCountChange = PublishedProblemCount - prevPublishedProblemCount;
-                PublishCourse(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
+                Publish(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
             }
             catch (Exception e)
             {
@@ -160,6 +161,10 @@ namespace Nezmatematika.Model
             }
         }
 
+        public static void ArchiveCourse(string courseId, int courseVersion)
+        {
+            ArchiveCourse(courseId, courseVersion, FilePathHelper._CoursesPublishedDirPath(), FilePathHelper._CoursesArchivedDirPath());
+        }
         public static void ArchiveCourse(string courseId, int courseVersion, string publishedCoursesDirPath, string archivedCoursesDirPath)
         {
             var problemsDirName = $"{courseId}_{courseVersion}";
@@ -179,7 +184,7 @@ namespace Nezmatematika.Model
             File.Delete(publishedFilePath);
         }
 
-        private void PublishCourse(string courseId, int courseVersion, string teacherCoursesDirPath, string publishedCoursesDirPath)
+        private void Publish(string courseId, int courseVersion, string teacherCoursesDirPath, string publishedCoursesDirPath)
         {
             var problemsDirName = $"{courseId}_{courseVersion}";
             var teacherFilePath = Path.Combine(teacherCoursesDirPath, $"{courseId}{GlobalValues.CourseFilename}");
@@ -216,6 +221,23 @@ namespace Nezmatematika.Model
             {
                 mathProblem.DirPath = DirPath;
                 mathProblem.FilePath = Path.Combine(DirPath, $"{mathProblem.Id}.rtf");
+            }
+        }
+
+        public void Delete()
+        {
+            if (Directory.Exists(DirPath))
+            {
+                var mathProblemFilePaths = Directory.GetFiles(DirPath);
+                foreach (var path in mathProblemFilePaths)
+                {
+                    File.Delete(path);
+                }
+                Directory.Delete(DirPath);
+            }
+            if (File.Exists(FilePath))
+            {
+                File.Delete(FilePath);
             }
         }
 

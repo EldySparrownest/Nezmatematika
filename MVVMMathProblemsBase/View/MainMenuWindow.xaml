@@ -615,11 +615,10 @@
                 <Grid x:Name="gridNewCourse"
                       Grid.Column="1"
                       Grid.Row="1"
-                      Grid.RowSpan="3">
-                    <StackPanel HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Margin="10"
-                                Visibility="{Binding NewCourseVis}">
+                      Grid.RowSpan="3"
+                      Visibility="{Binding NewCourseVis}">
+                    <StackPanel VerticalAlignment="Center"
+                                Margin="10" >
                         <Border BorderBrush="Black"
                                 BorderThickness="2">
                             <Grid Name="gridNewCourseForm"
@@ -650,7 +649,7 @@
                                          Grid.Column="1"
                                          Margin="5"
                                          VerticalAlignment="Center"
-                                         Width="150"
+                                         Width="200"
                                          MaxLength="100" />
                                 <Button x:Name="btnCreateNewCourse"
                                         Click="ResetCourseEditor"
@@ -662,7 +661,6 @@
                                         HorizontalAlignment="Right">
                                     <Label Content="Vytvořit" />
                                 </Button>
-
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -671,7 +669,8 @@
                       Visibility="{Binding TeacherCoursesToContinueVis}"
                       Grid.Column="1"
                       Grid.Row="1"
-                      Grid.RowSpan="3">
+                      Grid.RowSpan="3"
+                      Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
@@ -908,7 +907,8 @@
                       Visibility="{Binding SettingsVis}"
                       Grid.Column="1"
                       Grid.Row="1"
-                      Grid.RowSpan="3">
+                      Grid.RowSpan="3"
+                      Margin="5,5,5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
@@ -1056,7 +1056,7 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Grid.Row="4"
-                                Margin="5">
+                                Margin="5,5,5,0">
                         <Button Command="{Binding RestoreDefaultSettingsCommand}"
                                 CommandParameter="{Binding CurrentUser}"
                                 Margin="5">

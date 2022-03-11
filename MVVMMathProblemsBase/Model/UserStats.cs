@@ -12,7 +12,7 @@ namespace Nezmatematika.Model
 {
     public class UserStats
     {
-        //shared
+        //student only
         [XmlIgnore]
         public TimeSpan TimeTakingCourses;
 
@@ -31,7 +31,6 @@ namespace Nezmatematika.Model
             }
         }
 
-        //student only
         public int AnswersSentTotal;
         public int ProblemsSolvedTotal;
         public int ProblemsSolvedFirstTry;
@@ -49,7 +48,6 @@ namespace Nezmatematika.Model
         public UserStats()
         {
             TimeTakingCourses = TimeSpan.Zero;
-
             AnswersSentTotal = 0;
             ProblemsSolvedTotal = 0;
             ProblemsSolvedFirstTry = 0;
