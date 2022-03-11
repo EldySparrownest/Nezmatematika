@@ -342,6 +342,18 @@ namespace Nezmatematika.ViewModel
             }
         }
 
+        private Dictionary<string, string> dicStats;
+
+        public Dictionary<string, string> DicStats
+        {
+            get { return dicStats; }
+            set
+            {
+                dicStats = value;
+                OnPropertyChanged("DicStats");
+            }
+        }
+
         private string currentTimeTakingCourses;
         public string CurrentTimeTakingCourses { get { return currentTimeTakingCourses; } set { currentTimeTakingCourses = value; OnPropertyChanged("CurrentTimeTakingCourses"); } }
 
@@ -431,16 +443,6 @@ namespace Nezmatematika.ViewModel
             {
                 tempCourseTitle = value;
                 OnPropertyChanged("TempCourseTitle");
-            }
-        }
-        private string tempCourseDesc;
-        public string TempCourseDesc
-        {
-            get { return tempCourseDesc; }
-            set
-            {
-                tempCourseDesc = value;
-                OnPropertyChanged("TempCourseDesc");
             }
         }
         private string tempAnswer;
@@ -788,6 +790,7 @@ namespace Nezmatematika.ViewModel
         public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
         public PublishCourseCommand PublishCourseCommand { get; set; }
         public RemoveCorrectAnswerCommand RemoveCorrectAnswerCommand { get; set; }
+        public RemoveProblemCommand RemoveProblemCommand { get; set; }
         public RemoveSolutionStepCommand RemoveSolutionStepCommand { get; set; }
         public RestoreDefaultSettingsCommand RestoreDefaultSettingsCommand { get; set; }
         public SwitchBetweenUserAndCodeModeCommand SwitchBetweenUserAndCodeModeCommand { get; set; }
@@ -879,6 +882,7 @@ namespace Nezmatematika.ViewModel
             PrepUserForEditingCommand = new PrepUserForEditingCommand(this);
             PublishCourseCommand = new PublishCourseCommand(this);
             RemoveCorrectAnswerCommand = new RemoveCorrectAnswerCommand(this);
+            RemoveProblemCommand = new RemoveProblemCommand(this);
             RemoveSolutionStepCommand = new RemoveSolutionStepCommand(this);
             RestoreDefaultSettingsCommand = new RestoreDefaultSettingsCommand(this);
             SwitchBetweenUserAndCodeModeCommand = new SwitchBetweenUserAndCodeModeCommand(this);
@@ -994,23 +998,8 @@ namespace Nezmatematika.ViewModel
         }
         public void ReloadCurrentUserStats()
         {
-            if (CurrentUser == null || CurrentUserBase == null)
-                return;
-            var stats = UserStats.Read(_UserStatsPath(CurrentUserBase));
-            if (stats == null)
-                stats = new UserStats();
-
-            var timeSpan = stats.TimeTakingCourses;
-            var hoursTakingCourses = timeSpan.Days * 24 + timeSpan.Hours;
-            var restOfTimeSpan = timeSpan.ToString(@"mm\:ss");
-            CurrentTimeTakingCourses = $"{hoursTakingCourses}:{restOfTimeSpan}";
-            CurrentAnswersSentTotal = stats.AnswersSentTotal.ToString();
-            CurrentProblemsSolvedTotal = stats.ProblemsSolvedTotal.ToString();
-            CurrentProblemsSolvedFirstTry = stats.ProblemsSolvedFirstTry.ToString();
-            CurrentProblemsSolvedFirstTryNoHints = stats.ProblemsSolvedFirstTryNoHints.ToString();
-            CurrentHintsDisplayed = stats.HintsDisplayed.ToString();
-            CurrentCoursesStarted = stats.CoursesStarted.ToString();
-            CurrentCoursesCompleted = stats.CoursesCompleted.ToString();
+            var stats = (CurrentUser != null && CurrentUser.UserStats != null) ? CurrentUser.UserStats : new UserStats();
+            DicStats = stats.GetAsDictionary();
         }
         public void ReloadShownSolutionSteps()
         {
@@ -1174,7 +1163,6 @@ namespace Nezmatematika.ViewModel
         public void ClearCourseTempValues()
         {
             TempCourseTitle = string.Empty;
-            TempCourseDesc = string.Empty;
         }
         public void ClearCurrentValuesExceptUser()
         {
@@ -1255,10 +1243,11 @@ namespace Nezmatematika.ViewModel
         #region MethodsForCoursesInEditor
         public void CreateNewCourse()
         {
-            CurrentCourse = new Course(CurrentUser.UserBase, TempCourseTitle, TempCourseDesc);
+            CurrentCourse = new Course(CurrentUser.UserBase, TempCourseTitle);
             CurrentCourse.AddNewMathProblem();
             CurrentMathProblem = CurrentCourse.Problems[0];
             CurrentUser.UserStats.CourseCreatedUpdate();
+            SaveDataAndStats();
 
             Directory.CreateDirectory(CurrentCourse.DirPath);
             TeacherCoursesToContinueList.Add(CurrentCourse);
@@ -1335,6 +1324,7 @@ namespace Nezmatematika.ViewModel
             {
                 CurrentCourse.Publish(_CoursesPublishedDirPath(), _CoursesArchivedDirPath(), out int problemCountChange);
                 CurrentUser.UserStats.CoursePublishedUpdate(CurrentCourse.Version, problemCountChange);
+                SaveDataAndStats();
             }
             else
             {

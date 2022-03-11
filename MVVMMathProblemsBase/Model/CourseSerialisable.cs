@@ -22,7 +22,6 @@ namespace Nezmatematika.Model
         public DateTime LastOpened { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
-        public string CourseDesc { get; set; }
 
         public List<MathProblemSerialisable> Problems;
 
@@ -50,7 +49,6 @@ namespace Nezmatematika.Model
             TimeSpentEditing = course.TimeSpentEditing;
             PublishingStatus = course.PublishingStatus;
             CourseTitle = course.CourseTitle;
-            CourseDesc = course.CourseDesc;
             Problems = new List<MathProblemSerialisable>();
 
             var factory = new MathProblemFactory();

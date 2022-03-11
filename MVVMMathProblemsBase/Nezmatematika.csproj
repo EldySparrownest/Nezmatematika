@@ -133,6 +133,7 @@
     <Compile Include="ViewModel\Commands\CheckIfAnswerIsCorrectCommand.cs" />
     <Compile Include="ViewModel\Commands\PrepUserForEditingCommand.cs" />
     <Compile Include="ViewModel\Commands\RemoveCorrectAnswerCommand.cs" />
+    <Compile Include="ViewModel\Commands\RemoveProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\RemoveSolutionStepCommand.cs" />
     <Compile Include="ViewModel\Commands\RestoreDefaultSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchBetweenUserAndCodeModeCommand.cs" />

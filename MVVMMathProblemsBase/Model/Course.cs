@@ -24,7 +24,6 @@ namespace Nezmatematika.Model
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
-        public string CourseDesc { get; set; }
         public string DirPath { get; set; }
         public string FilePath { get; set; }
 
@@ -55,7 +54,6 @@ namespace Nezmatematika.Model
             TimeSpentEditing = serialisedCourse.TimeSpentEditing;
             PublishingStatus = serialisedCourse.PublishingStatus;
             CourseTitle = serialisedCourse.CourseTitle;
-            CourseDesc = serialisedCourse.CourseDesc;
             Problems = new ObservableCollection<MathProblem>();
 
             var factory = new MathProblemFactory();
@@ -64,7 +62,7 @@ namespace Nezmatematika.Model
                 Problems.Add(factory.CreateFromSerialised(problem));
             }
         }
-        public Course(UserBase author, string title, string desc)
+        public Course(UserBase author, string title)
         {
             Author = author;
             Id = NewCourseId(author.Id);
@@ -72,7 +70,6 @@ namespace Nezmatematika.Model
             DirPath = CourseDirPath();
             FilePath = CourseFilePath();
             CourseTitle = title;
-            CourseDesc = desc;
             Problems = new ObservableCollection<MathProblem>();
             Created = DateTime.Now;
             LastOpened = DateTime.Now;
@@ -118,7 +115,7 @@ namespace Nezmatematika.Model
         public void Save()
         {
             ReorderProblemIndexes();
-            TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now));
+            TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
             CourseSerialisable cs = new CourseSerialisable(this);
 

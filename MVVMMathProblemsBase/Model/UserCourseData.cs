@@ -89,7 +89,7 @@ namespace Nezmatematika.Model
         public void UpdateAtSessionEnd(out TimeSpan sessionDuration)
         {
             LastSessionEnded = DateTime.Now;
-            sessionDuration = LastSessionEnded.Subtract(LastSessionStarted);
+            sessionDuration = (!Completed && LastSessionEnded < LastSessionStarted) ? LastSessionEnded.Subtract(LastSessionStarted) : TimeSpan.Zero;
             if (!Completed)
                 NetCourseTime = NetCourseTime.Add(sessionDuration);
         }

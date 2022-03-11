@@ -106,6 +106,34 @@ namespace Nezmatematika.Model
                 UniqueCoursesPublished++;
         }
 
+        public string GetDisplayableTimeTakingCourses()
+        {
+            var hoursTakingCourses = TimeTakingCourses.Days * 24 + TimeTakingCourses.Hours;
+            var restOfTimeSpan = TimeTakingCourses.ToString(@"mm\:ss");
+            return $"{hoursTakingCourses}:{restOfTimeSpan}";
+        }
+
+        public Dictionary<string, string> GetAsDictionary()
+        {
+            var dic = new Dictionary<string, string>();
+
+            dic.Add("CurrentTimeTakingCourses", GetDisplayableTimeTakingCourses());
+            dic.Add("CurrentAnswersSentTotal", AnswersSentTotal.ToString());
+            dic.Add("CurrentProblemsSolvedTotal", ProblemsSolvedTotal.ToString());
+            dic.Add("CurrentProblemsSolvedFirstTry", ProblemsSolvedFirstTry.ToString());
+            dic.Add("CurrentProblemsSolvedFirstTryNoHints", ProblemsSolvedFirstTryNoHints.ToString());
+            dic.Add("CurrentHintsDisplayed", HintsDisplayed.ToString());
+            dic.Add("CurrentCoursesStarted", CoursesStarted.ToString());
+            dic.Add("CurrentCoursesCompleted", CoursesCompleted.ToString());
+
+            dic.Add("CurrentProblemsPublished", ProblemsPublished.ToString());
+            dic.Add("CurrentCoursesCreated", CoursesCreated.ToString());
+            dic.Add("CurrentVersionsPublished", VersionsPublished.ToString());
+            dic.Add("CurrentUniqueCoursesPublished", UniqueCoursesPublished.ToString());
+
+            return dic;
+        }
+
         public void Save(string filename)
         {
             using (StreamWriter sw = new StreamWriter(filename))
