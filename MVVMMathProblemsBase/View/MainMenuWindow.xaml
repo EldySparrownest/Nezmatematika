@@ -1820,12 +1820,6 @@
                                                        Margin="2.5"
                                                        Grid.Column="0"
                                                        MinWidth="15">
-                                                    <!--<i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="LostFocus">
-                                                <i:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=RenameEndCommand}"
-                                                                       CommandParameter="{Binding}" />
-                                            </i:EventTrigger>
-                                        </i:Interaction.Triggers>-->
                                                 </Label>
                                                 <Button Grid.Column="1"
                                                         HorizontalAlignment="Left"
@@ -1836,16 +1830,6 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
-                                    <ListView.Resources>
-                                        <!--<ContextMenu x:Key="resourceContextMenu">
-                                <MenuItem Header="Upravit profil"
-                                          Command="{Binding Source={StaticResource vm}, Path=PrepUserForEditingCommand}"
-                                          CommandParameter="{Binding}" />
-                                <MenuItem Header="Odstranit profil"
-                                          Command="{Binding Source={StaticResource vm}, Path=DeleteUserCommand}"
-                                          CommandParameter="{Binding}" />
-                            </ContextMenu>-->
-                                    </ListView.Resources>
                                 </ListView>
                                 <Label x:Name="lblSolutionHints"
                                        Grid.Column="1"
@@ -1885,7 +1869,7 @@
                                           Grid.Column="1"
                                           Grid.Row="3"
                                           SelectedValue="{Binding CurrentSolutionStepText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          ItemsSource="{Binding TempSolutionStepsTexts}"
+                                          ItemsSource="{Binding CurrentMathProblem.SolutionSteps}"
                                           IsSynchronizedWithCurrentItem="True"
                                           Margin="10,0,0,0">
                                     <ListView.ItemTemplate>

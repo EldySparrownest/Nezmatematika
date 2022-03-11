@@ -9,7 +9,7 @@ namespace Nezmatematika.Model
 {
     class MathProblemFactory
     {
-        public IMathProblem Create(Course course, string problemType = "základní", string precedingLabel = "0")
+        public IMathProblem Create(Course course, string problemType = "základní")
         {
             IMathProblem mathProblem;
             switch (problemType)
@@ -24,7 +24,7 @@ namespace Nezmatematika.Model
             mathProblem.DirPath = course.DirPath;
             mathProblem.FilePath = System.IO.Path.Combine(course.DirPath, $"{mathProblem.Id}.rtf");
             mathProblem.Index = course.Problems.Count;
-            mathProblem.OrderLabel = GetNextOrderLabel(precedingLabel);
+            mathProblem.SetSimplifiedOrderLabel();
             return mathProblem;
         }
 
@@ -61,46 +61,6 @@ namespace Nezmatematika.Model
         }
 
         private static string NewMathProblemId()
-            => string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
-
-        private static string GetNextOrderLabel(string precedingLabel)
-        {
-            if (precedingLabel != "0")
-            {
-                int dotIndex = precedingLabel.LastIndexOf('.');
-                string[] lastLabelArray = precedingLabel.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                int newLabelNbr;
-                char charToIncrement;
-                if (lastLabelArray.Length == 1)
-                {
-                    if (Int32.TryParse(lastLabelArray[0], out newLabelNbr))
-                    {
-                        newLabelNbr++;
-                        return String.Concat(Convert.ToString(newLabelNbr), ".");
-                    }
-                    else
-                    {
-                        charToIncrement = lastLabelArray[0][lastLabelArray[0].Length - 1];
-                        charToIncrement++;
-                        return String.Concat(charToIncrement, ".");
-                    }
-                }
-                else
-                {
-                    if (Int32.TryParse(lastLabelArray[lastLabelArray.Length - 1], out newLabelNbr))
-                    {
-                        newLabelNbr++;
-                        return String.Concat(precedingLabel.Substring(0, dotIndex), ".", Convert.ToString(newLabelNbr));
-                    }
-                    else if (lastLabelArray[lastLabelArray.Length - 1].Length == 1)
-                    {
-                        charToIncrement = lastLabelArray[lastLabelArray.Length - 1][0];
-                        charToIncrement++;
-                        return String.Concat(precedingLabel.Substring(0, dotIndex + 1), charToIncrement);
-                    }
-                }
-            }
-            return "1.";
-        }
+            => string.Join("", Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
     }
 }

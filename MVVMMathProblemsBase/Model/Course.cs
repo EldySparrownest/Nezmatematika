@@ -81,31 +81,22 @@ namespace Nezmatematika.Model
 
         public void AddNewMathProblem()
         {
-            string precedingLabel;
-            if (Problems.Count == 0)
-            {
-                precedingLabel = "0";
-            }
-            else
-            {
-                precedingLabel = Problems[Problems.Count - 1].OrderLabel;
-            }
-
             var mathProblemFactory = new MathProblemFactory();
-            Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní", precedingLabel));
+            Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní"));
         }
 
-        private void ReorderProblemIndexes()
+        private void UpdateProblemIndexesAndOrderLabels()
         {
             for (int i = Problems.Count - 1; i >= 0; i--)
             {
                 Problems[i].Index = i;
+                Problems[i].SetSimplifiedOrderLabel();
             }
         }
 
         private static string NewCourseId(string authorID)
             => string.Join("_", authorID,
-                    string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
+                    string.Join("", Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
 
         private string CourseDirPath()
             => DirPath = Path.Combine(App.MyBaseDirectory, "Courses", Author.Id, Id);
@@ -115,7 +106,7 @@ namespace Nezmatematika.Model
 
         public void Save()
         {
-            ReorderProblemIndexes();
+            UpdateProblemIndexesAndOrderLabels();
             TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
             CourseSerialisable cs = new CourseSerialisable(this);
@@ -174,7 +165,7 @@ namespace Nezmatematika.Model
             if (course == null)
                 return;
 
-            course.UpdatePathsToAdjustForMovingFiles(publishedCoursesDirPath, archivedCoursesDirPath);
+            course.UpdatePathsToAdjustForMovingFiles(archivedCoursesDirPath);
             course.Save(); //hlavní kurzový soubor se rovnou uloží kam má
 
             //přesun adresáře s RTF soubory úloh
@@ -193,7 +184,7 @@ namespace Nezmatematika.Model
             if (course == null)
                 return;
 
-            course.UpdatePathsToAdjustForMovingFiles(teacherCoursesDirPath, publishedCoursesDirPath);
+            course.UpdatePathsToAdjustForMovingFiles(publishedCoursesDirPath);
             course.Save(); //hlavní kurzový soubor se rovnou uloží kam má (a případně si i dovytvoří adresáře)
 
             //kopírování adresáře s RTF soubory úloh
@@ -210,10 +201,9 @@ namespace Nezmatematika.Model
             }
         }
 
-        public void UpdatePathsToAdjustForMovingFiles(string oldCoursesDir, string newCoursesDir, bool addVersionSuffix = false)
+        public void UpdatePathsToAdjustForMovingFiles(string newCoursesDir)
         {
             var versionSuffix = $"_{Version}";
-            //DirPath = DirPath.Replace(oldCoursesDir, newCoursesDir) + versionSuffix;
             DirPath = Path.Combine(newCoursesDir, String.Join("", Id, versionSuffix));
             FilePath = Path.Combine(newCoursesDir, String.Join("",Id,versionSuffix, GlobalValues.CourseFilename));
 

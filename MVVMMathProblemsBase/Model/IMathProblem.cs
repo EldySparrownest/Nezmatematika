@@ -18,5 +18,7 @@ namespace Nezmatematika.Model
         string ProblemQuestion { get; set; }
         ObservableCollection<string> CorrectAnswers { get; set; }
         ObservableCollection<string> SolutionSteps { get; set; }
+
+        void SetSimplifiedOrderLabel();
     }
 }

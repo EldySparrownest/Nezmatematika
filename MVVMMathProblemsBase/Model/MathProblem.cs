@@ -59,6 +59,7 @@ namespace Nezmatematika.Model
                 MessageBox.Show(e.Message);
             }
         }
+        public void SetSimplifiedOrderLabel() => OrderLabel = $"{Index + 1}.";
 
         public void TrimAndPruneCorrectAnswers()
         {
