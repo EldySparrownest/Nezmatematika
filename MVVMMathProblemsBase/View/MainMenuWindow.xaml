@@ -403,6 +403,7 @@
                               Visibility="{Binding StudentNewCourseSelVis}"
                               IsSynchronizedWithCurrentItem="True"
                               Thumb.DragDelta="Thumb_DragDelta"
+                              Grid.Row="0"
                               Margin="5">
                         <ListView.View>
                             <GridView>
@@ -445,13 +446,20 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="btnStartNewCourse"
-                            Command="{Binding OpenCourseForStudentCommand}"
-                            Grid.Row="1"
-                            HorizontalAlignment="Right"
-                            Margin="5">
-                        <Label Content="Začít kurz" />
-                    </Button>
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="1"
+                                HorizontalAlignment="Right">
+                        <Button x:Name="btnImportCourse"
+                                Click="btnImportCourse_Click"
+                                Margin="5">
+                            <Label Content="Importovat kurz" />
+                        </Button>
+                        <Button x:Name="btnStartNewCourse"
+                                Command="{Binding OpenCourseForStudentCommand}"
+                                Margin="5">
+                            <Label Content="Začít kurz" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
                 <Grid x:Name="gridStudentContinuableCourseSelection"
                       Visibility="{Binding StudentCoursesToContinueVis}"
@@ -732,17 +740,19 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="btnEditCourse"
-                            Click="ResetCourseEditor"
-                            Command="{Binding EditCourseCommand}"
-                            Margin="0,10,0,0"
-                            Grid.Row="1"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top">
-                        <Label Content="Začít editovat"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                    </Button>
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Margin="0,10,0,0">
+                        <Button x:Name="btnEditCourse"
+                                Click="ResetCourseEditor"
+                                Command="{Binding EditCourseCommand}">
+                            <Label Content="Začít editovat"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
                 <Grid x:Name="gridStatistics"
                       Visibility="{Binding StatsVis}"
@@ -1661,6 +1671,12 @@
                             <Button x:Name="btnExport"
                                     Click="btnExportProblem_Click">
                                 <Label Content="Export" />
+                            </Button>
+                            <Button x:Name="btnExportCourseZip"
+                                    Click="btnExportCourse_Click">
+                                <Label Content="Exportovat kurz"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
                             </Button>
                             <ToggleButton x:Name="btnCodeMode"
                                           Margin="5"

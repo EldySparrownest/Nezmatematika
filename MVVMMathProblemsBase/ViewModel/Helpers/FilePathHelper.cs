@@ -30,5 +30,7 @@ namespace Nezmatematika.ViewModel.Helpers
         public static string _UserSettingsPath(UserBase userBase) => Path.Combine(_SettingsDirPath(), $"{userBase.Id}{UserSettingsFilename}");
         public static string _UserStatsPath(UserBase userBase) => Path.Combine(_SettingsDirPath(), $"{userBase.Id}{UserStatsFilename}");
         public static string _TeacherCoursesDirPath(UserBase userBase) => Path.Combine(_CoursesDirPath(), userBase.Id);
+
+        public static string _ExportsDirPath() => Path.Combine(App.MyBaseDirectory, "Exports");
     }
 }

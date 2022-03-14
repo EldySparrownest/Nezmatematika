@@ -777,8 +777,6 @@ namespace Nezmatematika.View
             {
                 if (vM.Settings.AutosaveCourseBeforePublishing)
                     btnSaveCourse_Click(sender, e);
-
-                //vM.PublishCurrentCourse();
             }
         }
 
@@ -791,9 +789,9 @@ namespace Nezmatematika.View
                 UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemText = problem.Text.Trim();
+                vM.CurrentMathProblem.ProblemText = problem.Text.Trim().Length <= 25 ? problem.Text.Trim() : problem.Text.Trim().Substring(0,22) + "...";
                 var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemQuestion = question.Text.Trim();
+                vM.CurrentMathProblem.ProblemQuestion = question.Text.Trim().Length <= 25 ? question.Text.Trim() : question.Text.Trim().Substring(0, 22) + "...";
                 var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
 
                 vM.SaveCurrentCourse();
@@ -838,6 +836,58 @@ namespace Nezmatematika.View
                 UpdateCodeMode();
                 SaveRTF(saveFileDialog.FileName, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
             }
+        }
+
+        private void btnImportCourse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "komprimované složky (*.zip)|*.zip",
+                RestoreDirectory = true,
+                Title = "Nezmatematika - import kurzu"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+                ZipHelper.UnzipDirectory(openFileDialog.FileName, FilePathHelper._CoursesPublishedDirPath());
+
+            vM.GetListOfNewCoursesToStart();
+        }
+
+        private void btnExportCourse_Click(object sender, RoutedEventArgs e)
+        {
+            if (vM.CurrentCourse.Version < 1)
+            {
+                MessageBox.Show("Exportuje se poslední zveřejněná verze. Proto kurz nelze exportovat, dokud jej nezveřejníte.");
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".zip",
+                Filter = "Komprimovaná složka (*.zip)|*.zip",
+                OverwritePrompt = true,
+                Title = "Nezmatematika - export kurzu",
+                ValidateNames = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var tempExportZip = FilePathHelper._ExportsDirPath();
+                Directory.CreateDirectory(tempExportZip);
+                PrepCourseForExport(vM.CurrentCourse);
+                
+                if (ZipHelper.ZipUpDirectory(tempExportZip, saveFileDialog.FileName) == true)
+                    MessageBox.Show("Export kurzu proběhl úspěšně.");
+
+                Directory.Delete(tempExportZip, true);
+            }
+        }
+
+        private void PrepCourseForExport(Course course)
+        {
+            course.PrepForExport(course.Id, course.Version, FilePathHelper._CoursesPublishedDirPath(), FilePathHelper._ExportsDirPath());
         }
     }
 

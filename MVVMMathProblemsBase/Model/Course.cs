@@ -140,7 +140,7 @@ namespace Nezmatematika.Model
                     Course.ArchiveCourse(Id, prevVersion, publishedCoursesDirPath, archivedCoursesDirPath);
 
                 problemCountChange = PublishedProblemCount - prevPublishedProblemCount;
-                Publish(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
+                CopyAllCourseFiles(Id, Version, teacherCoursesDirPath, publishedCoursesDirPath);
             }
             catch (Exception e)
             {
@@ -149,6 +149,31 @@ namespace Nezmatematika.Model
                 PublishedProblemCount = prevPublishedProblemCount;
                 Save();
                 MessageBox.Show(e.Message);
+            }
+        }
+        private void CopyAllCourseFiles(string courseId, int courseVersion, string originalParentDirPath, string newParentDirPath)
+        {
+            var problemsDirName = $"{courseId}_{courseVersion}";
+            var originalFilePath = Path.Combine(originalParentDirPath, $"{courseId}{GlobalValues.CourseFilename}");
+            var course = Course.Read(originalFilePath);
+
+            if (course == null)
+                return;
+
+            course.UpdatePathsToAdjustForMovingFiles(newParentDirPath);
+            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má (a případně si i dovytvoří adresáře)
+
+            //kopírování adresáře s RTF soubory úloh
+            var newDirPath = Path.Combine(newParentDirPath, problemsDirName);
+            Directory.CreateDirectory(newDirPath);
+            if (Directory.Exists(DirPath) && Directory.Exists(newDirPath))
+            {
+                var newFiles = Directory.EnumerateFiles(DirPath);
+                foreach (var file in newFiles)
+                {
+                    var newFilePath = file.Replace(DirPath, newDirPath);
+                    File.Copy(file, newFilePath, true);
+                }
             }
         }
 
@@ -175,27 +200,22 @@ namespace Nezmatematika.Model
             File.Delete(publishedFilePath);
         }
 
-        private void Publish(string courseId, int courseVersion, string teacherCoursesDirPath, string publishedCoursesDirPath)
+        public void PrepForExport(string courseId, int courseVersion, string sourceDir, string targetDir)
         {
-            var problemsDirName = $"{courseId}_{courseVersion}";
-            var teacherFilePath = Path.Combine(teacherCoursesDirPath, $"{courseId}{GlobalValues.CourseFilename}");
-            var course = Course.Read(teacherFilePath);
-
-            if (course == null)
-                return;
-
-            course.UpdatePathsToAdjustForMovingFiles(publishedCoursesDirPath);
-            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má (a případně si i dovytvoří adresáře)
+            var idVersionString = $"{courseId}_{courseVersion}";
+            var originalFilePath = Path.Combine(sourceDir, $"{idVersionString}{GlobalValues.CourseFilename}");
+            var fileForExportPath = Path.Combine(targetDir, $"{idVersionString}{GlobalValues.CourseFilename}");
+            File.Copy(originalFilePath, fileForExportPath, true);
 
             //kopírování adresáře s RTF soubory úloh
-            var courseDirPublished = Path.Combine(publishedCoursesDirPath, problemsDirName);
-            Directory.CreateDirectory(courseDirPublished);
-            if (Directory.Exists(DirPath) && Directory.Exists(courseDirPublished))
+            var newDirPath = Path.Combine(targetDir, idVersionString);
+            Directory.CreateDirectory(newDirPath);
+            if (Directory.Exists(DirPath) && Directory.Exists(newDirPath))
             {
                 var newFiles = Directory.EnumerateFiles(DirPath);
                 foreach (var file in newFiles)
                 {
-                    var newFilePath = file.Replace(DirPath, courseDirPublished);
+                    var newFilePath = file.Replace(DirPath, newDirPath);
                     File.Copy(file, newFilePath, true);
                 }
             }

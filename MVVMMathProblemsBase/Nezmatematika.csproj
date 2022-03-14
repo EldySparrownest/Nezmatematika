@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -142,6 +143,7 @@
     <Compile Include="ViewModel\Helpers\FilePathHelper.cs" />
     <Compile Include="ViewModel\Helpers\TextRangeHelper.cs" />
     <Compile Include="ViewModel\Helpers\XmlHelper.cs" />
+    <Compile Include="ViewModel\Helpers\ZipHelper.cs" />
     <Compile Include="ViewModel\MainMenuVM.cs" />
     <Compile Include="ViewModel\MathProblemVM.cs" />
     <Compile Include="ViewModel\UserTypeSelectVM.cs" />
