@@ -15,7 +15,7 @@ namespace Nezmatematika.Model
     {
         public string Id { get; set; }
         public string DirPath { get; set; }
-        public string FilePath { get; set; }
+        public string RelFilePath { get; set; }
         public int Index { get; set; }
         public string OrderLabel { get; set; }
         public string ProblemText { get; set; }

@@ -21,8 +21,8 @@ namespace Nezmatematika.Model
                     break;
             }
             mathProblem.Id = NewMathProblemId();
-            mathProblem.DirPath = course.DirPath;
-            mathProblem.FilePath = System.IO.Path.Combine(course.DirPath, $"{mathProblem.Id}.rtf");
+            mathProblem.DirPath = course.RelDirPath;
+            mathProblem.RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{mathProblem.Id}.rtf");
             mathProblem.Index = course.Problems.Count;
             mathProblem.SetSimplifiedOrderLabel();
             return mathProblem;
@@ -33,7 +33,7 @@ namespace Nezmatematika.Model
             var mathProblem = new MathProblem();
             mathProblem.Id = serialisedMathProblem.Id;
             mathProblem.DirPath = serialisedMathProblem.DirPath;
-            mathProblem.FilePath = serialisedMathProblem.FilePath;
+            mathProblem.RelFilePath = serialisedMathProblem.FilePath;
 
             mathProblem.Index = serialisedMathProblem.Index;
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
@@ -49,7 +49,7 @@ namespace Nezmatematika.Model
             var serialisedMathProblem = new MathProblemSerialisable();
             serialisedMathProblem.Id = mathProblem.Id;
             serialisedMathProblem.DirPath = mathProblem.DirPath;
-            serialisedMathProblem.FilePath = mathProblem.FilePath;
+            serialisedMathProblem.FilePath = mathProblem.RelFilePath;
 
             serialisedMathProblem.Index = mathProblem.Index;
             serialisedMathProblem.OrderLabel = mathProblem.OrderLabel;

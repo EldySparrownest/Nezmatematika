@@ -894,8 +894,8 @@ namespace Nezmatematika.ViewModel
         #region SettingAndLoadingMethods
         public void LoadDefaultSettings()
         {
-            if (File.Exists(_DefaultSettingsPath))
-                this.Settings = new MySettings().Read(_DefaultSettingsPath);
+            if (File.Exists(_DefaultSettingsFullPath))
+                this.Settings = new MySettings().Read(_DefaultSettingsFullPath);
         }
         public void SetLastUsedUserFromAllUsers()
         {
@@ -925,7 +925,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SetCurrentUserFromUserBase(UserBase userBase)
         {
-            CurrentUser = userBase == null ? null : new User(userBase, _UserCoursesDataPath(userBase), _UserStatsPath(userBase));
+            CurrentUser = userBase == null ? null : new User(userBase, _UserCoursesDataRelFilePath(userBase), _UserStatsRelFilePath(userBase));
         }
         public void SetCurrentUserToLastUsedUser()
         {
@@ -934,7 +934,7 @@ namespace Nezmatematika.ViewModel
         }
         public void LoadSettingsForCurrentUser()
         {
-            var settingsPath = CurrentUser != null ? _UserSettingsPath(CurrentUser.UserBase) : _DefaultSettingsPath;
+            var settingsPath = CurrentUser != null ? _UserSettingsRelFilePath(CurrentUser.UserBase) : _DefaultSettingsFullPath;
             if (File.Exists(settingsPath))
                 this.Settings = new MySettings().Read(settingsPath);
         }
@@ -1014,7 +1014,7 @@ namespace Nezmatematika.ViewModel
         #region SavingMethods
         public void SaveUserSettings()
         {
-            Settings.Save(_UserSettingsPath(CurrentUser.UserBase));
+            Settings.Save(_UserSettingsRelFilePath(CurrentUser.UserBase));
         }
         public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
@@ -1031,9 +1031,9 @@ namespace Nezmatematika.ViewModel
         }
         public void DeleteUser(UserBase userBaseToDelete)
         {
-            File.Delete(_UserStatsPath(userBaseToDelete));
-            File.Delete(_UserCoursesDataPath(userBaseToDelete));
-            File.Delete(_UserSettingsPath(userBaseToDelete));
+            File.Delete(_UserStatsRelFilePath(userBaseToDelete));
+            File.Delete(_UserCoursesDataRelFilePath(userBaseToDelete));
+            File.Delete(_UserSettingsRelFilePath(userBaseToDelete));
             UserBasesOfTypeList.Remove(userBaseToDelete);
             AllUserBasesList.Remove(userBaseToDelete);
             SaveUserList();
@@ -1058,7 +1058,7 @@ namespace Nezmatematika.ViewModel
             mathProblem.TrimAndPruneCorrectAnswers();
             try
             {
-                FileStream fileStream = new FileStream(mathProblem.FilePath, FileMode.Create);
+                FileStream fileStream = new FileStream(Path.Combine(App.MyBaseDirectory, mathProblem.RelFilePath), FileMode.Create);
                 textRange.Save(fileStream, DataFormats.Rtf);
                 fileStream.Close();
             }
@@ -1090,7 +1090,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveUserList()
         {
-            using (StreamWriter sw = new StreamWriter(_UserListPath()))
+            using (StreamWriter sw = new StreamWriter(_UserListFullPath()))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(List<UserBase>));
                 xmls.Serialize(sw, new List<UserBase>(this.AllUserBasesList));
@@ -1146,9 +1146,9 @@ namespace Nezmatematika.ViewModel
         }
         public void RestoreDefaultSettingsForCurrentUser()
         {
-            var usersNewSettings = new MySettings().Read(_DefaultSettingsPath);
+            var usersNewSettings = new MySettings().Read(_DefaultSettingsFullPath);
             usersNewSettings.HasCourseToContinue = this.Settings.HasCourseToContinue;
-            usersNewSettings.Save(_UserSettingsPath(CurrentUser.UserBase));
+            usersNewSettings.Save(_UserSettingsRelFilePath(CurrentUser.UserBase));
             LoadSettingsForCurrentUser();
         }
         public void ClearUserTempValues()
@@ -1236,7 +1236,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveDataAndStats()
         {
-            CurrentUser.SaveDataAndStats(_UserCoursesDataPath(CurrentUser.UserBase), _UserStatsPath(CurrentUser.UserBase));
+            CurrentUser.SaveDataAndStats(_UserCoursesDataRelFilePath(CurrentUser.UserBase), _UserStatsRelFilePath(CurrentUser.UserBase));
         }
         #endregion MethodForCoursesInStudentMode
 
@@ -1249,7 +1249,7 @@ namespace Nezmatematika.ViewModel
             CurrentUser.UserStats.CourseCreatedUpdate();
             SaveDataAndStats();
 
-            Directory.CreateDirectory(CurrentCourse.DirPath);
+            Directory.CreateDirectory(Path.Combine(App.MyBaseDirectory, CurrentCourse.RelDirPath));
             TeacherCoursesToContinueList.Add(CurrentCourse);
             UpdateAbilityToContinueCourse();
 
@@ -1322,7 +1322,7 @@ namespace Nezmatematika.ViewModel
 
             if (publish)
             {
-                CurrentCourse.PublishCourse(_CoursesPublishedDirPath(), _CoursesArchivedDirPath(), out int problemCountChange);
+                CurrentCourse.PublishCourse(_CoursesPublishedRelDirPath(), _CoursesArchivedRelDirPath(), out int problemCountChange);
                 CurrentUser.UserStats.CoursePublishedUpdate(CurrentCourse.Version, problemCountChange);
                 SaveDataAndStats();
             }
@@ -1345,9 +1345,9 @@ namespace Nezmatematika.ViewModel
         {
             AllUserBasesList.Clear();
             List<UserBase> resultList = new List<UserBase>();
-            if (File.Exists(_UserListPath()))
+            if (File.Exists(_UserListFullPath()))
             {
-                using (StreamReader sw = new StreamReader(_UserListPath()))
+                using (StreamReader sw = new StreamReader(_UserListFullPath()))
                 {
                     XmlSerializer xmls = new XmlSerializer(typeof(List<UserBase>));
                     resultList = xmls.Deserialize(sw) as List<UserBase>;
@@ -1377,9 +1377,10 @@ namespace Nezmatematika.ViewModel
         {
             TeacherCoursesToContinueList.Clear();
             List<Course> resultList = new List<Course>();
-            if (Directory.Exists(_TeacherCoursesDirPath(CurrentUser.UserBase)))
+            var fullTeacherDirPath = GetFullPath(FullPathOptions.DirCoursesTeacher, CurrentUser.UserBase);
+            if (Directory.Exists(fullTeacherDirPath))
             {
-                var files = Directory.EnumerateFiles(_TeacherCoursesDirPath(CurrentUser.UserBase));
+                var files = Directory.EnumerateFiles(fullTeacherDirPath);
 
                 foreach (var file in files)
                 {
@@ -1392,9 +1393,10 @@ namespace Nezmatematika.ViewModel
         private void GetAllArchivedCoursesList()
         {
             AllArchivedCoursesList.Clear();
-            if (Directory.Exists(_CoursesArchivedDirPath()))
+            var archivedFullDirPath = GetFullPath(FullPathOptions.DirCoursesArchived);
+            if (Directory.Exists(archivedFullDirPath))
             {
-                var files = Directory.EnumerateFiles(_CoursesArchivedDirPath());
+                var files = Directory.EnumerateFiles(archivedFullDirPath);
 
                 foreach (var file in files)
                 {
@@ -1405,9 +1407,10 @@ namespace Nezmatematika.ViewModel
         private void GetAllPublishedCoursesList()
         {
             AllPublishedCoursesList.Clear();
-            if (Directory.Exists(_CoursesPublishedDirPath()))
+            var publishedFullDirPath = GetFullPath(FullPathOptions.DirCoursesPublished);
+            if (Directory.Exists(publishedFullDirPath))
             {
-                var files = Directory.EnumerateFiles(_CoursesPublishedDirPath());
+                var files = Directory.EnumerateFiles(publishedFullDirPath);
 
                 foreach (var file in files)
                 {

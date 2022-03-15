@@ -12,8 +12,8 @@ namespace Nezmatematika.Model
     {
         public string Id { get; set; }
         public int Version { get; set; }
-        public string DirPath { get; set; }
-        public string FilePath { get; set; }
+        public string RelDirPath { get; set; }
+        public string RelFilePath { get; set; }
         public UserBase Author { get; set; }
         public DateTime Created { get; set; }
         public PublishingStatus PublishingStatus { get; set; }
@@ -36,8 +36,8 @@ namespace Nezmatematika.Model
 
         public CourseSerialisable(Course course)
         {
-            DirPath = course.DirPath;
-            FilePath = course.FilePath;
+            RelDirPath = course.RelDirPath;
+            RelFilePath = course.RelFilePath;
             Author = course.Author;
             Id = course.Id;
             Version = course.Version;
@@ -60,15 +60,16 @@ namespace Nezmatematika.Model
 
         public void Save()
         {
-            using (StreamWriter sw = new StreamWriter(FilePath))
+            using (StreamWriter sw = new StreamWriter(Path.Combine(App.MyBaseDirectory, RelFilePath)))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(CourseSerialisable));
                 xmls.Serialize(sw, this);
             }
         }
-        public static CourseSerialisable Read(string filename)
+        public static CourseSerialisable Read(string filePath)
         {
-            using (StreamReader sw = new StreamReader(filename))
+            filePath = Path.Combine(App.MyBaseDirectory, filePath);
+            using (StreamReader sw = new StreamReader(filePath))
             {
                 XmlSerializer xmls = new XmlSerializer(typeof(CourseSerialisable));
                 return xmls.Deserialize(sw) as CourseSerialisable;

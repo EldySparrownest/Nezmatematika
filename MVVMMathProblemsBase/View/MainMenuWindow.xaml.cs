@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using Nezmatematika.Model;
 using Nezmatematika.ViewModel;
-using Nezmatematika.ViewModel.Helpers;
+using static Nezmatematika.ViewModel.Helpers.FilePathHelper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +19,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Nezmatematika.ViewModel.Helpers;
 
 namespace Nezmatematika.View
 {
@@ -203,7 +204,8 @@ namespace Nezmatematika.View
         {
             if (vM.CurrentMathProblem != null)
             {
-                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
+                var mathProblemFullFilePath = System.IO.Path.Combine(App.MyBaseDirectory, vM.CurrentMathProblem.RelFilePath);
+                if (!string.IsNullOrEmpty(mathProblemFullFilePath) && File.Exists(mathProblemFullFilePath))
                 {
                     switch (App.WhereInApp)
                     {
@@ -214,7 +216,7 @@ namespace Nezmatematika.View
                         case WhereInApp.CourseForStudent:
                             rtbProblemTextStudentMode.Document.Blocks.Clear();
                             rtbQuestionStudentMode.Document.Blocks.Clear();
-                            LoadMathProblemFromFile(vM.CurrentMathProblem.FilePath, dicStudentTagRTB);
+                            LoadMathProblemFromFile(mathProblemFullFilePath, dicStudentTagRTB);
                             break;
                     }
                 }
@@ -234,8 +236,9 @@ namespace Nezmatematika.View
                         rtbCodeMode.Document.Blocks.Clear();
                         rtbProblemText.Document.Blocks.Clear();
                         rtbQuestion.Document.Blocks.Clear();
-                        if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
-                            LoadMathProblemFromFile(vM.CurrentMathProblem.FilePath, dicTeacherTagRTB);
+                        var curMathProblemFullFilePath = System.IO.Path.Combine(App.MyBaseDirectory, vM.CurrentMathProblem.RelFilePath);
+                        if (!string.IsNullOrEmpty(curMathProblemFullFilePath) && File.Exists(curMathProblemFullFilePath))
+                            LoadMathProblemFromFile(curMathProblemFullFilePath, dicTeacherTagRTB);
                         break;
                 }
             }
@@ -849,7 +852,7 @@ namespace Nezmatematika.View
             };
 
             if (openFileDialog.ShowDialog() == true)
-                ZipHelper.UnzipDirectory(openFileDialog.FileName, FilePathHelper._CoursesPublishedDirPath());
+                ZipHelper.UnzipDirectory(openFileDialog.FileName, _CoursesPublishedRelDirPath());
 
             vM.GetListOfNewCoursesToStart();
         }
@@ -874,7 +877,7 @@ namespace Nezmatematika.View
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                var tempExportZip = FilePathHelper._ExportsDirPath();
+                var tempExportZip = FilePathHelper._ExportsDirName();
                 Directory.CreateDirectory(tempExportZip);
                 PrepCourseForExport(vM.CurrentCourse);
                 
@@ -887,7 +890,7 @@ namespace Nezmatematika.View
 
         private void PrepCourseForExport(Course course)
         {
-            course.PrepForExport(course.Id, course.Version, FilePathHelper._CoursesPublishedDirPath(), FilePathHelper._ExportsDirPath());
+            course.PrepForExport(course.Id, course.Version, FilePathHelper._CoursesPublishedRelDirPath(), FilePathHelper._ExportsDirName());
         }
     }
 
