@@ -23,7 +23,7 @@ namespace Nezmatematika.ViewModel.Helpers
                 case FullPathOptions.DirCoursesTeacher:
                     return Path.Combine(App.MyBaseDirectory, _TeacherCoursesRelDirPath(userBase));
                 case FullPathOptions.DirUsers:
-                    return Path.Combine(App.MyBaseDirectory, _SettingsDirName());
+                    return Path.Combine(App.MyBaseDirectory, _UsersDirName());
                 case FullPathOptions.FileUserCoursesData:
                     return Path.Combine(App.MyBaseDirectory, _UserCoursesDataRelFilePath(userBase));
                 case FullPathOptions.FileUserStats:
@@ -41,17 +41,17 @@ namespace Nezmatematika.ViewModel.Helpers
         //_UserListPath bude obsahovat seznam uživatelů
         //na indexu [0] bude vždy poslední použitý student (pokud existuje)
         //na indexu [Count-1] bude vždy poslední použitý učitel (pokud existuje)
-        public static string _SettingsDirName() => "Settings";
-        public static string _UserListFullPath() => Path.Combine(App.MyBaseDirectory, _SettingsDirName(), "UserList.xml");
-        public static string _DefaultSettingsFullPath => Path.Combine(App.MyBaseDirectory, _SettingsDirName(), $"Default{UserSettingsFilename}");
+        public static string _UsersDirName() => "Users";
+        public static string _UserListFullPath() => Path.Combine(App.MyBaseDirectory, _UsersDirName(), "UserList.xml");
+        public static string _DefaultSettingsFullPath => Path.Combine(App.MyBaseDirectory, _UsersDirName(), $"Default{UserSettingsFilename}");
 
         public static string _CoursesDirName() => "Courses";
         public static string _CoursesArchivedRelDirPath() => Path.Combine(_CoursesDirName(), "Archived");
         public static string _CoursesPublishedRelDirPath() => Path.Combine(_CoursesDirName(), "Published");
 
-        public static string _UserCoursesDataRelFilePath(UserBase userBase) => Path.Combine(_SettingsDirName(), $"{userBase.Id}{UserCoursesDataFilename}");
-        public static string _UserSettingsRelFilePath(UserBase userBase) => Path.Combine(_SettingsDirName(), $"{userBase.Id}{UserSettingsFilename}");
-        public static string _UserStatsRelFilePath(UserBase userBase) => Path.Combine(_SettingsDirName(), $"{userBase.Id}{UserStatsFilename}");
+        public static string _UserCoursesDataRelFilePath(UserBase userBase) => Path.Combine(_UsersDirName(), $"{userBase.Id}{UserCoursesDataFilename}");
+        public static string _UserSettingsRelFilePath(UserBase userBase) => Path.Combine(_UsersDirName(), $"{userBase.Id}{UserSettingsFilename}");
+        public static string _UserStatsRelFilePath(UserBase userBase) => Path.Combine(_UsersDirName(), $"{userBase.Id}{UserStatsFilename}");
         public static string _TeacherCoursesRelDirPath(UserBase userBase) => Path.Combine(_CoursesDirName(), userBase.Id);
 
         public static string _ExportsDirName() => "Exports";
