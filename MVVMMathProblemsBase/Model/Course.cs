@@ -79,10 +79,10 @@ namespace Nezmatematika.Model
             PublishedProblemCount = 0;
         }
 
-        public void AddNewMathProblem()
+        public void AddNewMathProblem(bool capitalisation)
         {
             var mathProblemFactory = new MathProblemFactory();
-            Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní"));
+            Problems.Add((MathProblem)mathProblemFactory.Create(this, capitalisation, "základní"));
         }
 
         private void UpdateProblemIndexesAndOrderLabels()

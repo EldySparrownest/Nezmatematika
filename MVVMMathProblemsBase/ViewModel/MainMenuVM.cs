@@ -1014,7 +1014,7 @@ namespace Nezmatematika.ViewModel
         #region SavingMethods
         public void SaveUserSettings()
         {
-            Settings.Save(_UserSettingsRelFilePath(CurrentUser.UserBase));
+            Settings.Save(Path.Combine(App.MyBaseDirectory, _UserSettingsRelFilePath(CurrentUser.UserBase)));
         }
         public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
@@ -1244,7 +1244,7 @@ namespace Nezmatematika.ViewModel
         public void CreateNewCourse()
         {
             CurrentCourse = new Course(CurrentUser.UserBase, TempCourseTitle);
-            CurrentCourse.AddNewMathProblem();
+            CurrentCourse.AddNewMathProblem(Settings.CapitalisationMatters);
             CurrentMathProblem = CurrentCourse.Problems[0];
             CurrentUser.UserStats.CourseCreatedUpdate();
             SaveDataAndStats();

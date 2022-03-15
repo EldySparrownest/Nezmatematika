@@ -16,6 +16,7 @@ namespace Nezmatematika.Model
         string OrderLabel { get; set; }
         string ProblemText { get; set; }
         string ProblemQuestion { get; set; }
+        bool CapitalisationMatters { get; set; }
         ObservableCollection<string> CorrectAnswers { get; set; }
         ObservableCollection<string> SolutionSteps { get; set; }
 

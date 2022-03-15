@@ -9,7 +9,7 @@ namespace Nezmatematika.Model
 {
     class MathProblemFactory
     {
-        public IMathProblem Create(Course course, string problemType = "základní")
+        public IMathProblem Create(Course course, bool capitalisation, string problemType = "základní")
         {
             IMathProblem mathProblem;
             switch (problemType)
@@ -25,6 +25,7 @@ namespace Nezmatematika.Model
             mathProblem.RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{mathProblem.Id}.rtf");
             mathProblem.Index = course.Problems.Count;
             mathProblem.SetSimplifiedOrderLabel();
+            mathProblem.CapitalisationMatters = capitalisation;
             return mathProblem;
         }
 

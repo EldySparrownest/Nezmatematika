@@ -33,13 +33,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "MsmKey" = "8:_45EBAC9ACAB34584B2303324C8EEE31B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6B09D186EDA5492C89BD1A3DA0F535A5"
+        "MsmKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -59,6 +59,12 @@
         {
         "MsmKey" = "8:_97A74411142C58871DF8295754710521"
         "OwnerKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BE324A660E01409B93FF6387C414645F"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -292,6 +298,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_45EBAC9ACAB34584B2303324C8EEE31B"
+            {
+            "SourcePath" = "8:..\\MVVMMathProblemsBase\\DefaultSettings.xml"
+            "TargetName" = "8:DefaultSettings.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_10A8B60928A74F60BAE3DAFEAFFB3C25"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_52B5B8637A764ADBAE827689E21AA2FC"
             {
             "AssemblyRegister" = "3:1"
@@ -309,26 +335,6 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6B09D186EDA5492C89BD1A3DA0F535A5"
-            {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Settings\\DefaultSettings.xml"
-            "TargetName" = "8:DefaultSettings.xml"
-            "Tag" = "8:"
-            "Folder" = "8:_10A8B60928A74F60BAE3DAFEAFFB3C25"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -372,6 +378,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE324A660E01409B93FF6387C414645F"
+            {
+            "SourcePath" = "8:..\\MVVMMathProblemsBase\\DefaultSettings.xml"
+            "TargetName" = "8:DefaultSettings.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C0B5885987FD46A1880928B104238E24"
@@ -482,7 +508,7 @@
                                 {
                                     "{9EF0B969-E518-4E46-987F-47570745A589}:_10A8B60928A74F60BAE3DAFEAFFB3C25"
                                     {
-                                    "Name" = "8:Settings"
+                                    "Name" = "8:Users"
                                     "AlwaysCreate" = "11:TRUE"
                                     "Condition" = "8:"
                                     "Transitive" = "11:FALSE"
@@ -524,6 +550,17 @@
                                             }
                                         }
                                     }
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_965CED9F941C4C5FA73BBB60C975DBE4"
+                                    {
+                                    "Name" = "8:Exports"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_C66A9C4633124B9AAC25DE87B0341189"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -551,6 +588,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_0DEE8B1F2B034B23A6CCC6A895F1103C"
+                    {
+                    "Name" = "8:Exports"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_13224631197A4832B19A84A06F26A45B"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_147B9A3870C24588B6A5B34C3FC95E1E"
                     {
                     "Name" = "8:Courses"
@@ -564,7 +612,7 @@
                     }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_799D3D281A7B4A6B8AF52FC2C36EAE78"
                     {
-                    "Name" = "8:Settings"
+                    "Name" = "8:Users"
                     "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
@@ -591,15 +639,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
-        "ProductCode" = "8:{29561A84-3991-4830-9F2C-0395C946D789}"
-        "PackageCode" = "8:{69561B46-C6F5-441F-9796-8CD271AC483D}"
+        "ProductCode" = "8:{1323BFB6-FCBD-4C15-89D6-E80254FFA391}"
+        "PackageCode" = "8:{8AB78583-4624-44DA-AE67-D521B7E84F0D}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.5.0"
+        "ProductVersion" = "8:0.6.0"
         "Manufacturer" = "8:HopefulSparrow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
