@@ -18,14 +18,5 @@ namespace Nezmatematika.ViewModel.Helpers
                 xmls.Serialize(sw, item);
             }
         }
-
-        public static object Read(string filename, Type type)
-        {
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(type);
-                return xmls.Deserialize(sr) as object;
-            }
-        }
     }
 }

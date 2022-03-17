@@ -74,7 +74,7 @@ namespace Nezmatematika.Model
             SolvedCorrectlyCount++;
             ResumeOnIndex++;
 
-            completed = (SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count);
+            completed = SolvedProblemsCount == CourseProblemCount + RequeuedProblems.Count;
         }
 
         public void UpdateAfterIncorrectAnswer(int problemIndex, bool requeue)

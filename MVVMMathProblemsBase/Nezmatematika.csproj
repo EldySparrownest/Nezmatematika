@@ -156,9 +156,6 @@
     <Compile Include="View\MainMenuWindow.xaml.cs">
       <DependentUpon>MainMenuWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MathProblemWindow.xaml.cs">
-      <DependentUpon>MathProblemWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -167,10 +164,6 @@
       <DependentUpon>UserTypeSelectWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainMenuWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\MathProblemWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

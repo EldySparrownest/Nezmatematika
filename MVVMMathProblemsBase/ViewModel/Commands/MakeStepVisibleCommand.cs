@@ -31,7 +31,10 @@ namespace Nezmatematika.ViewModel.Commands
                 || MMVM.CurrentUserCourseData.VisibleStepsCounts == null
                 || MMVM.SolutionStepsShownToStudent == null)
                 return false;
-            
+
+            if (MMVM.CurrentProblemSolved)
+                return false;
+
             if (!(MMVM.CurrentUserCourseData.VisibleStepsCounts.Count > MMVM.CurrentMathProblemIndex))
                 return false;
 

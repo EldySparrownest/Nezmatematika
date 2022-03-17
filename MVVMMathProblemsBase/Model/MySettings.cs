@@ -34,7 +34,7 @@ namespace Nezmatematika.Model
                 xmls.Serialize(sw, this);
             }
         }
-        public MySettings Read(string filename)
+        public static MySettings Read(string filename)
         {
             using (StreamReader sr = new StreamReader(filename))
             {

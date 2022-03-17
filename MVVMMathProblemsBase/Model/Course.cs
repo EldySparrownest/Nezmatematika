@@ -134,7 +134,7 @@ namespace Nezmatematika.Model
                     Course.ArchiveCourse(Id, prevVersion, publishedCoursesRelDirPath, archivedCoursesRelDirPath);
 
                 problemCountChange = PublishedProblemCount - prevPublishedProblemCount;
-                CopyAllCourseFiles(Id, Version, teacherCoursesDirPath, publishedCoursesRelDirPath);
+                CopyAllCourseFiles(Id, Version, teacherCoursesDirPath, publishedCoursesRelDirPath); // obě cesty v parametrech musejí být relativní!
             }
             catch (Exception e)
             {
@@ -176,18 +176,18 @@ namespace Nezmatematika.Model
         {
             ArchiveCourse(courseId, courseVersion, FilePathHelper._CoursesPublishedRelDirPath(), FilePathHelper._CoursesArchivedRelDirPath());
         }
-        public static void ArchiveCourse(string courseId, int courseVersion, string publishedCoursesDirPath, string archivedCoursesDirPath)
+        public static void ArchiveCourse(string courseId, int courseVersion, string publishedCoursesRelDirPath, string archivedCoursesRelDirPath)
         {
             var problemsDirName = $"{courseId}_{courseVersion}";
-            var archivedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, archivedCoursesDirPath);
-            var publishedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, publishedCoursesDirPath);
-            var publishedFullFilePath = Path.Combine(App.MyBaseDirectory, publishedCoursesDirPath, $"{problemsDirName}{GlobalValues.CourseFilename}");
+            var archivedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, archivedCoursesRelDirPath);
+            var publishedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, publishedCoursesRelDirPath);
+            var publishedFullFilePath = Path.Combine(App.MyBaseDirectory, publishedCoursesRelDirPath, $"{problemsDirName}{GlobalValues.CourseFilename}");
             var course = Course.Read(publishedFullFilePath);
 
             if (course == null)
                 return;
 
-            course.UpdatePathsToAdjustForMovingFiles(archivedCoursesDirPath);
+            course.UpdatePathsToAdjustForMovingFiles(archivedCoursesRelDirPath);
             course.Save(); //hlavní kurzový soubor se rovnou uloží kam má
 
             //přesun adresáře s RTF soubory úloh
@@ -224,12 +224,12 @@ namespace Nezmatematika.Model
             var versionSuffix = $"_{Version}";
             var courseDirName = String.Join("", Id, versionSuffix);
             var fileName = String.Join("", Id, versionSuffix, GlobalValues.CourseFilename);
-            RelDirPath = newCoursesDir;
+            RelDirPath = Path.Combine(newCoursesDir, courseDirName);
             RelFilePath = Path.Combine(newCoursesDir, fileName);
 
             foreach (var mathProblem in Problems)
             {
-                mathProblem.DirPath = Path.Combine(newCoursesDir, courseDirName);
+                mathProblem.DirPath = RelDirPath;
                 mathProblem.RelFilePath = Path.Combine(newCoursesDir, courseDirName, $"{mathProblem.Id}.rtf");
             }
         }

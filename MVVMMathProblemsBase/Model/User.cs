@@ -44,22 +44,11 @@ namespace Nezmatematika.Model
 
         public void SaveCoursesData(string coursesDataFilename)
         {
-            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);
-            
-            //using (StreamWriter sw = new StreamWriter(coursesDataFilename))
-            //{
-            //    XmlSerializer xmls = new XmlSerializer(typeof(List<UserCourseData>));
-            //    xmls.Serialize(sw, CoursesData);
-            //}
+            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);          
         }
         public void SaveStats(string statsFilename)
         {
             XmlHelper.Save(statsFilename, typeof(UserStats), UserStats);
-            //using (StreamWriter sw = new StreamWriter(statsFilename))
-            //{
-            //    XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
-            //    xmls.Serialize(sw, UserStats);
-            //}
         }
 
         public void ReadCoursesData(string coursesDataFilename)

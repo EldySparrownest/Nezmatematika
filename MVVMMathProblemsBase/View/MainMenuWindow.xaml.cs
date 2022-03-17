@@ -34,12 +34,6 @@ namespace Nezmatematika.View
     // zaznamenávání historie učení a sledování pokroků
     //  == statistika + zařazování příkladů s chybou na konec kurzu
     // interní editor musí podporovat export a import úloh
-    //  == asi budu zazipovávat?
-
-    //HLAVNÍ SEZNAM VĚCÍ NEZBYTNÝCH, KTERÉ MUSÍM DODĚLAT:
-    // 1) najít způsob, jak serializovat kurzy a příklady (asi udělám helper třídy) - nějakým způsobem hotovo
-    // 2) dořešit přepínání mezi příklady v editoru
-    // 3) rozchodit studentský mód
 
     //Podtrhování a přeškrtávání pohromadě asi fungovat prostě nebude... Pokud mám mít jen jedno, bude to podtrhávání.
 
@@ -852,7 +846,7 @@ namespace Nezmatematika.View
             };
 
             if (openFileDialog.ShowDialog() == true)
-                ZipHelper.UnzipDirectory(openFileDialog.FileName, _CoursesPublishedRelDirPath());
+                ZipHelper.UnzipDirectory(openFileDialog.FileName, GetFullPath(FullPathOptions.DirCoursesPublished));
 
             vM.GetListOfNewCoursesToStart();
         }
@@ -877,20 +871,20 @@ namespace Nezmatematika.View
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                var tempExportZip = FilePathHelper._ExportsDirName();
-                Directory.CreateDirectory(tempExportZip);
+                var exportDirFullPath = GetFullPath(FullPathOptions.DirExports);
+                Directory.CreateDirectory(exportDirFullPath);
                 PrepCourseForExport(vM.CurrentCourse);
                 
-                if (ZipHelper.ZipUpDirectory(tempExportZip, saveFileDialog.FileName) == true)
+                if (ZipHelper.ZipUpDirectory(exportDirFullPath, saveFileDialog.FileName) == true)
                     MessageBox.Show("Export kurzu proběhl úspěšně.");
 
-                Directory.Delete(tempExportZip, true);
+                Directory.Delete(exportDirFullPath, true);
             }
         }
 
-        private void PrepCourseForExport(Course course)
+        private void PrepCourseForExport(Course course) //TADY OPRAVDU MAJÍ BÝT CESTY RELATIVNÍ!!!
         {
-            course.PrepForExport(course.Id, course.Version, FilePathHelper._CoursesPublishedRelDirPath(), FilePathHelper._ExportsDirName());
+            course.PrepForExport(course.Id, course.Version, _CoursesPublishedRelDirPath(), _ExportsDirName());
         }
     }
 

@@ -895,7 +895,7 @@ namespace Nezmatematika.ViewModel
         public void LoadDefaultSettings()
         {
             if (File.Exists(_DefaultSettingsFullPath))
-                this.Settings = new MySettings().Read(_DefaultSettingsFullPath);
+                this.Settings = MySettings.Read(_DefaultSettingsFullPath);
         }
         public void SetLastUsedUserFromAllUsers()
         {
@@ -925,7 +925,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SetCurrentUserFromUserBase(UserBase userBase)
         {
-            CurrentUser = userBase == null ? null : new User(userBase, _UserCoursesDataRelFilePath(userBase), _UserStatsRelFilePath(userBase));
+            CurrentUser = userBase == null ? null : new User(userBase, GetFullPath(FullPathOptions.FileUserCoursesData, userBase), GetFullPath(FullPathOptions.FileUserStats, userBase));
         }
         public void SetCurrentUserToLastUsedUser()
         {
@@ -934,9 +934,9 @@ namespace Nezmatematika.ViewModel
         }
         public void LoadSettingsForCurrentUser()
         {
-            var settingsPath = CurrentUser != null ? _UserSettingsRelFilePath(CurrentUser.UserBase) : _DefaultSettingsFullPath;
+            var settingsPath = CurrentUser != null ? GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase) : _DefaultSettingsFullPath;
             if (File.Exists(settingsPath))
-                this.Settings = new MySettings().Read(settingsPath);
+                this.Settings = MySettings.Read(settingsPath);
         }
         public void UpdateAbilityToContinueCourse()
         {
@@ -1014,7 +1014,7 @@ namespace Nezmatematika.ViewModel
         #region SavingMethods
         public void SaveUserSettings()
         {
-            Settings.Save(Path.Combine(App.MyBaseDirectory, _UserSettingsRelFilePath(CurrentUser.UserBase)));
+            Settings.Save(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
         }
         public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
@@ -1031,9 +1031,9 @@ namespace Nezmatematika.ViewModel
         }
         public void DeleteUser(UserBase userBaseToDelete)
         {
-            File.Delete(_UserStatsRelFilePath(userBaseToDelete));
-            File.Delete(_UserCoursesDataRelFilePath(userBaseToDelete));
-            File.Delete(_UserSettingsRelFilePath(userBaseToDelete));
+            File.Delete(GetFullPath(FullPathOptions.FileUserStats, userBaseToDelete));
+            File.Delete(GetFullPath(FullPathOptions.FileUserCoursesData, userBaseToDelete));
+            File.Delete(GetFullPath(FullPathOptions.FileUserSettings, userBaseToDelete));
             UserBasesOfTypeList.Remove(userBaseToDelete);
             AllUserBasesList.Remove(userBaseToDelete);
             SaveUserList();
@@ -1146,9 +1146,9 @@ namespace Nezmatematika.ViewModel
         }
         public void RestoreDefaultSettingsForCurrentUser()
         {
-            var usersNewSettings = new MySettings().Read(_DefaultSettingsFullPath);
+            var usersNewSettings = MySettings.Read(_DefaultSettingsFullPath);
             usersNewSettings.HasCourseToContinue = this.Settings.HasCourseToContinue;
-            usersNewSettings.Save(_UserSettingsRelFilePath(CurrentUser.UserBase));
+            usersNewSettings.Save(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
             LoadSettingsForCurrentUser();
         }
         public void ClearUserTempValues()
@@ -1236,7 +1236,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveDataAndStats()
         {
-            CurrentUser.SaveDataAndStats(_UserCoursesDataRelFilePath(CurrentUser.UserBase), _UserStatsRelFilePath(CurrentUser.UserBase));
+            CurrentUser.SaveDataAndStats(GetFullPath(FullPathOptions.FileUserCoursesData, CurrentUser.UserBase), GetFullPath(FullPathOptions.FileUserStats, CurrentUser.UserBase));
         }
         #endregion MethodForCoursesInStudentMode
 
@@ -1322,7 +1322,7 @@ namespace Nezmatematika.ViewModel
 
             if (publish)
             {
-                CurrentCourse.PublishCourse(_CoursesPublishedRelDirPath(), _CoursesArchivedRelDirPath(), out int problemCountChange);
+                CurrentCourse.PublishCourse(_CoursesPublishedRelDirPath(), _CoursesArchivedRelDirPath(), out int problemCountChange); // cesty musejí být relativní !!!
                 CurrentUser.UserStats.CoursePublishedUpdate(CurrentCourse.Version, problemCountChange);
                 SaveDataAndStats();
             }
