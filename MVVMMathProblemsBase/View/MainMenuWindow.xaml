@@ -366,23 +366,6 @@
                                                           Content="Škola"
                                                           HorizontalContentAlignment="Left" />
                                 </GridViewColumn>
-                                <!--<GridViewColumn Header="Akce"
-                                            Width="Auto">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button Content="Upravit"
-                                                    Command="{Binding PrepUserForEditingCommand}"
-                                                    CommandParameter="{Binding}" 
-                                                    Margin="5"/>
-                                            <Button Content="Smazat"
-                                                    Command="{Binding DeleteUserCommand}"
-                                                    CommandParameter="{Binding}" 
-                                                    Margin="5"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>-->
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -433,12 +416,21 @@
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="55" />
                                 </GridViewColumn>
+                                <GridViewColumn local:GridColumn.MinWidth="105"
+                                                Width="Auto"
+                                                DisplayMemberBinding="{Binding Problems.Count}">
+                                    <GridViewColumnHeader Tag="Problems.Count"
+                                                          Click="lvStartableNewCoursesColumnHeader_Click"
+                                                          Content="Počet úloh"
+                                                          HorizontalContentAlignment="Left"
+                                                          MinWidth="105" />
+                                </GridViewColumn>
                                 <GridViewColumn local:GridColumn.MinWidth="125"
                                                 Width="Auto"
                                                 DisplayMemberBinding="{Binding LastPublished, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                     <GridViewColumnHeader Tag="LastPublished"
                                                           Click="lvStartableNewCoursesColumnHeader_Click"
-                                                          Content="Zveřejněno"
+                                                          Content="Zveřejněn"
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="125" />
                                 </GridViewColumn>
@@ -496,7 +488,7 @@
                                                 Width="Auto"
                                                 DisplayMemberBinding="{Binding Version}">
                                     <GridViewColumnHeader Tag="Version"
-                                                          Click="lvStartableNewCoursesColumnHeader_Click"
+                                                          Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                           Content="Verze"
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="35" />
@@ -513,7 +505,6 @@
                                 <GridViewColumn local:GridColumn.MinWidth="105"
                                                 Width="Auto">
                                     <GridViewColumnHeader Tag="SolvedCorrectlyCount"
-                                                          Click="lvStudentCoursesInProgressColumnHeader_Click"
                                                           Content="Vyřešené úlohy"
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="105" />
@@ -529,6 +520,15 @@
                                             </TextBlock>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn local:GridColumn.MinWidth="130"
+                                                Width="Auto"
+                                                DisplayMemberBinding="{Binding CourseStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                    <GridViewColumnHeader Tag="CourseStarted"
+                                                          Click="lvStudentCoursesInProgressColumnHeader_Click"
+                                                          Content="Zahájen"
+                                                          HorizontalContentAlignment="Left"
+                                                          MinWidth="130" />
                                 </GridViewColumn>
                                 <GridViewColumn local:GridColumn.MinWidth="130"
                                                 Width="Auto"
@@ -574,7 +574,7 @@
                                                 Width="Auto"
                                                 DisplayMemberBinding="{Binding Version}">
                                     <GridViewColumnHeader Tag="Version"
-                                                          Click="lvStartableNewCoursesColumnHeader_Click"
+                                                          Click="lvStudentCoursesFinishedColumnHeader_Click"
                                                           Content="Verze"
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="35" />
@@ -599,8 +599,17 @@
                                 </GridViewColumn>
                                 <GridViewColumn local:GridColumn.MinWidth="130"
                                                 Width="Auto"
+                                                DisplayMemberBinding="{Binding CourseStarted, StringFormat=dd.MM.yyyy HH:mm:ss}">
+                                    <GridViewColumnHeader Tag="CourseStarted"
+                                                          Click="lvStudentCoursesFinishedColumnHeader_Click"
+                                                          Content="Zahájen"
+                                                          HorizontalContentAlignment="Left"
+                                                          MinWidth="130" />
+                                </GridViewColumn>
+                                <GridViewColumn local:GridColumn.MinWidth="130"
+                                                Width="Auto"
                                                 DisplayMemberBinding="{Binding CourseFinished, StringFormat=dd.MM.yyyy HH:mm:ss}">
-                                    <GridViewColumnHeader Tag="CourseTitle"
+                                    <GridViewColumnHeader Tag="CourseFinished"
                                                           Click="lvStudentCoursesFinishedColumnHeader_Click"
                                                           Content="Dokončen"
                                                           HorizontalContentAlignment="Left"
@@ -720,6 +729,14 @@
                                                           HorizontalContentAlignment="Left"
                                                           MinWidth="35" />
                                 </GridViewColumn>
+                                <GridViewColumn local:GridColumn.MinWidth="105"
+                                                Width="Auto"
+                                                DisplayMemberBinding="{Binding Problems.Count}">
+                                    <GridViewColumnHeader Tag="Problems.Count"
+                                                          Click="lvContinuableCoursesColumnHeader_Click"
+                                                          Content="Počet úloh"
+                                                          HorizontalContentAlignment="Left" />
+                                </GridViewColumn>
                                 <GridViewColumn local:GridColumn.MinWidth="125"
                                                 Width="Auto"
                                                 DisplayMemberBinding="{Binding LastEdited, StringFormat=dd.MM.yyyy HH:mm:ss}">
@@ -733,7 +750,7 @@
                                                 DisplayMemberBinding="{Binding Created, StringFormat=dd.MM.yyyy HH:mm:ss}">
                                     <GridViewColumnHeader Tag="Created"
                                                           Click="lvContinuableCoursesColumnHeader_Click"
-                                                          Content="Vytvořeno"
+                                                          Content="Vytvořen"
                                                           HorizontalContentAlignment="Left" />
                                 </GridViewColumn>
                             </GridView>
