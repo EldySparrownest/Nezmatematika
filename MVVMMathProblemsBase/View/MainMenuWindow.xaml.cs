@@ -55,7 +55,6 @@ namespace Nezmatematika.View
             }
             if (vM.IsInStudentMode == true)
             {
-                //vM.TeacherNotNullCurrentMathProblemAboutToChange += ViewModelTeacher_CurrentMathProblemAboutToChange;
                 vM.StudentCurrentMathProblemChanged += ViewModel_StudentCurrentMathProblemChanged;
             }
 
@@ -64,7 +63,7 @@ namespace Nezmatematika.View
             dicStudentTagRTB = new Dictionary<string, RichTextBox>()
             {
                 { "ProblemText", rtbProblemTextStudentMode},
-                { "Question", rtbQuestionStudentMode }
+                { "Question", rtbProblemTextStudentMode }
             };
 
             dicTeacherTagRTB = new Dictionary<string, RichTextBox>()
@@ -203,7 +202,6 @@ namespace Nezmatematika.View
                             break;
                         case WhereInApp.CourseForStudent:
                             rtbProblemTextStudentMode.Document.Blocks.Clear();
-                            rtbQuestionStudentMode.Document.Blocks.Clear();
                             LoadMathProblemFromFile(mathProblemFullFilePath, dicStudentTagRTB);
                             break;
                     }
@@ -715,8 +713,8 @@ namespace Nezmatematika.View
                 using (var stream = new MemoryStream())
                 {
                     new TextRange(tpStart, tpEnd).Save(stream, DataFormats.XamlPackage);
-                    rtbTarget.Document.Blocks.Clear();
                     new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd).Load(stream, DataFormats.XamlPackage);
+                    if (App.WhereInApp == WhereInApp.CourseForStudent && i < tagRTBDictionary.Count - 1) rtbTarget.AppendText("\r\n\r\n");
                 }
             }
         }

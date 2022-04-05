@@ -1318,18 +1318,10 @@
                           DockPanel.Dock="Top">
                         <Grid.RowDefinitions>
                             <RowDefinition />
-                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <RichTextBox x:Name="rtbProblemTextStudentMode"
                                      Grid.Column="0"
                                      Grid.Row="0"
-                                     IsReadOnly="True"
-                                     HorizontalScrollBarVisibility="Auto"
-                                     VerticalScrollBarVisibility="Auto"
-                                     Margin="5" />
-                        <RichTextBox x:Name="rtbQuestionStudentMode"
-                                     Grid.Column="0"
-                                     Grid.Row="1"
                                      IsReadOnly="True"
                                      HorizontalScrollBarVisibility="Auto"
                                      VerticalScrollBarVisibility="Auto"
