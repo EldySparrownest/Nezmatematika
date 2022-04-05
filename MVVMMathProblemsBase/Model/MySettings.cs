@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,13 +27,9 @@ namespace Nezmatematika.Model
         public string DefaultFontFamily { get; set; }
         public int DefaultFontSize { get; set; }
 
-        public void Save(string filename)
+        public void Save(string fullFilePath)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(MySettings));
-                xmls.Serialize(sw, this);
-            }
+            XmlHelper.Save(fullFilePath, typeof(MySettings), this);
         }
         public static MySettings Read(string filename)
         {

@@ -702,10 +702,10 @@ namespace Nezmatematika.View
 
                 if (textOpenTagStartIndex < 0 || textCloseTagStartIndex < 0)
                 {
-                    MessageBoxResult result = MessageBox.Show("Při načítání příkladu ze souboru byla zjištěna chyba.\n" +
+                    MessageBoxResult result = MessageBox.Show("Při načítání úlohy ze souboru byla zjištěna chyba.\n" +
                                                                 "Nouzovým načtením bude celý obsah souboru načten do textového pole \"Zadání\".\n" +
                                                                 "Chcete se pokusit příklad načíst nouzově?",
-                                                                "Nezmatematika - chyba načtení příkladu",
+                                                                "Nezmatematika - chyba načtení úlohy",
                                                                 MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
@@ -786,9 +786,9 @@ namespace Nezmatematika.View
                 UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemText = problem.Text.Trim().Length <= 25 ? problem.Text.Trim() : problem.Text.Trim().Substring(0,22) + "...";
+                vM.CurrentMathProblem.ProblemText = TextRangeHelper.GetTextRangeSubstringWithoutLineBreaks(problem, 22);
                 var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemQuestion = question.Text.Trim().Length <= 25 ? question.Text.Trim() : question.Text.Trim().Substring(0, 22) + "...";
+                vM.CurrentMathProblem.ProblemQuestion = TextRangeHelper.GetTextRangeSubstringWithoutLineBreaks(question, 25);
                 var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
 
                 vM.SaveCurrentCourse();

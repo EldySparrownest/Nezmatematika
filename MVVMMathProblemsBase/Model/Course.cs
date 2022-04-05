@@ -103,9 +103,8 @@ namespace Nezmatematika.Model
             UpdateProblemIndexesAndOrderLabels();
             TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
-            CourseSerialisable cs = new CourseSerialisable(this);
-
-            cs.Save();
+            
+            new CourseSerialisable(this).Save();
         }
 
         public void PublishCourse(string publishedCoursesRelDirPath, string archivedCoursesRelDirPath, out int problemCountChange)

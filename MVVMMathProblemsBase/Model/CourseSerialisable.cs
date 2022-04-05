@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -60,11 +61,7 @@ namespace Nezmatematika.Model
 
         public void Save()
         {
-            using (StreamWriter sw = new StreamWriter(Path.Combine(App.MyBaseDirectory, RelFilePath)))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(CourseSerialisable));
-                xmls.Serialize(sw, this);
-            }
+            XmlHelper.Save(Path.Combine(App.MyBaseDirectory, RelFilePath), typeof(CourseSerialisable), this);
         }
         public static CourseSerialisable Read(string filePath)
         {

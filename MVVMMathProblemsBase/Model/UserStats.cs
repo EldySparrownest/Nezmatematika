@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -132,13 +133,9 @@ namespace Nezmatematika.Model
             return dic;
         }
 
-        public void Save(string filename)
+        public void Save(string fullFilePath)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
-                xmls.Serialize(sw, this);
-            }
+            XmlHelper.Save(fullFilePath, typeof(UserStats), this);
         }
         public static UserStats Read(string filename)
         {

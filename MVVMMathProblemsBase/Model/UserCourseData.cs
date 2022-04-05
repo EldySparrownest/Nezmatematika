@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -108,7 +109,7 @@ namespace Nezmatematika.Model
             if (index >= CourseProblemCount)
             {
                 if (index - CourseProblemCount >= RequeuedProblems.Count)
-                    throw new Exception("Došlo k překročení počtu příkladů v kurzu.");
+                    throw new Exception("Došlo k překročení počtu úloh v kurzu.");
             }
             return index;
         }
@@ -125,13 +126,9 @@ namespace Nezmatematika.Model
             VisibleStepsCounts[problemIndex]++;
         }
 
-        public void Save(string filename)
+        public void Save(string fullFilePath)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(UserCourseData));
-                xmls.Serialize(sw, this);
-            }
+            XmlHelper.Save(fullFilePath, typeof(UserCourseData), this);
         }
         public UserCourseData Read(string filename)
         {

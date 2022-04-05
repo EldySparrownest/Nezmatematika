@@ -101,7 +101,6 @@
     <Compile Include="Model\MathProblemFactory.cs" />
     <Compile Include="Model\MathProblemSerialisable.cs" />
     <Compile Include="Model\MySettings.cs" />
-    <Compile Include="Model\TextStyling.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserBase.cs" />
     <Compile Include="Model\UserCourseData.cs" />
@@ -145,13 +144,8 @@
     <Compile Include="ViewModel\Helpers\XmlHelper.cs" />
     <Compile Include="ViewModel\Helpers\ZipHelper.cs" />
     <Compile Include="ViewModel\MainMenuVM.cs" />
-    <Compile Include="ViewModel\MathProblemVM.cs" />
     <Compile Include="ViewModel\UserTypeSelectVM.cs" />
     <Compile Include="ViewModel\ValueConverters\NullableColorToSolidColorBrushConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToFeedackConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToModeNameStringCovnerter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToVisibilityConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToSolidColorBrushConverter.cs" />
     <Compile Include="ViewModel\ValueConverters\SolidColorBrushToColorConverter.cs" />
     <Compile Include="View\MainMenuWindow.xaml.cs">
       <DependentUpon>MainMenuWindow.xaml</DependentUpon>

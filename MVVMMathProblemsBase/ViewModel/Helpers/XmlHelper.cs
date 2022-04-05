@@ -10,9 +10,9 @@ namespace Nezmatematika.ViewModel.Helpers
 {
     public static class XmlHelper
     {
-        public static void Save<T>(string filename, Type type, T item)
+        public static void Save<T>(string fullFilePath, Type type, T item)
         {
-            using (StreamWriter sw = new StreamWriter(filename))
+            using (StreamWriter sw = new StreamWriter(fullFilePath))
             {
                 XmlSerializer xmls = new XmlSerializer(type);
                 xmls.Serialize(sw, item);
