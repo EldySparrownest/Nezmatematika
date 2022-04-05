@@ -1,9 +1,5 @@
 ﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
@@ -36,7 +32,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             Course courseToDelete = parameter as Course;
-            if(courseToDelete.Version != 0)
+            if (courseToDelete.Version != 0)
             {
                 Course.ArchiveCourse(courseToDelete.Id, courseToDelete.Version);
             }

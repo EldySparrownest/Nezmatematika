@@ -1,14 +1,9 @@
 ﻿using Nezmatematika.ViewModel.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
@@ -103,7 +98,7 @@ namespace Nezmatematika.Model
             UpdateProblemIndexesAndOrderLabels();
             TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
-            
+
             new CourseSerialisable(this).Save();
         }
 
@@ -147,7 +142,7 @@ namespace Nezmatematika.Model
         private void CopyAllCourseFiles(string courseId, int courseVersion, string originalParentDirPath, string newParentDirPath)
         {
             var problemsDirName = $"{courseId}_{courseVersion}";
-            var fullOriginalFilePath = Path.Combine(App.MyBaseDirectory,originalParentDirPath, $"{courseId}{GlobalValues.CourseFilename}");
+            var fullOriginalFilePath = Path.Combine(App.MyBaseDirectory, originalParentDirPath, $"{courseId}{GlobalValues.CourseFilename}");
             var course = Course.Read(fullOriginalFilePath);
 
             if (course == null)

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input; // for ICommand
 
 namespace Nezmatematika.ViewModel.Commands
@@ -10,7 +6,7 @@ namespace Nezmatematika.ViewModel.Commands
     public class CheckIfAnswerIsCorrectCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
-        
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -35,10 +31,10 @@ namespace Nezmatematika.ViewModel.Commands
             string answer = (parameter as string).Trim();
             MMVM.CurrentUserCourseData.RecordStudentAnswer(answer);
             MMVM.CurrentProblemSolved = true;
-            
+
             var isCorrect = MMVM.CheckIfAnswerIsCorrect(answer);
             MMVM.UpdateUCDAndStatsAfterAnswer(isCorrect);
-            
+
             MMVM.DisplayAnswerFeedback(isCorrect);
             if (MMVM.IsThisProblemTheLastOne())
                 MMVM.BtnNextToBtnFinish();

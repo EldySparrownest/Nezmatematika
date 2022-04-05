@@ -1,16 +1,11 @@
 ﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Nezmatematika
 {
     public enum WhereInApp { ModeSelection, MainMenu, CourseForStudent, CourseEditor, Statistics, Settings };
-    public enum AppMode { Student, Teacher, Unselected};
+    public enum AppMode { Student, Teacher, Unselected };
 
     /// <summary>
     /// Interakční logika pro App.xaml

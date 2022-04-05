@@ -1,10 +1,6 @@
 ﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nezmatematika.ViewModel.Helpers
 {
@@ -44,7 +40,7 @@ namespace Nezmatematika.ViewModel.Helpers
                     return App.MyBaseDirectory;
             };
         }
-        
+
         public static string CourseFilename = "Course.xml";
         public static string UserSettingsFilename = "Settings.xml";
         public static string UserStatsFilename = "Stats.xml";
@@ -56,7 +52,7 @@ namespace Nezmatematika.ViewModel.Helpers
         public static string _CoursesDirName() => "Courses";
         public static string _ExportsDirName() => "Exports";
         public static string _UsersDirName() => "Users";
-        
+
         public static string _UserListFullPath() => Path.Combine(App.MyBaseDirectory, _UsersDirName(), "UserList.xml");
         public static string _DefaultSettingsFullPath => Path.Combine(App.MyBaseDirectory, _UsersDirName(), $"Default{UserSettingsFilename}");
 

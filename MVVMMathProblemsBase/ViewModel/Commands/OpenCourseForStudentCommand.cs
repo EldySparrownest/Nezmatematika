@@ -1,9 +1,5 @@
 ﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,7 +29,7 @@ namespace Nezmatematika.ViewModel.Commands
 
             if (MMVM.CurrentCourse != null)
                 return true;
-            
+
             if (parameter != null)
             {
                 var ucd = parameter as UserCourseData;
@@ -58,7 +54,7 @@ namespace Nezmatematika.ViewModel.Commands
                         MMVM.CurrentCourse = MMVM.AllArchivedCoursesList.Find(c => c.Id == ucd.CourseId);
                 }
             }
-            
+
             MMVM.BackToMainMenu();
 
             if (MMVM.CurrentCourse == null)

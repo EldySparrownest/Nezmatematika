@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
@@ -102,7 +99,7 @@ namespace Nezmatematika.Model
             Completed = true;
             ResumeOnIndex = 0;
         }
-        
+
         public int GetIndexToResumeOn()
         {
             var index = ResumeOnIndex;

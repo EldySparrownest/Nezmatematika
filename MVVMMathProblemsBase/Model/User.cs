@@ -1,10 +1,6 @@
 ﻿using Nezmatematika.ViewModel.Helpers;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
@@ -19,7 +15,7 @@ namespace Nezmatematika.Model
         {
             UserBase = new UserBase();
             CoursesData = new List<UserCourseData>();
-            UserStats = new UserStats(); 
+            UserStats = new UserStats();
         }
 
         public User(string titBef, string fName, string lName, string titAft, string sName, string cName)
@@ -44,7 +40,7 @@ namespace Nezmatematika.Model
 
         public void SaveCoursesData(string coursesDataFilename)
         {
-            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);          
+            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);
         }
         public void SaveStats(string statsFilename)
         {

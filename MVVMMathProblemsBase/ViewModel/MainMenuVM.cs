@@ -1,6 +1,6 @@
 ﻿using Nezmatematika.Model;
 using Nezmatematika.ViewModel.Commands;
-using static Nezmatematika.ViewModel.Helpers.FilePathHelper;
+using Nezmatematika.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Xml.Serialization;
-using Nezmatematika.ViewModel.Helpers;
+using static Nezmatematika.ViewModel.Helpers.FilePathHelper;
 
 namespace Nezmatematika.ViewModel
 {
