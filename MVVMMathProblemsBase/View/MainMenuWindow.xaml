@@ -1360,37 +1360,9 @@
                                                 Background="{TemplateBinding Background}"
                                                 Padding="{TemplateBinding Padding}"
                                                 SnapsToDevicePixels="true">
-                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                         </Border>
                                         <ControlTemplate.Triggers>
-                                            <!--<Trigger Property="IsSelected"
-                                                     Value="true">
-                                                <Setter Property="Background"
-                                                        TargetName="Bd"
-                                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                                                <Setter Property="Foreground"
-                                                        Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                                            </Trigger>
-                                            <MultiTrigger>
-                                                <MultiTrigger.Conditions>
-                                                    <Condition Property="IsSelected"
-                                                               Value="true" />
-                                                    <Condition Property="Selector.IsSelectionActive"
-                                                               Value="false" />
-                                                </MultiTrigger.Conditions>
-                                                <Setter Property="Background"
-                                                        TargetName="Bd"
-                                                        Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
-                                                <Setter Property="Foreground"
-                                                        Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}}" />
-                                            </MultiTrigger>
-                                            <Trigger Property="IsEnabled"
-                                                     Value="false">
-                                                <Setter Property="Foreground"
-                                                        Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                                            </Trigger>-->
                                             <Trigger Property="IsMouseOver"
                                                      Value="True">
                                                 <Setter Property="Background"
