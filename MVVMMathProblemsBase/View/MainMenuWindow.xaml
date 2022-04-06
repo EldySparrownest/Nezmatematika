@@ -1527,35 +1527,30 @@
                             <Button Command="{Binding AddNewProblemCommand}"
                                     Margin="5"
                                     VerticalAlignment="Center">
-                                <Label Content="Přidat úlohu"
+                                <Label Content="Přidat&#xa;úlohu"
                                        VerticalAlignment="Center"
                                        VerticalContentAlignment="Center" />
                             </Button>
                             <Button Command="{Binding RemoveProblemCommand}"
                                     Margin="5"
                                     VerticalAlignment="Center">
-                                <Label Content="Odebrat úlohu"
+                                <Label Content="Odebrat&#xa;  úlohu"
                                        VerticalAlignment="Center"
                                        VerticalContentAlignment="Center" />
                             </Button>
                             <Button Name="btnSaveCourse"
                                     Click="btnSaveCourse_Click"
                                     Margin="5">
-                                <Label Content="Uložit" />
+                                <Label Content="Uložit&#xa; kurz" />
                             </Button>
                             <Button Name="btnPublishCourse"
                                     Click="btnPublishCourse_Click"
                                     Command="{Binding PublishCourseCommand}"
                                     Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="O"
-                                               FontSize="15"
-                                               FontWeight="ExtraBold"
-                                               Foreground="Green"
-                                               HorizontalAlignment="Center" />
-                                    <TextBlock Text="Zveřejnit"
-                                               HorizontalAlignment="Center" />
-                                </StackPanel>
+                                <Label Content="Zveřejnit&#xa;   kurz"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"/>
                             </Button>
                             <Separator />
                             <ToggleButton x:Name="btnBold"
@@ -1646,15 +1641,15 @@
                             <Separator />
                             <Button x:Name="btnImport"
                                     Click="btnImportProblem_Click">
-                                <Label Content="Import" />
+                                <Label Content="Importovat&#xa;    úlohu" />
                             </Button>
                             <Button x:Name="btnExport"
                                     Click="btnExportProblem_Click">
-                                <Label Content="Export" />
+                                <Label Content="Exportovat&#xa;    úlohu" />
                             </Button>
                             <Button x:Name="btnExportCourseZip"
                                     Click="btnExportCourse_Click">
-                                <Label Content="Exportovat kurz"
+                                <Label Content="Exportovat&#xa;     kurz"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                             </Button>
