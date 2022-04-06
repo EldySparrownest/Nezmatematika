@@ -36,6 +36,7 @@ namespace Nezmatematika.ViewModel.Commands
             MMVM.CurrentCourse.Save();
             if (index == MMVM.CurrentCourse.Problems.Count)
                 index--;
+            MMVM.PopulateTempMathProblemsFromCurrentCourse();
             MMVM.CurrentMathProblem = MMVM.CurrentCourse.Problems[index];
         }
     }

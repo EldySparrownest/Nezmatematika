@@ -227,6 +227,7 @@ namespace Nezmatematika.ViewModel
             set
             {
                 currentCourse = value;
+                ReloadTempMathProblems();
                 OnPropertyChanged("CurrentCourse");
             }
         }
@@ -254,7 +255,6 @@ namespace Nezmatematika.ViewModel
                 {
                     BtnHintVis = Visibility.Visible;
                     TempAnswer = string.Empty;
-                    TempSolutionStepText = string.Empty;
                     CurrentProblemSolved = CurrentUserCourseData.GetIsProblemSolved(CurrentMathProblemIndex);
 
                     if (CurrentProblemSolved)
@@ -435,6 +435,16 @@ namespace Nezmatematika.ViewModel
             {
                 tempAnswer = value;
                 OnPropertyChanged("TempAnswer");
+            }
+        }
+        private ObservableCollection<MathProblem> tempMathProblems;
+        public ObservableCollection<MathProblem> TempMathProblems
+        {
+            get { return tempMathProblems; }
+            set 
+            {
+                tempMathProblems = value;
+                OnPropertyChanged("TempMathProblems");
             }
         }
         private string tempCorrectAnswer;
@@ -796,6 +806,7 @@ namespace Nezmatematika.ViewModel
             GetListOfAllUsers();
             SetLastUsedUserFromAllUsers();
             SetCurrentUserToLastUsedUser();
+            TempMathProblems = new ObservableCollection<MathProblem>();
             TempAnswers = new ObservableCollection<string>();
             TempSolutionStepsTexts = new ObservableCollection<string>();
             TempSolutionStepText = string.Empty;
@@ -948,19 +959,17 @@ namespace Nezmatematika.ViewModel
             TempSchoolName = userBaseToEdit.SchoolName;
             TempClassName = userBaseToEdit.ClassName;
         }
+        public void PopulateTempMathProblemsFromCurrentCourse()
+        {
+            TempMathProblems = (CurrentCourse != null && CurrentCourse.Problems != null) ? new ObservableCollection<MathProblem>(CurrentCourse.Problems) : new ObservableCollection<MathProblem>();
+        }
         public void PopulateTempAnswersFromCurrentMathProblem()
         {
-            if (CurrentMathProblem != null && CurrentMathProblem.CorrectAnswers != null)
-                TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
-            else
-                TempAnswers = new ObservableCollection<string>();
+            TempAnswers = (CurrentMathProblem != null && CurrentMathProblem.CorrectAnswers != null) ? new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers) : new ObservableCollection<string>();
         }
         public void PopulateTempSolutionStepsFromCurrentMathProblem()
         {
-            if (CurrentMathProblem != null && CurrentMathProblem.SolutionSteps != null)
-                TempSolutionStepsTexts = new ObservableCollection<string>(CurrentMathProblem.SolutionSteps);
-            else
-                TempSolutionStepsTexts = new ObservableCollection<string>();
+            TempSolutionStepsTexts = (CurrentMathProblem != null && CurrentMathProblem.SolutionSteps != null) ? new ObservableCollection<string>(CurrentMathProblem.SolutionSteps) : new ObservableCollection<string>();
         }
         public void ReloadCurrentUserStats()
         {
@@ -1014,8 +1023,11 @@ namespace Nezmatematika.ViewModel
         public void SaveCurrentMathProblem(TextRange textRange)
         {
             SaveMathProblem(CurrentMathProblem, textRange);
-            TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
+            PopulateTempAnswersFromCurrentMathProblem();
             PopulateTempSolutionStepsFromCurrentMathProblem();
+            var curMathProblem = CurrentMathProblem;
+            PopulateTempMathProblemsFromCurrentCourse();
+            CurrentMathProblem = curMathProblem;
         }
         public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
         {
@@ -1212,6 +1224,8 @@ namespace Nezmatematika.ViewModel
             UpdateAbilityToContinueCourse();
 
             SaveCurrentCourse();
+
+            PopulateTempMathProblemsFromCurrentCourse();
         }
 
         public void StartEditingCurrentCourse()
@@ -1222,6 +1236,13 @@ namespace Nezmatematika.ViewModel
             PopulateTempSolutionStepsFromCurrentMathProblem();
             EditCourseVis = Visibility.Visible;
             CourseEditorMathProblemUserModeVis = Visibility.Visible;
+        }
+
+        public void ReloadTempMathProblems()
+        {
+            TempMathProblems.Clear();
+            if (CurrentCourse != null && CurrentCourse.Problems != null)
+                TempMathProblems = new ObservableCollection<MathProblem>(CurrentCourse.Problems);
         }
 
         public void ReloadTempAnswers()
