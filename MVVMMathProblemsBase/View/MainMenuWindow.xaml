@@ -12,8 +12,7 @@
         Height="Auto"
         Width="Auto"
         MinHeight="450"
-        MinWidth="1150"
-        d:DesignWidth="5000">
+        MinWidth="690">
     <Window.Resources>
         <vm:MainMenuVM x:Key="vm" />
         <converters:NullableColorToSolidColorBrushConverter x:Key="nullColorToSolidColorBrush" />
@@ -1105,95 +1104,114 @@
                       Grid.Row="1"
                       Grid.RowSpan="3">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Vertical"
                                 Grid.Row="0">
                         <Label Content="Úvodem"
                                FontSize="30" />
-                        <Label Content="Program Nezmatematika vytvořila v rámci své bakalářské práce studentka Jihočeské Univerzity v Českých Budějovicích, Zdeňka Kolářová." />
-                        <Label Content="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy úloh (tzv. 'kurzy'), které si studenti budou moci procvičovat." />
-                        <Label Content="Program Nezmatematika není určen k použití při známkovaných testech." />
-                        <Label Content="Pokud máte připomínky či návrhy ke zlepšení aplikace, můžete je poslat na tuto adresu: nezmatematika@gmail.com" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="Program Nezmatematika vytvořila v rámci své bakalářské práce studentka Jihočeské Univerzity v Českých Budějovicích, Zdeňka Kolářová." />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="Jeho účelem je umožnit vyučujícím vytvářet své vlastní sestavy úloh (tzv. 'kurzy'), které si studenti budou moci procvičovat." />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="Program Nezmatematika není určen k použití při známkovaných testech." />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="Pokud máte připomínky či návrhy ke zlepšení aplikace, můžete je poslat na tuto adresu: nezmatematika@gmail.com" />
                     </StackPanel>
-                    <Grid Grid.Row="3">
+                    <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Label Content="Použité grafické prvky: "
-                               Grid.ColumnSpan="3"
-                               Grid.Row="0"
-                               FontSize="30" />
-                        <Label Content="Prvek"
-                               Grid.Column="0"
-                               Grid.Row="1" />
-                        <Label Content="Popis"
-                               Grid.Column="1"
-                               Grid.Row="1" />
-                        <Label Content="Zdroj"
-                               Grid.Column="2"
-                               Grid.Row="1" />
+                        <TextBlock Text="Použité grafické prvky: "
+                                   TextWrapping="Wrap"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="0"
+                                   FontSize="30" />
+                        <TextBlock Text="Prvek"
+                                   Grid.Column="0"
+                                   Grid.Row="1"
+                                   Margin="5" />
+                        <TextBlock Text="Popis"
+                                   Grid.Column="1"
+                                   Grid.Row="1"
+                                   Margin="5" />
+                        <TextBlock Text="Zdroj"
+                                   Grid.Column="2"
+                                   Grid.Row="1"
+                                   Margin="5" />
                         <Image Grid.Column="0"
                                Grid.Row="2"
                                MaxHeight="50"
-                               MaxWidth="50">
+                               MaxWidth="50"
+                               Margin="5">
                             <Image.Source>
                                 <BitmapImage UriSource="/Images/Logo_500x500.png" />
                             </Image.Source>
                         </Image>
-                        <Label Content="Ikona a logo aplikace"
-                               VerticalAlignment="Center"
-                               Grid.Column="1"
-                               Grid.Row="2" />
-                        <Label Content="Upraveno z volně dostupných zdrojů Canva.com"
-                               VerticalAlignment="Center"
-                               Grid.Column="2"
-                               Grid.Row="2" />
+                        <TextBlock Text="Ikona a logo aplikace"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="1"
+                                   Grid.Row="2"
+                                   Margin="5" />
+                        <TextBlock Text="Upraveno z volně dostupných zdrojů Canva.com"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="2"
+                                   Grid.Row="2"
+                                   Margin="5" />
                         <Image Grid.Column="0"
                                Grid.Row="3"
                                MaxHeight="30"
-                               MaxWidth="30">
+                               MaxWidth="30"
+                               Margin="5">
                             <Image.Source>
                                 <BitmapImage UriSource="/Images/small-check-mark-icon-5.jpg" />
                             </Image.Source>
                         </Image>
-                        <Label Content="Fajfka při správné odpovědi"
-                               VerticalAlignment="Center"
-                               Grid.Column="1"
-                               Grid.Row="3" />
-                        <Label Content="https://icon-library.com/icon/small-check-mark-icon-5.html"
-                               VerticalAlignment="Center"
-                               Grid.Column="2"
-                               Grid.Row="3" />
+                        <TextBlock Text="Fajfka při správné odpovědi"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="1"
+                                   Grid.Row="3"
+                                   Margin="5" />
+                        <TextBlock Text="https://icon-library.com/icon/small-check-mark-icon-5.html"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="2"
+                                   Grid.Row="3"
+                                   Margin="5" />
                         <Image Grid.Column="0"
                                Grid.Row="4"
                                MaxHeight="30"
-                               MaxWidth="30">
+                               MaxWidth="30"
+                               Margin="5">
                             <Image.Source>
                                 <BitmapImage UriSource="/Images/my_red_cross_icon_30x30.png" />
                             </Image.Source>
                         </Image>
-                        <Label Content="Křížek při nesprávné odpovědi"
-                               VerticalAlignment="Center"
-                               Grid.Column="1"
-                               Grid.Row="4" />
-                        <Label Content="Vyrobeno vlastními silami"
-                               VerticalAlignment="Center"
-                               Grid.Column="2"
-                               Grid.Row="4" />
+                        <TextBlock Text="Křížek při nesprávné odpovědi"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="1"
+                                   Grid.Row="4"
+                                   Margin="5" />
+                        <TextBlock Text="Vyrobeno vlastními silami"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="2"
+                                   Grid.Row="4"
+                                   Margin="5" />
                     </Grid>
                 </Grid>
                 <Grid Name="gridStudentMenu"
@@ -1550,7 +1568,7 @@
                                 <Label Content="Zveřejnit&#xa;   kurz"
                                        HorizontalContentAlignment="Center"
                                        VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"/>
+                                       VerticalContentAlignment="Center" />
                             </Button>
                             <Separator />
                             <ToggleButton x:Name="btnBold"
