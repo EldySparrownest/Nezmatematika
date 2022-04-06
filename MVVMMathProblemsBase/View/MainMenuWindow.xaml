@@ -1566,9 +1566,7 @@
                                     Command="{Binding PublishCourseCommand}"
                                     Margin="5">
                                 <Label Content="Zveřejnit&#xa;   kurz"
-                                       HorizontalContentAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center" />
+                                       VerticalAlignment="Center"/>
                             </Button>
                             <Separator />
                             <ToggleButton x:Name="btnBold"
@@ -1816,7 +1814,7 @@
                                       Grid.Column="0"
                                       Grid.Row="3"
                                       SelectedValue="{Binding CurrentAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      ItemsSource="{Binding CurrentMathProblem.CorrectAnswers}"
+                                      ItemsSource="{Binding TempAnswers}"
                                       IsSynchronizedWithCurrentItem="True">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
@@ -1880,7 +1878,7 @@
                                       Grid.Column="1"
                                       Grid.Row="3"
                                       SelectedValue="{Binding CurrentSolutionStepText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      ItemsSource="{Binding CurrentMathProblem.SolutionSteps}"
+                                      ItemsSource="{Binding TempSolutionStepsTexts}"
                                       IsSynchronizedWithCurrentItem="True"
                                       Margin="10,0,0,0">
                                 <ListView.ItemTemplate>

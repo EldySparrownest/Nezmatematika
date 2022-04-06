@@ -733,7 +733,9 @@ namespace Nezmatematika.View
         private void LoadMathProblemCollections(TextRange trCodeMode)
         {
             vM.CurrentMathProblem.CorrectAnswers = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
-            vM.TempSolutionStepsTexts = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
+            vM.ReloadTempAnswers();
+            vM.CurrentMathProblem.SolutionSteps = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
+            vM.ReloadTempSolutionSteps();
         }
 
         private List<string> ParseTaggedTextIntoList(string textToParse, string tagItemName)
@@ -752,7 +754,7 @@ namespace Nezmatematika.View
             try
             {
                 textToParse = textToParse.Substring(textToParse.IndexOf(collectionOpenTag));
-                textToParse = textToParse.Substring(0, textToParse.IndexOf(collectionCloseTag) - 1);
+                textToParse = textToParse.Substring(0, textToParse.IndexOf(collectionCloseTag));
                 textToParse = textToParse.Replace(collectionOpenTag, "");
 
                 while (textToParse.Contains(itemOpenTag) && textToParse.Contains(itemCloseTag))
@@ -837,7 +839,13 @@ namespace Nezmatematika.View
             };
 
             if (openFileDialog.ShowDialog() == true)
+            {
+                foreach (var item in dicTeacherTagRTB)
+                {
+                    item.Value.Document.Blocks.Clear();
+                }
                 LoadMathProblemFromFile(openFileDialog.FileName, dicTeacherTagRTB, true);
+            }
         }
 
         private void btnExportProblem_Click(object sender, RoutedEventArgs e)

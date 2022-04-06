@@ -27,8 +27,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.TempSolutionStepsTexts.Add(parameter.ToString());
-            MMVM.ReloadSolutionSteps();
+            MMVM.CurrentMathProblem.SolutionSteps.Add(parameter.ToString());
+            MMVM.ReloadTempSolutionSteps();
             MMVM.TempSolutionStepText = string.Empty;
         }
     }

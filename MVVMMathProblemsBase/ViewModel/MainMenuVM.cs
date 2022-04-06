@@ -1224,29 +1224,17 @@ namespace Nezmatematika.ViewModel
             CourseEditorMathProblemUserModeVis = Visibility.Visible;
         }
 
-        public void ReloadCorrectAnswers()
-        {
-            CurrentMathProblem.CorrectAnswers.Clear();
-            CurrentMathProblem.CorrectAnswers = new ObservableCollection<string>(TempAnswers);
-        }
-
         public void ReloadTempAnswers()
         {
             TempAnswers.Clear();
             TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
         }
 
-        public void ReplaceInTempAnswers(string oldAnswer, string newAnswer)
+        public void ReplaceInCurrentProblemCorrectAnswers(string oldAnswer, string newAnswer)
         {
-            var replacingAt = TempAnswers.IndexOf(oldAnswer);
+            var replacingAt = CurrentMathProblem.CorrectAnswers.IndexOf(oldAnswer);
             if (replacingAt > -1)
-                TempAnswers[replacingAt] = newAnswer;
-        }
-
-        public void ReloadSolutionSteps()
-        {
-            CurrentMathProblem.SolutionSteps.Clear();
-            CurrentMathProblem.SolutionSteps = new ObservableCollection<string>(TempSolutionStepsTexts);
+                CurrentMathProblem.CorrectAnswers[replacingAt] = newAnswer;
         }
 
         public void ReloadTempSolutionSteps()
@@ -1255,11 +1243,11 @@ namespace Nezmatematika.ViewModel
             TempSolutionStepsTexts = new ObservableCollection<string>(CurrentMathProblem.SolutionSteps);
         }
 
-        public void ReplaceInTempSolutionSteps(string oldStepText, string newStepText)
+        public void ReplaceInCurrentProblemSolutionSteps(string oldStepText, string newStepText)
         {
-            var replacingAt = TempSolutionStepsTexts.IndexOf(oldStepText);
+            var replacingAt = CurrentMathProblem.SolutionSteps.IndexOf(oldStepText);
             if (replacingAt > -1)
-                TempSolutionStepsTexts[replacingAt] = newStepText;
+                CurrentMathProblem.SolutionSteps[replacingAt] = newStepText;
         }
 
         public void PublishCurrentCourse()
