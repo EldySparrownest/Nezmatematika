@@ -6,23 +6,20 @@ namespace Nezmatematika.Model
 {
     class MathProblemFactory
     {
-        public IMathProblem Create(Course course, bool capitalisationMatters, string problemType = "základní")
+        public MathProblem Create(Course course, bool capitalisationMatters)
         {
-            IMathProblem mathProblem;
-            switch (problemType)
+            var id = NewMathProblemId();
+            var mathProblem = new MathProblem
             {
-                default:
-                    mathProblem = new MathProblem();
-                    ((MathProblem)mathProblem).SolutionSteps = new ObservableCollection<string>();
-                    ((MathProblem)mathProblem).CorrectAnswers = new ObservableCollection<string>();
-                    break;
-            }
-            mathProblem.Id = NewMathProblemId();
-            mathProblem.DirPath = course.RelDirPath;
-            mathProblem.RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{mathProblem.Id}.rtf");
-            mathProblem.Index = course.Problems.Count;
+                Id = id,
+                RelDirPath = course.RelDirPath,
+                RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{id}.rtf"),
+                Index = course.Problems.Count,
+                CapitalisationMatters = capitalisationMatters,
+                CorrectAnswers = new ObservableCollection<string>(),
+                SolutionSteps = new ObservableCollection<string>()
+            };
             mathProblem.SetSimplifiedOrderLabel();
-            mathProblem.CapitalisationMatters = capitalisationMatters;
             return mathProblem;
         }
 
@@ -30,8 +27,8 @@ namespace Nezmatematika.Model
         {
             var mathProblem = new MathProblem();
             mathProblem.Id = serialisedMathProblem.Id;
-            mathProblem.DirPath = serialisedMathProblem.DirPath;
-            mathProblem.RelFilePath = serialisedMathProblem.FilePath;
+            mathProblem.RelDirPath = serialisedMathProblem.RelDirPath;
+            mathProblem.RelFilePath = serialisedMathProblem.RelFilePath;
 
             mathProblem.Index = serialisedMathProblem.Index;
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
@@ -47,8 +44,8 @@ namespace Nezmatematika.Model
         {
             var serialisedMathProblem = new MathProblemSerialisable();
             serialisedMathProblem.Id = mathProblem.Id;
-            serialisedMathProblem.DirPath = mathProblem.DirPath;
-            serialisedMathProblem.FilePath = mathProblem.RelFilePath;
+            serialisedMathProblem.RelDirPath = mathProblem.RelDirPath;
+            serialisedMathProblem.RelFilePath = mathProblem.RelFilePath;
 
             serialisedMathProblem.Index = mathProblem.Index;
             serialisedMathProblem.OrderLabel = mathProblem.OrderLabel;

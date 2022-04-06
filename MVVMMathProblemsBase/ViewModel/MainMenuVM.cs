@@ -1143,7 +1143,7 @@ namespace Nezmatematika.ViewModel
         private bool CheckUserCourseDataExists() => CurrentUser.CoursesData.Find(c => c.CourseId == CurrentCourse?.Id && c.Version == CurrentCourse?.Version) != null;
         private void CreateUserCourseData(DateTime startTime)
         {
-            CurrentUserCourseData = new UserCourseData(CurrentCourse, CurrentUser.UserBase.Id, startTime);
+            CurrentUserCourseData = new UserCourseData(CurrentCourse, startTime);
             CurrentUser.CoursesData.Add(CurrentUserCourseData);
         }
         public bool CheckIfAnswerIsCorrect(string answerToCheck) => CurrentMathProblem.CheckAnswerIsCorrect(answerToCheck);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nezmatematika.Model;
+using System;
 using System.Windows.Input; // for ICommand
 
 namespace Nezmatematika.ViewModel.Commands

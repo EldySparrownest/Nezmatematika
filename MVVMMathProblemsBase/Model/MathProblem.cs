@@ -7,10 +7,10 @@ using System.Windows.Documents;
 
 namespace Nezmatematika.Model
 {
-    public class MathProblem : IMathProblem, INotifyPropertyChanged
+    public class MathProblem : INotifyPropertyChanged
     {
         public string Id { get; set; }
-        public string DirPath { get; set; }
+        public string RelDirPath { get; set; }
         public string RelFilePath { get; set; }
         public int Index { get; set; }
         public string OrderLabel { get; set; }

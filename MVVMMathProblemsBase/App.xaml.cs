@@ -14,8 +14,6 @@ namespace Nezmatematika
     {
         public static User AppUser = null;
 
-        //private static string myBaseDirectory = Environment.CurrentDirectory;
-        //private static string myBaseDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "HopefulSparrow", "Nezmatematika");
         private static string myBaseDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HopefulSparrow", "Nezmatematika");
         public static string MyBaseDirectory { get { return myBaseDirectory; } }
 

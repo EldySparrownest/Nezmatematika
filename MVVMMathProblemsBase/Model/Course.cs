@@ -76,8 +76,7 @@ namespace Nezmatematika.Model
 
         public void AddNewMathProblem(bool capitalisationMatters)
         {
-            var mathProblemFactory = new MathProblemFactory();
-            Problems.Add((MathProblem)mathProblemFactory.Create(this, capitalisationMatters, "základní"));
+            Problems.Add(new MathProblemFactory().Create(this, capitalisationMatters));
         }
 
         private void UpdateProblemIndexesAndOrderLabels()
@@ -223,7 +222,7 @@ namespace Nezmatematika.Model
 
             foreach (var mathProblem in Problems)
             {
-                mathProblem.DirPath = RelDirPath;
+                mathProblem.RelDirPath = RelDirPath;
                 mathProblem.RelFilePath = Path.Combine(newCoursesDir, courseDirName, $"{mathProblem.Id}.rtf");
             }
         }

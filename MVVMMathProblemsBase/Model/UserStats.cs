@@ -12,7 +12,7 @@ namespace Nezmatematika.Model
     {
         //student only
         [XmlIgnore]
-        public TimeSpan TimeTakingCourses;
+        public TimeSpan TimeTakingCourses { get; set; }
 
         // XmlSerializer does not support TimeSpan, so use this property for serialization instead.
         [Browsable(false)]
@@ -29,19 +29,19 @@ namespace Nezmatematika.Model
             }
         }
 
-        public int AnswersSentTotal;
-        public int ProblemsSolvedTotal;
-        public int ProblemsSolvedFirstTry;
-        public int ProblemsSolvedFirstTryNoHints;
-        public int HintsDisplayed;
-        public int CoursesStarted;
-        public int CoursesCompleted;
+        public int AnswersSentTotal { get; set; }
+        public int ProblemsSolvedTotal { get; set; }
+        public int ProblemsSolvedFirstTry { get; set; }
+        public int ProblemsSolvedFirstTryNoHints { get; set; }
+        public int HintsDisplayed { get; set; }
+        public int CoursesStarted { get; set; }
+        public int CoursesCompleted { get; set; }
 
         //teacher only
-        public int ProblemsPublished;
-        public int CoursesCreated;
-        public int VersionsPublished;
-        public int UniqueCoursesPublished;
+        public int ProblemsPublished { get; set; }
+        public int CoursesCreated { get; set; }
+        public int VersionsPublished { get; set; }
+        public int UniqueCoursesPublished { get; set; }
 
         public UserStats()
         {

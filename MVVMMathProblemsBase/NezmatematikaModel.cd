@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Nezmatematika.Model.Course">
+    <Position X="9.75" Y="4.75" Width="2.5" />
+    <Members>
+      <Method Name="AddNewMathProblem" Hidden="true" />
+      <Method Name="ArchiveCourse" Hidden="true" />
+      <Method Name="CopyAllCourseFiles" Hidden="true" />
+      <Method Name="Course" Hidden="true" />
+      <Method Name="Delete" Hidden="true" />
+      <Method Name="NewCourseId" Hidden="true" />
+      <Method Name="OnPropertyChanged" Hidden="true" />
+      <Method Name="PrepForExport" Hidden="true" />
+      <Field Name="problems" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Method Name="PublishCourse" Hidden="true" />
+      <Method Name="Read" Hidden="true" />
+      <Method Name="Save" Hidden="true" />
+      <Method Name="UpdatePathsToAdjustForMovingFiles" Hidden="true" />
+      <Method Name="UpdateProblemIndexesAndOrderLabels" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Problems" Type="Nezmatematika.Model.MathProblem" FixedFromPoint="true">
+      <Path>
+        <Point X="12.25" Y="5.688" />
+        <Point X="15.5" Y="5.688" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAiAoAAIABAAgAAoBgIAhAioAEIAAwAAAAAQAAAAEQ=</HashCode>
+      <FileName>Model\Course.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Problems" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Nezmatematika.Model.CourseSerialisable" Collapsed="true">
+    <Position X="9.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAiAoAAIAAAAAAAgAAIAAAiIAEAAAwAAAAAQAAAAAA=</HashCode>
+      <FileName>Model\CourseSerialisable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.GlobalValues">
+    <Position X="19" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAA=</HashCode>
+      <FileName>Model\GlobalValues.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.MathProblem" BaseTypeListCollapsed="true">
+    <Position X="15.5" Y="4.75" Width="2.5" />
+    <Members>
+      <Method Name="GetCorrectAnswersInOneString" Hidden="true" />
+      <Method Name="CheckAnswerIsCorrect" Hidden="true" />
+      <Method Name="OnPropertyChanged" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Method Name="SaveContents" Hidden="true" />
+      <Method Name="SetSimplifiedOrderLabel" Hidden="true" />
+      <Method Name="TrimAndPruneCorrectAnswers" Hidden="true" />
+      <Method Name="ValidateMathProblem" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACACAEwAgUIBAAIAAAAACAsAAAABgEAAEIAAAAAAA=</HashCode>
+      <FileName>Model\MathProblem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Nezmatematika.Model.MathProblemFactory" Collapsed="true">
+    <Position X="14.25" Y="3.5" Width="3.75" />
+    <Members>
+      <Method Name="Create" Hidden="true" />
+      <Method Name="CreateFromMathProblem" Hidden="true" />
+      <Method Name="CreateFromSerialised" Hidden="true" />
+      <Method Name="NewMathProblemId" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAABAAAAAAAEAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\MathProblemFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.MathProblemSerialisable" Collapsed="true">
+    <Position X="15.5" Y="8.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAgAAUAAAAAAAAAAAAIAAAABgAAAEIAAAAAAA=</HashCode>
+      <FileName>Model\MathProblemSerialisable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.MySettings">
+    <Position X="8.5" Y="0.5" Width="2.5" />
+    <Members>
+      <Method Name="Read" Hidden="true" />
+      <Method Name="Save" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gCAACIAIBAAUAAAAAABAAAAgAAAAAABAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\MySettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.User">
+    <Position X="1.75" Y="0.5" Width="3.5" />
+    <Members>
+      <Method Name="ReadCoursesData" Hidden="true" />
+      <Method Name="ReadStats" Hidden="true" />
+      <Method Name="SaveCoursesData" Hidden="true" />
+      <Method Name="SaveDataAndStats" Hidden="true" />
+      <Method Name="SaveStats" Hidden="true" />
+      <Method Name="User" Hidden="true" />
+    </Members>
+    <AssociationLine Name="CoursesData" Type="Nezmatematika.Model.UserCourseData" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.062" Y="1.368" />
+        <Point X="5.062" Y="1.561" />
+        <Point X="7.125" Y="1.561" />
+        <Point X="7.125" Y="2" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAACAABAAAAgAAAABAAAAEABAAAAAAAAAQ=</HashCode>
+      <FileName>Model\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UserBase" />
+      <Property Name="UserStats" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CoursesData" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Nezmatematika.Model.UserBase">
+    <Position X="0.5" Y="2" Width="1.75" />
+    <Members>
+      <Method Name="Edit" Hidden="true" />
+      <Method Name="NewId" Hidden="true" />
+      <Method Name="UpdateDisplayName" Hidden="true" />
+      <Method Name="UserBase" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAACEFAAAADABAAAAAAAAAAAAAAACAACEAAAAAAAAAg=</HashCode>
+      <FileName>Model\UserBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.UserCourseData">
+    <Position X="5.5" Y="2" Width="2.5" />
+    <Members>
+      <Method Name="AddNewVisibleStepsCounter" Hidden="true" />
+      <Method Name="GetIndexToResumeOn" Hidden="true" />
+      <Method Name="GetIsProblemSolved" Hidden="true" />
+      <Method Name="Read" Hidden="true" />
+      <Method Name="RecordStepReveal" Hidden="true" />
+      <Method Name="RecordStudentAnswer" Hidden="true" />
+      <Method Name="Save" Hidden="true" />
+      <Method Name="UpdateAfterCorrectAnswer" Hidden="true" />
+      <Method Name="UpdateAfterIncorrectAnswer" Hidden="true" />
+      <Method Name="UpdateAtSessionEnd" Hidden="true" />
+      <Method Name="UpdateAtSessionStart" Hidden="true" />
+      <Method Name="UpdateWhenCourseCompleted" Hidden="true" />
+      <Method Name="UserCourseData" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>MAQUYIAAYAACAhIQAoAAAIDgAQAAAAAAAABCAAAAEGg=</HashCode>
+      <FileName>Model\UserCourseData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nezmatematika.Model.UserStats">
+    <Position X="2.5" Y="2" Width="2.75" />
+    <Members>
+      <Method Name="AnswerSentUpdate" Hidden="true" />
+      <Method Name="CourseCompletedUpdate" Hidden="true" />
+      <Method Name="CourseCreatedUpdate" Hidden="true" />
+      <Method Name="CoursePublishedUpdate" Hidden="true" />
+      <Method Name="GetAsDictionary" Hidden="true" />
+      <Method Name="GetDisplayableTimeTakingCourses" Hidden="true" />
+      <Method Name="HintDisplayedUpdate" Hidden="true" />
+      <Method Name="NewCourseStartedUpdate" Hidden="true" />
+      <Method Name="Read" Hidden="true" />
+      <Method Name="Save" Hidden="true" />
+      <Method Name="SessionEndUpdate" Hidden="true" />
+      <Method Name="UserStats" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QEAAEIgABAQAgBFAAAUABAAigYAAAAEABAAAQIAAAAA=</HashCode>
+      <FileName>Model\UserStats.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Nezmatematika.Model.PublishingStatus">
+    <Position X="11.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Model\PublishingStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

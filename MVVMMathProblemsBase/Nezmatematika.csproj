@@ -97,7 +97,6 @@
     <Compile Include="Model\Course.cs" />
     <Compile Include="Model\CourseSerialisable.cs" />
     <Compile Include="Model\GlobalValues.cs" />
-    <Compile Include="Model\IMathProblem.cs" />
     <Compile Include="Model\MathProblemFactory.cs" />
     <Compile Include="Model\MathProblemSerialisable.cs" />
     <Compile Include="Model\MySettings.cs" />
@@ -185,6 +184,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="NezmatematikaModel.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
