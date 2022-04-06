@@ -1059,7 +1059,7 @@
                                     Margin="5">
                             <TextBlock Text="Odpovědi úlohy rozlišují malá a velká písmena (výchozí hodnota): " />
                             <CheckBox x:Name="cbSCapitalisationMatters"
-                                      IsChecked="{Binding Settings.CapitalisationMatters}" />
+                                      IsChecked="{Binding Settings.CapitalisationMatters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                         <StackPanel Name="spSDefaultFontFamily"
                                     Grid.Row="5"
@@ -1807,7 +1807,8 @@
                                         Grid.Row="2">
                                 <Label Content="Odpovědi rozlišují velká a malá písmena: "
                                        VerticalAlignment="Center" />
-                                <CheckBox IsChecked="{Binding CurrentMathProblem.CapitalisationMatters}"
+                                <CheckBox x:Name="cbProblemCapitalisation"
+                                          IsChecked="{Binding CurrentMathProblem.CapitalisationMatters}"
                                           VerticalAlignment="Center" />
                             </StackPanel>
 

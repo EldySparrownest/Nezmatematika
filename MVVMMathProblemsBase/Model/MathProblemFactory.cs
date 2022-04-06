@@ -6,7 +6,7 @@ namespace Nezmatematika.Model
 {
     class MathProblemFactory
     {
-        public IMathProblem Create(Course course, bool capitalisation, string problemType = "základní")
+        public IMathProblem Create(Course course, bool capitalisationMatters, string problemType = "základní")
         {
             IMathProblem mathProblem;
             switch (problemType)
@@ -22,7 +22,7 @@ namespace Nezmatematika.Model
             mathProblem.RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{mathProblem.Id}.rtf");
             mathProblem.Index = course.Problems.Count;
             mathProblem.SetSimplifiedOrderLabel();
-            mathProblem.CapitalisationMatters = capitalisation;
+            mathProblem.CapitalisationMatters = capitalisationMatters;
             return mathProblem;
         }
 
@@ -37,6 +37,7 @@ namespace Nezmatematika.Model
             mathProblem.OrderLabel = serialisedMathProblem.OrderLabel;
             mathProblem.ProblemText = serialisedMathProblem.ProblemText;
             mathProblem.ProblemQuestion = serialisedMathProblem.ProblemQuestion;
+            mathProblem.CapitalisationMatters = serialisedMathProblem.CapitalisationMatters;
             mathProblem.CorrectAnswers = new ObservableCollection<string>(serialisedMathProblem.CorrectAnswers);
             mathProblem.SolutionSteps = new ObservableCollection<string>(serialisedMathProblem.SolutionSteps);
             return mathProblem;
@@ -53,6 +54,7 @@ namespace Nezmatematika.Model
             serialisedMathProblem.OrderLabel = mathProblem.OrderLabel;
             serialisedMathProblem.ProblemText = mathProblem.ProblemText;
             serialisedMathProblem.ProblemQuestion = mathProblem.ProblemQuestion;
+            serialisedMathProblem.CapitalisationMatters = mathProblem.CapitalisationMatters;
             serialisedMathProblem.CorrectAnswers = mathProblem.CorrectAnswers.ToList();
             serialisedMathProblem.SolutionSteps = mathProblem.SolutionSteps.ToList();
             return serialisedMathProblem;

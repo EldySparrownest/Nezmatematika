@@ -569,6 +569,8 @@ namespace Nezmatematika.View
                 newdocument = AddRTBContentWithTagsToFlowDoc(newdocument, tagRTBPair.Key, tagRTBPair.Value);
             }
 
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("\n"));
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(WrapBoolInTags(cbProblemCapitalisation.IsChecked == true, "CapitalisationMatters")));
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Answer", vM.CurrentMathProblem.CorrectAnswers)));
             newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Step", vM.CurrentMathProblem.SolutionSteps)));
 
@@ -579,7 +581,7 @@ namespace Nezmatematika.View
         {
             originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"<{tagName}>"));
             AddDocument(rtb.Document, originalFlowDoc);
-            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"</{tagName}>\n"));
+            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"</{tagName}>"));
             return originalFlowDoc;
         }
 
@@ -588,6 +590,12 @@ namespace Nezmatematika.View
             return $"<{itemTagName}s>\n"
                 + string.Join("\n", collection.Select(s => $"<{itemTagName}>{s}</{itemTagName}>"))
                 + $"\n</{itemTagName}s>\n";
+        }
+
+        private string WrapBoolInTags(bool value, string tagName)
+        {
+            var textBool = value ? "true" : "false";
+            return $"<{tagName}>{textBool}</{tagName}>\n";
         }
 
         public static void AddDocument(FlowDocument from, FlowDocument to)
@@ -661,12 +669,15 @@ namespace Nezmatematika.View
             RTBWithFcs.CaretPosition = RTBWithFcs.CaretPosition.GetPositionAtOffset(textToInsert.Length);
         }
 
-        private void LoadMathProblemFromFile(string filepath, Dictionary<string, RichTextBox> tagRTBDictionary, bool loadCollections = false)
+        private void LoadMathProblemFromFile(string filepath, Dictionary<string, RichTextBox> tagRTBDictionary, bool loadForEditor = false)
         {
             var trCodeMode = LoadRTBCodeModeContentFromFile(filepath);
             LoadMathProblemIntoRTBs(trCodeMode, tagRTBDictionary);
-            if (loadCollections)
+            if (loadForEditor)
+            {
                 LoadMathProblemCollections(trCodeMode);
+                LoadCapitalisation(trCodeMode);
+            }
         }
 
         private TextRange LoadRTBCodeModeContentFromFile(string filepath)
@@ -754,10 +765,31 @@ namespace Nezmatematika.View
             }
             catch (Exception)
             {
-
                 throw;
             }
+        }
+        
+        private void LoadCapitalisation(TextRange trCodeMode)
+        {
+            cbProblemCapitalisation.IsChecked = ParseTaggedBool(trCodeMode.Text, "CapitalisationMatters");
+        }
 
+        private bool ParseTaggedBool(string textToParse, string tagName)
+        {
+            var itemOpenTag = $"<{tagName}>";
+            var itemCloseTag = $"</{tagName}>";
+            try
+            {
+                textToParse = textToParse.Substring(textToParse.IndexOf(itemOpenTag));
+                textToParse = textToParse.Substring(0, textToParse.IndexOf(itemCloseTag));
+                textToParse = textToParse.Replace(itemOpenTag, "");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+            return textToParse.ToLower() == "true";
         }
 
         private void btnPublishCourse_Click(object sender, RoutedEventArgs e)

@@ -30,7 +30,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             var index = MMVM.CurrentMathProblem.Index;
-            File.Delete(MMVM.CurrentMathProblem.RelFilePath);
+            File.Delete(Path.Combine(App.MyBaseDirectory, MMVM.CurrentMathProblem.RelFilePath));
             MMVM.CurrentCourse.Problems.RemoveAt(index);
             MMVM.CurrentCourse.Save();
             if (index == MMVM.CurrentCourse.Problems.Count)
