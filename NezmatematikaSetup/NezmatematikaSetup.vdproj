@@ -639,15 +639,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
-        "ProductCode" = "8:{CB0606AC-CBFD-4742-ADFC-6ECEB271B3DE}"
-        "PackageCode" = "8:{2D661909-F6B1-4C90-BC5B-3131DC416784}"
+        "ProductCode" = "8:{D90E31F6-3B53-415F-9077-952BB675D976}"
+        "PackageCode" = "8:{84560E46-8699-48BF-A0E8-51DC74F18928}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.8.2"
+        "ProductVersion" = "8:0.8.3"
         "Manufacturer" = "8:HopefulSparrow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1175,7 +1175,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_480CDFF80C1546E39001172A6EDE294F"
             {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\obj\\Debug\\Nezmatematika.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"

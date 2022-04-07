@@ -733,9 +733,9 @@ namespace Nezmatematika.View
         private void LoadMathProblemCollections(TextRange trCodeMode)
         {
             vM.CurrentMathProblem.CorrectAnswers = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
-            vM.ReloadTempAnswers();
+            vM.PopulateTempAnswersFromCurrentMathProblem();
             vM.CurrentMathProblem.SolutionSteps = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
-            vM.ReloadTempSolutionSteps();
+            vM.PopulateTempSolutionStepsFromCurrentMathProblem();
         }
 
         private List<string> ParseTaggedTextIntoList(string textToParse, string tagItemName)
@@ -807,6 +807,7 @@ namespace Nezmatematika.View
         {
             if (vM.CurrentCourse != null && vM.CurrentMathProblem != null)
             {
+                vM.TeacherNotNullCurrentMathProblemAboutToChange -= ViewModelTeacher_CurrentMathProblemAboutToChange;
                 UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
@@ -817,6 +818,11 @@ namespace Nezmatematika.View
 
                 vM.SaveCurrentCourse();
                 vM.SaveCurrentMathProblem(contents);
+                
+                var curMathProblem = vM.CurrentMathProblem;
+                vM.PopulateTempMathProblemsFromCurrentCourse();
+                vM.CurrentMathProblem = curMathProblem;
+                vM.TeacherNotNullCurrentMathProblemAboutToChange += ViewModelTeacher_CurrentMathProblemAboutToChange;
             }
         }
 

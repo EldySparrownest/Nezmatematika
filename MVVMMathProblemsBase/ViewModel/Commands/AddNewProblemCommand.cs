@@ -25,8 +25,10 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            var index = MMVM.CurrentMathProblem.Index;
             MMVM.CurrentCourse.AddNewMathProblem(MMVM.Settings.CapitalisationMatters);
             MMVM.PopulateTempMathProblemsFromCurrentCourse();
+            MMVM.CurrentMathProblem = MMVM.CurrentCourse.Problems[index];
         }
     }
 }

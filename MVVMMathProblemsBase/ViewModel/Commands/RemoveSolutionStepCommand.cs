@@ -26,7 +26,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.CurrentMathProblem.SolutionSteps.Remove(MMVM.CurrentSolutionStepText);
-            MMVM.ReloadTempSolutionSteps();
+            MMVM.PopulateTempSolutionStepsFromCurrentMathProblem();
         }
     }
 }

@@ -41,12 +41,14 @@ namespace Nezmatematika.Model
         private static string NewMathProblemId()
             => string.Join("", Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
 
-        public void SaveContents(TextRange contents, string filePath, string dirPath)
+        public void SaveContents(IEnumerable<string> answers, IEnumerable<string> steps, TextRange contents)
         {
+            CorrectAnswers = new List<string>(answers);
+            SolutionSteps = new List<string>(steps);
+            TrimAndPruneCorrectAnswers();
             try
             {
-                Directory.CreateDirectory(dirPath);
-                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                FileStream fileStream = new FileStream(Path.Combine(App.MyBaseDirectory, RelFilePath), FileMode.Create);
                 contents.Save(fileStream, DataFormats.Rtf);
                 fileStream.Close();
             }
@@ -55,6 +57,7 @@ namespace Nezmatematika.Model
                 MessageBox.Show(e.Message);
             }
         }
+
         public void SetSimplifiedOrderLabel() => OrderLabel = $"{Index + 1}.";
 
         public void TrimAndPruneCorrectAnswers()

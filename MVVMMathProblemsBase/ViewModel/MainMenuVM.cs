@@ -1022,28 +1022,9 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveCurrentMathProblem(TextRange textRange)
         {
-            SaveMathProblem(CurrentMathProblem, textRange);
+            CurrentMathProblem.SaveContents(TempAnswers, TempSolutionStepsTexts, textRange);
             PopulateTempAnswersFromCurrentMathProblem();
             PopulateTempSolutionStepsFromCurrentMathProblem();
-            var curMathProblem = CurrentMathProblem;
-            PopulateTempMathProblemsFromCurrentCourse();
-            CurrentMathProblem = curMathProblem;
-        }
-        public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
-        {
-            mathProblem.CorrectAnswers = new List<string>(TempAnswers);
-            mathProblem.SolutionSteps = new List<string>(TempSolutionStepsTexts);
-            mathProblem.TrimAndPruneCorrectAnswers();
-            try
-            {
-                FileStream fileStream = new FileStream(Path.Combine(App.MyBaseDirectory, mathProblem.RelFilePath), FileMode.Create);
-                textRange.Save(fileStream, DataFormats.Rtf);
-                fileStream.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
         }
         public void ArchiveLastUsedUsers()
         {
@@ -1245,23 +1226,11 @@ namespace Nezmatematika.ViewModel
                 TempMathProblems = new ObservableCollection<MathProblem>(CurrentCourse.Problems);
         }
 
-        public void ReloadTempAnswers()
-        {
-            TempAnswers.Clear();
-            TempAnswers = new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers);
-        }
-
         public void ReplaceInCurrentProblemCorrectAnswers(string oldAnswer, string newAnswer)
         {
             var replacingAt = CurrentMathProblem.CorrectAnswers.IndexOf(oldAnswer);
             if (replacingAt > -1)
                 CurrentMathProblem.CorrectAnswers[replacingAt] = newAnswer;
-        }
-
-        public void ReloadTempSolutionSteps()
-        {
-            TempSolutionStepsTexts.Clear();
-            TempSolutionStepsTexts = new ObservableCollection<string>(CurrentMathProblem.SolutionSteps);
         }
 
         public void ReplaceInCurrentProblemSolutionSteps(string oldStepText, string newStepText)

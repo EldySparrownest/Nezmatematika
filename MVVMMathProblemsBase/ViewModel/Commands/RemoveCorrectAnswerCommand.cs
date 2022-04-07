@@ -26,7 +26,7 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.CurrentMathProblem.CorrectAnswers.Remove(parameter.ToString());
-            MMVM.ReloadTempAnswers();
+            MMVM.PopulateTempAnswersFromCurrentMathProblem();
         }
     }
 }
