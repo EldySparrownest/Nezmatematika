@@ -146,9 +146,9 @@ namespace Nezmatematika.View
 
         private void ResetCourseEditor(object sender, RoutedEventArgs e)
         {
-            var settingsLoadedProperly = !(vM.Settings == null);
-            var initFontFamily = (settingsLoadedProperly && !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily)) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
-            var initFontSize = (settingsLoadedProperly && vM.Settings.DefaultFontSize != 0) ? vM.Settings.DefaultFontSize : 16;
+            var settingsLoadedProperly = !(vM.CurrentSettings == null);
+            var initFontFamily = (settingsLoadedProperly && !String.IsNullOrEmpty(vM.CurrentSettings.DefaultFontFamily)) ? new FontFamily(vM.CurrentSettings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            var initFontSize = (settingsLoadedProperly && vM.CurrentSettings.DefaultFontSize != 0) ? vM.CurrentSettings.DefaultFontSize : 16;
 
             cbEditorFontFamily.SelectedItem = initFontFamily;
             cbEditorFontSize.Text = initFontSize.ToString();
@@ -181,7 +181,7 @@ namespace Nezmatematika.View
 
         private void ViewModelTeacher_CurrentMathProblemAboutToChange(object sender, EventArgs e)
         {
-            if (vM.Settings.AutosaveProblemWhenSwitching && App.WhereInApp == WhereInApp.CourseEditor)
+            if (vM.CurrentSettings.AutosaveProblemWhenSwitching && App.WhereInApp == WhereInApp.CourseEditor)
             {
                 btnSaveCourse_Click(sender, new RoutedEventArgs());
             }
@@ -634,8 +634,8 @@ namespace Nezmatematika.View
 
         private void LoadComboBoxesForSettings(object sender, RoutedEventArgs e)
         {
-            cbSEditorFontFamily.SelectedItem = !String.IsNullOrEmpty(vM.Settings.DefaultFontFamily) ? new FontFamily(vM.Settings.DefaultFontFamily) : new FontFamily("Cambria Math");
-            int fontSize = vM.Settings.DefaultFontSize != 0 ? vM.Settings.DefaultFontSize : 16;
+            cbSEditorFontFamily.SelectedItem = !String.IsNullOrEmpty(vM.CurrentSettings.DefaultFontFamily) ? new FontFamily(vM.CurrentSettings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            int fontSize = vM.CurrentSettings.DefaultFontSize != 0 ? vM.CurrentSettings.DefaultFontSize : 16;
             cbSEditorFontSize.SelectedItem = fontSize;
             cbSEditorFontSize.Text = fontSize.ToString();
         }
@@ -798,7 +798,7 @@ namespace Nezmatematika.View
         {
             if (vM.CurrentCourse != null)
             {
-                if (vM.Settings.AutosaveCourseBeforePublishing)
+                if (vM.CurrentSettings.AutosaveCourseBeforePublishing)
                     btnSaveCourse_Click(sender, e);
             }
         }

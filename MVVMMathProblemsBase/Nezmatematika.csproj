@@ -95,8 +95,8 @@
     </ApplicationDefinition>
     <Compile Include="Model\PublishingStatus.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\GlobalValues.cs" />
-    <Compile Include="Model\MySettings.cs" />
+    <Compile Include="GlobalValues.cs" />
+    <Compile Include="Model\UserSettings.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserBase.cs" />
     <Compile Include="Model\UserCourseData.cs" />

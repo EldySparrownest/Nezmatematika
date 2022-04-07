@@ -26,6 +26,9 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            if (App.WhereInApp == WhereInApp.Settings)
+                MMVM.LoadCurrentSettingsForCurrentUser();
+            
             if (MMVM.IsInStudentMode == true && App.WhereInApp == WhereInApp.CourseForStudent)
             {
                 MMVM.CurrentUserCourseData.UpdateAtSessionEnd(out TimeSpan sessionDuration);

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Nezmatematika.Model.Course">
-    <Position X="9.75" Y="4.75" Width="2.5" />
+    <Position X="15.75" Y="1.25" Width="2.5" />
     <Members>
       <Method Name="AddNewMathProblem" Hidden="true" />
       <Method Name="ArchiveCourse" Hidden="true" />
@@ -20,35 +20,65 @@
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Events" Collapsed="true" />
     </Compartments>
+    <AssociationLine Name="Problems" Type="Nezmatematika.Model.MathProblem" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.25" Y="2.712" />
+        <Point X="19.5" Y="2.712" />
+        <Point X="19.5" Y="3.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.99" Y="0.443" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PublishingStatus" Type="Nezmatematika.Model.PublishingStatus" FixedFromPoint="true">
+      <Path>
+        <Point X="16.375" Y="4.469" />
+        <Point X="16.375" Y="5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.315" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>IAAiAoAAIABAAgAAgBgIAhAiIAEIAAwAAAAAQAAAAAQ=</HashCode>
       <FileName>Model\Course.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PublishingStatus" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Problems" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Nezmatematika.Model.GlobalValues">
-    <Position X="19" Y="0.5" Width="1.75" />
+    <Position X="6.75" Y="0.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAA=</HashCode>
-      <FileName>Model\GlobalValues.cs</FileName>
+      <FileName>GlobalValues.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.MathProblem" BaseTypeListCollapsed="true">
-    <Position X="15.5" Y="4.75" Width="2.5" />
+    <Position X="18.5" Y="3.25" Width="2.5" />
     <Members>
       <Method Name="GetCorrectAnswersInOneString" Hidden="true" />
       <Method Name="CheckAnswerIsCorrect" Hidden="true" />
+      <Method Name="MathProblem" Hidden="true" />
+      <Method Name="NewMathProblemId" Hidden="true" />
       <Method Name="SaveContents" Hidden="true" />
       <Method Name="SetSimplifiedOrderLabel" Hidden="true" />
       <Method Name="TrimAndPruneCorrectAnswers" Hidden="true" />
       <Method Name="ValidateMathProblem" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAACACAEwAgUBBAAAAAAAACAIAAAABgEAAEIAAAAAAA=</HashCode>
       <FileName>Model\MathProblem.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Nezmatematika.Model.MySettings">
-    <Position X="8.5" Y="0.5" Width="2.5" />
+  <Class Name="Nezmatematika.Model.UserSettings">
+    <Position X="8" Y="2.5" Width="3" />
     <Members>
       <Method Name="Read" Hidden="true" />
       <Method Name="Save" Hidden="true" />
@@ -57,15 +87,15 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>gCAACIAIBAAUAAAAAABAAAAgAAAAAABAIAAAAAAAAAA=</HashCode>
-      <FileName>Model\MySettings.cs</FileName>
+      <HashCode>ACAACIAIBAAUAAAAAABAAAAgAAAAAABAIAAAAAAAAAA=</HashCode>
+      <FileName>Model\UserSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.User">
-    <Position X="1.75" Y="0.5" Width="3.5" />
+    <Position X="1.75" Y="0.75" Width="3.5" />
     <Members>
       <Method Name="ReadCoursesData" Hidden="true" />
-      <Method Name="ReadStats" Hidden="true" />
+      <Method Name="ReadSettings" Hidden="true" />
       <Method Name="SaveCoursesData" Hidden="true" />
       <Method Name="SaveDataAndStats" Hidden="true" />
       <Method Name="SaveStats" Hidden="true" />
@@ -73,18 +103,17 @@
     </Members>
     <AssociationLine Name="CoursesData" Type="Nezmatematika.Model.UserCourseData" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="5.062" Y="1.368" />
+        <Point X="5.062" Y="2.056" />
         <Point X="5.062" Y="1.561" />
-        <Point X="7.125" Y="1.561" />
-        <Point X="7.125" Y="2" />
+        <Point X="6.625" Y="1.561" />
+        <Point X="6.625" Y="2.25" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAACAABAAAAgAAAABAAAAEABAAAAAAAAAQ=</HashCode>
+      <HashCode>QgAAAAACAAAACAAhAAAAgAAAABAAAAEABAAAAAAAAAQ=</HashCode>
       <FileName>Model\User.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="UserBase" />
       <Property Name="UserStats" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
@@ -92,7 +121,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Nezmatematika.Model.UserBase">
-    <Position X="0.5" Y="2" Width="1.75" />
+    <Position X="12" Y="2.5" Width="1.75" />
     <Members>
       <Method Name="Edit" Hidden="true" />
       <Method Name="NewId" Hidden="true" />
@@ -108,7 +137,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.UserCourseData">
-    <Position X="5.5" Y="2" Width="2.5" />
+    <Position X="5" Y="2.25" Width="2.5" />
     <Members>
       <Method Name="AddNewVisibleStepsCounter" Hidden="true" />
       <Method Name="GetIndexToResumeOn" Hidden="true" />
@@ -133,7 +162,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.UserStats">
-    <Position X="2.5" Y="2" Width="2.75" />
+    <Position X="1.75" Y="2.5" Width="2.75" />
     <Members>
       <Method Name="AnswerSentUpdate" Hidden="true" />
       <Method Name="CourseCompletedUpdate" Hidden="true" />
@@ -157,7 +186,7 @@
     </TypeIdentifier>
   </Class>
   <Enum Name="Nezmatematika.Model.PublishingStatus">
-    <Position X="11.5" Y="0.5" Width="1.75" />
+    <Position X="16" Y="5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAQA=</HashCode>
       <FileName>Model\PublishingStatus.cs</FileName>

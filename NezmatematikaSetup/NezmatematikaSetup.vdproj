@@ -88,6 +88,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -113,12 +119,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -639,15 +639,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
-        "ProductCode" = "8:{D90E31F6-3B53-415F-9077-952BB675D976}"
-        "PackageCode" = "8:{84560E46-8699-48BF-A0E8-51DC74F18928}"
+        "ProductCode" = "8:{13057280-01A9-4F21-B880-77237B0BFA34}"
+        "PackageCode" = "8:{EFA17177-DF93-422B-972B-3A5A2433D715}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.8.3"
+        "ProductVersion" = "8:0.8.4"
         "Manufacturer" = "8:HopefulSparrow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1175,7 +1175,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_480CDFF80C1546E39001172A6EDE294F"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\MVVMMathProblemsBase\\obj\\Release\\Nezmatematika.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"

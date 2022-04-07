@@ -5,9 +5,8 @@ using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
-    public class MySettings
+    public class UserSettings
     {
-        public UserBase ThisUser { get; set; }
         public bool HasCourseToContinue { get; set; }
         public Color MainBackgroundColour { get; set; }
         public Color SecondaryBackgroundColour { get; set; }
@@ -24,14 +23,14 @@ namespace Nezmatematika.Model
 
         public void Save(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(MySettings), this);
+            XmlHelper.Save(fullFilePath, typeof(UserSettings), this);
         }
-        public static MySettings Read(string filename)
+        public static UserSettings Read(string filename)
         {
             using (StreamReader sr = new StreamReader(filename))
             {
-                XmlSerializer xmls = new XmlSerializer(typeof(MySettings));
-                return xmls.Deserialize(sr) as MySettings;
+                XmlSerializer xmls = new XmlSerializer(typeof(UserSettings));
+                return xmls.Deserialize(sr) as UserSettings;
             }
         }
     }

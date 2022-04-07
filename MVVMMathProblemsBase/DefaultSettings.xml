@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MySettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<UserSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LastStudentUser>
   </LastStudentUser>
   <LastTeacherUser>
@@ -31,4 +31,4 @@
   <CapitalisationMatters>false</CapitalisationMatters>
   <DefaultFontFamily>Cambria Math</DefaultFontFamily>
   <DefaultFontSize>16</DefaultFontSize>
-</MySettings>
+</UserSettings>

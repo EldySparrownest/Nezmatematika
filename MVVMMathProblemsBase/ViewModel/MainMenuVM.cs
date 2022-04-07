@@ -75,14 +75,14 @@ namespace Nezmatematika.ViewModel
             }
         }
 
-        private MySettings settings;
-        public MySettings Settings
+        private UserSettings currentSettings;
+        public UserSettings CurrentSettings
         {
-            get { return settings; }
-            private set
+            get { return currentSettings; }
+            set
             {
-                settings = value;
-                OnPropertyChanged("Settings");
+                currentSettings = value;
+                OnPropertyChanged("CurrentSettings");
             }
         }
         #endregion SettingsValues
@@ -201,7 +201,7 @@ namespace Nezmatematika.ViewModel
                     if (EditUserVis == Visibility.Visible)
                         PopulateUserTempValues(CurrentUser.UserBase);
                 }
-                LoadSettingsForCurrentUser();
+                LoadCurrentSettingsForCurrentUser();
                 ReloadCurrentUserStats();
                 OnPropertyChanged("CurrentUser");
             }
@@ -801,7 +801,7 @@ namespace Nezmatematika.ViewModel
         public MainMenuVM()
         {
             IsInStudentMode = App.AppMode == AppMode.Student;
-            LoadDefaultSettings();
+            CurrentSettings = GetDefaultSettings();
             AllUserBasesList = new ObservableCollection<UserBase>();
             GetListOfAllUsers();
             SetLastUsedUserFromAllUsers();
@@ -881,11 +881,8 @@ namespace Nezmatematika.ViewModel
         #endregion Constructors
 
         #region SettingAndLoadingMethods
-        public void LoadDefaultSettings()
-        {
-            if (File.Exists(_DefaultSettingsFullPath))
-                this.Settings = MySettings.Read(_DefaultSettingsFullPath);
-        }
+        public UserSettings GetDefaultSettings() => File.Exists(_DefaultSettingsFullPath) ? UserSettings.Read(_DefaultSettingsFullPath) : new UserSettings();
+
         public void SetLastUsedUserFromAllUsers()
         {
             if (AllUserBasesList.Count >= 1)
@@ -902,25 +899,32 @@ namespace Nezmatematika.ViewModel
         }
         public void SetCurrentUserFromUserBase(UserBase userBase)
         {
-            CurrentUser = userBase == null ? null : new User(userBase, GetFullPath(FullPathOptions.FileUserCoursesData, userBase), GetFullPath(FullPathOptions.FileUserStats, userBase));
+            CurrentUser = userBase == null ? null : new User(userBase, GetFullPath(FullPathOptions.FileUserCoursesData, userBase), GetFullPath(FullPathOptions.FileUserSettings, userBase), GetFullPath(FullPathOptions.FileUserStats, userBase));
         }
         public void SetCurrentUserToLastUsedUser()
         {
             var userBase = IsInStudentMode ? LastStudentUserBase : LastTeacherUserBase;
             SetCurrentUserFromUserBase(userBase);
         }
-        public void LoadSettingsForCurrentUser()
+        public void LoadCurrentSettingsForCurrentUser()
         {
-            var settingsPath = CurrentUser != null ? GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase) : _DefaultSettingsFullPath;
-            if (File.Exists(settingsPath))
-                this.Settings = MySettings.Read(settingsPath);
+            if (CurrentUser != null)
+            {
+                var userSettingsPath = GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase);
+                if (File.Exists(userSettingsPath))
+                {
+                    CurrentSettings = UserSettings.Read(userSettingsPath);
+                    return;
+                }
+            }
+            CurrentSettings = GetDefaultSettings();
         }
         public void UpdateAbilityToContinueCourse()
         {
-            var oldValue = Settings.HasCourseToContinue;
-            Settings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
-            if (oldValue != Settings.HasCourseToContinue)
-                SaveUserSettings();
+            var oldValue = CurrentSettings.HasCourseToContinue;
+            CurrentSettings.HasCourseToContinue = IsInStudentMode ? true : TeacherCoursesToContinueList.Count > 0;
+            if (oldValue != CurrentSettings.HasCourseToContinue)
+                SaveCurrentSettingsForCurrentUser();
         }
         public void OpenCurrentCourseForStudent()
         {
@@ -987,18 +991,15 @@ namespace Nezmatematika.ViewModel
         #endregion SettingAndLoadingMethods
 
         #region SavingMethods
-        public void SaveUserSettings()
+        public void SaveCurrentSettingsForCurrentUser()
         {
-            Settings.Save(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
+            CurrentSettings.Save(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
+            CurrentUser.ReadSettings(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
         }
         public void CreateNewUser(string titBef, string fName, string lName, string titAft, string sName, string cName)
         {
             CurrentUser = new User(titBef, fName, lName, titAft, sName, cName);
-
-            this.Settings.ThisUser = CurrentUser.UserBase;
-            this.Settings.HasCourseToContinue = false;
             RestoreDefaultSettingsForCurrentUser();
-            SaveUserSettings();
             AllUserBasesList.Add(CurrentUser.UserBase);
             SaveUserList();
             UserBasesOfTypeList.Add(CurrentUser.UserBase);
@@ -1053,7 +1054,7 @@ namespace Nezmatematika.ViewModel
         public void BackToMainMenu()
         {
             if (App.WhereInApp == WhereInApp.Settings)
-                LoadSettingsForCurrentUser();
+                LoadCurrentSettingsForCurrentUser();
 
             App.WhereInApp = WhereInApp.MainMenu;
 
@@ -1097,10 +1098,11 @@ namespace Nezmatematika.ViewModel
         }
         public void RestoreDefaultSettingsForCurrentUser()
         {
-            var usersNewSettings = MySettings.Read(_DefaultSettingsFullPath);
-            usersNewSettings.HasCourseToContinue = this.Settings.HasCourseToContinue;
-            usersNewSettings.Save(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
-            LoadSettingsForCurrentUser();
+            var usersNewSettings = GetDefaultSettings();
+            usersNewSettings.HasCourseToContinue = CurrentSettings.HasCourseToContinue;
+            CurrentUser.UserSettings = usersNewSettings;
+            CurrentUser.SaveSettings(GetFullPath(FullPathOptions.FileUserSettings, CurrentUser.UserBase));
+            LoadCurrentSettingsForCurrentUser();
         }
         public void ClearUserTempValues()
         {
@@ -1154,7 +1156,7 @@ namespace Nezmatematika.ViewModel
 
             }
             else
-                CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, Settings.RequeueOnMistake);
+                CurrentUserCourseData.UpdateAfterIncorrectAnswer(CurrentMathProblem.Index, CurrentSettings.RequeueOnMistake);
 
             var firstTry = CurrentMathProblemIndex < CurrentCourse.Problems.Count;
             var withoutHints = SolutionStepsShownToStudent.Count == 0;
@@ -1195,7 +1197,7 @@ namespace Nezmatematika.ViewModel
         public void CreateNewCourse()
         {
             CurrentCourse = new Course(CurrentUser.UserBase, TempCourseTitle);
-            CurrentCourse.AddNewMathProblem(Settings.CapitalisationMatters);
+            CurrentCourse.AddNewMathProblem(CurrentSettings.CapitalisationMatters);
             CurrentMathProblem = CurrentCourse.Problems[0];
             CurrentUser.UserStats.CourseCreatedUpdate();
             SaveDataAndStats();

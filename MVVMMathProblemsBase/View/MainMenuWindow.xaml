@@ -21,7 +21,7 @@
     <Grid x:Name="gridMain"
           DataContext="{StaticResource vm}"
           Background="{Binding Converter={StaticResource nullColorToSolidColorBrush},
-                               Path=Settings.MainBackgroundColour,
+                               Path=CurrentSettings.MainBackgroundColour,
                                Mode=TwoWay}">
         <DockPanel DataContext="{StaticResource vm}">
             <Grid x:Name="gridMainMenu"
@@ -927,7 +927,7 @@
                 </Grid>
                 <Grid x:Name="gridSettings"
                       Background="{Binding Converter={StaticResource nullColorToSolidColorBrush},
-                               Path=Settings.SecondaryBackgroundColour,
+                               Path=CurrentSettings.SecondaryBackgroundColour,
                                Mode=TwoWay}"
                       Visibility="{Binding SettingsVis}"
                       Grid.Column="1"
@@ -1019,7 +1019,7 @@
                                     Margin="5">
                             <TextBlock Text="Na závěr opakovat úlohy s chybou: " />
                             <CheckBox x:Name="cbSRequeueProblemsOnMistake"
-                                      IsChecked="{Binding Settings.RequeueOnMistake}" />
+                                      IsChecked="{Binding CurrentSettings.RequeueOnMistake}" />
                         </StackPanel>
                     </Grid>
                     <Grid x:Name="gridTeacherSettings"
@@ -1043,7 +1043,7 @@
                                     Margin="5">
                             <TextBlock Text="Automaticky ukládat úlohy při přepínání: " />
                             <CheckBox x:Name="cbSAutosaveProblems"
-                                      IsChecked="{Binding Settings.AutosaveProblemWhenSwitching}" />
+                                      IsChecked="{Binding CurrentSettings.AutosaveProblemWhenSwitching}" />
                         </StackPanel>
                         <StackPanel Name="spSAutosaveCoursesBeforePublishing"
                                     Grid.Row="2"
@@ -1051,7 +1051,7 @@
                                     Margin="5">
                             <TextBlock Text="Automaticky ukládat kurzy před zveřejněním: " />
                             <CheckBox x:Name="cbSAutosaveCoursesBeforePublishing"
-                                      IsChecked="{Binding Settings.AutosaveCourseBeforePublishing}" />
+                                      IsChecked="{Binding CurrentSettings.AutosaveCourseBeforePublishing}" />
                         </StackPanel>
                         <StackPanel Name="spSCapitalisationMatters"
                                     Grid.Row="3"
@@ -1059,7 +1059,7 @@
                                     Margin="5">
                             <TextBlock Text="Odpovědi úlohy rozlišují malá a velká písmena (výchozí hodnota): " />
                             <CheckBox x:Name="cbSCapitalisationMatters"
-                                      IsChecked="{Binding Settings.CapitalisationMatters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding CurrentSettings.CapitalisationMatters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                         <StackPanel Name="spSDefaultFontFamily"
                                     Grid.Row="5"
@@ -1070,12 +1070,12 @@
                             <ComboBox x:Name="cbSEditorFontFamily"
                                       MaxHeight="25"
                                       Width="150"
-                                      Text="{Binding Settings.DefaultFontFamily, UpdateSourceTrigger=PropertyChanged}" />
+                                      Text="{Binding CurrentSettings.DefaultFontFamily, UpdateSourceTrigger=PropertyChanged}" />
                             <ComboBox x:Name="cbSEditorFontSize"
                                       MaxHeight="25"
                                       Width="50"
                                       IsEditable="True"
-                                      Text="{Binding Settings.DefaultFontSize, UpdateSourceTrigger=PropertyChanged}" />
+                                      Text="{Binding CurrentSettings.DefaultFontSize, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </Grid>
                     <StackPanel Orientation="Horizontal"

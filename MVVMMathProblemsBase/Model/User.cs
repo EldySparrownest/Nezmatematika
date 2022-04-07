@@ -8,6 +8,7 @@ namespace Nezmatematika.Model
     public class User
     {
         public UserBase UserBase { get; set; }
+        public UserSettings UserSettings {get; set;}
         public UserStats UserStats { get; set; }
         public List<UserCourseData> CoursesData { get; set; }
 
@@ -22,14 +23,16 @@ namespace Nezmatematika.Model
         {
             UserBase = new UserBase(titBef, fName, lName, titAft, sName, cName);
             CoursesData = new List<UserCourseData>();
+            UserSettings = new UserSettings();
             UserStats = new UserStats();
         }
 
-        public User(UserBase userBase, string coursesDataFilename, string statsFilename)
+        public User(UserBase userBase, string coursesDataFilename, string settingsFullFilePath, string statsFullFilePath)
         {
             UserBase = userBase;
             ReadCoursesData(coursesDataFilename);
-            ReadStats(statsFilename);
+            ReadSettings(settingsFullFilePath);
+            ReadStats(statsFullFilePath);
         }
 
         public void SaveDataAndStats(string coursesDataFilename, string statsFilename)
@@ -41,6 +44,10 @@ namespace Nezmatematika.Model
         public void SaveCoursesData(string coursesDataFilename)
         {
             XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);
+        }
+        public void SaveSettings(string fullFilePath)
+        {
+            XmlHelper.Save(fullFilePath, typeof(UserSettings), UserSettings);
         }
         public void SaveStats(string statsFilename)
         {
@@ -58,6 +65,10 @@ namespace Nezmatematika.Model
                 }
             }
             else CoursesData = new List<UserCourseData>();
+        }
+        public void ReadSettings(string fullFilePath)
+        {
+            UserSettings = File.Exists(fullFilePath) ? UserSettings.Read(fullFilePath) : new UserSettings();
         }
         public void ReadStats(string statsFilename)
         {

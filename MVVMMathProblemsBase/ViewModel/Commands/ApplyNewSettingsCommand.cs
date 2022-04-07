@@ -25,7 +25,7 @@ namespace Nezmatematika.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.SaveUserSettings();
+            MMVM.SaveCurrentSettingsForCurrentUser();
         }
     }
 }
