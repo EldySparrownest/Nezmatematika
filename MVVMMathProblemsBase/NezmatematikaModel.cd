@@ -9,10 +9,7 @@
       <Method Name="Course" Hidden="true" />
       <Method Name="Delete" Hidden="true" />
       <Method Name="NewCourseId" Hidden="true" />
-      <Method Name="OnPropertyChanged" Hidden="true" />
       <Method Name="PrepForExport" Hidden="true" />
-      <Field Name="problems" Hidden="true" />
-      <Event Name="PropertyChanged" Hidden="true" />
       <Method Name="PublishCourse" Hidden="true" />
       <Method Name="Read" Hidden="true" />
       <Method Name="Save" Hidden="true" />
@@ -23,25 +20,9 @@
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Events" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="Problems" Type="Nezmatematika.Model.MathProblem" FixedFromPoint="true">
-      <Path>
-        <Point X="12.25" Y="5.688" />
-        <Point X="15.5" Y="5.688" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>IAAiAoAAIABAAgAAoBgIAhAioAEIAAwAAAAAQAAAAEQ=</HashCode>
+      <HashCode>IAAiAoAAIABAAgAAgBgIAhAiIAEIAAwAAAAAQAAAAAQ=</HashCode>
       <FileName>Model\Course.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Problems" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Nezmatematika.Model.CourseSerialisable" Collapsed="true">
-    <Position X="9.75" Y="8.5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>IAAiAoAAIAAAAAAAgAAIAAAiIAEAAAwAAAAAQAAAAAA=</HashCode>
-      <FileName>Model\CourseSerialisable.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.GlobalValues">
@@ -56,40 +37,14 @@
     <Members>
       <Method Name="GetCorrectAnswersInOneString" Hidden="true" />
       <Method Name="CheckAnswerIsCorrect" Hidden="true" />
-      <Method Name="OnPropertyChanged" Hidden="true" />
-      <Event Name="PropertyChanged" Hidden="true" />
       <Method Name="SaveContents" Hidden="true" />
       <Method Name="SetSimplifiedOrderLabel" Hidden="true" />
       <Method Name="TrimAndPruneCorrectAnswers" Hidden="true" />
       <Method Name="ValidateMathProblem" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAACACAEwAgUIBAAIAAAAACAsAAAABgEAAEIAAAAAAA=</HashCode>
+      <HashCode>AAACACAEwAgUBBAAAAAAAACAIAAAABgEAAEIAAAAAAA=</HashCode>
       <FileName>Model\MathProblem.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Nezmatematika.Model.MathProblemFactory" Collapsed="true">
-    <Position X="14.25" Y="3.5" Width="3.75" />
-    <Members>
-      <Method Name="Create" Hidden="true" />
-      <Method Name="CreateFromMathProblem" Hidden="true" />
-      <Method Name="CreateFromSerialised" Hidden="true" />
-      <Method Name="NewMathProblemId" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAgAAAAAAAABAAAAAAAEAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\MathProblemFactory.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Nezmatematika.Model.MathProblemSerialisable" Collapsed="true">
-    <Position X="15.5" Y="8.25" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAACACAAgAAUAAAAAAAAAAAAIAAAABgAAAEIAAAAAAA=</HashCode>
-      <FileName>Model\MathProblemSerialisable.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.MySettings">

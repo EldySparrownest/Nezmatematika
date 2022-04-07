@@ -95,10 +95,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\PublishingStatus.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\CourseSerialisable.cs" />
     <Compile Include="Model\GlobalValues.cs" />
-    <Compile Include="Model\MathProblemFactory.cs" />
-    <Compile Include="Model\MathProblemSerialisable.cs" />
     <Compile Include="Model\MySettings.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserBase.cs" />

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.ObjectModel; // for ObservableCollection
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows; // for Visibility
 using System.Windows.Documents;
 
 namespace Nezmatematika.Model
 {
-    public class MathProblem : INotifyPropertyChanged
+    public class MathProblem
     {
         public string Id { get; set; }
         public string RelDirPath { get; set; }
@@ -17,29 +16,30 @@ namespace Nezmatematika.Model
         public string ProblemText { get; set; }
         public string ProblemQuestion { get; set; }
         public bool CapitalisationMatters { get; set; }
+        public List<string> CorrectAnswers { get; set; }
+        public List<string> SolutionSteps { get; set; }
 
-        private ObservableCollection<string> correctAnswers { get; set; }
-        public ObservableCollection<string> CorrectAnswers
+        public MathProblem()
         {
-            get { return correctAnswers; }
-            set
-            {
-                correctAnswers = value;
-                OnPropertyChanged("CorrectAnswers");
-            }
-        }
-        private ObservableCollection<string> solutionSteps { get; set; }
-        public ObservableCollection<string> SolutionSteps
-        {
-            get { return solutionSteps; }
-            set
-            {
-                solutionSteps = value;
-                OnPropertyChanged("SolutionSteps");
-            }
+            Id = NewMathProblemId();
+            CorrectAnswers = new List<string>();
+            SolutionSteps = new List<string>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public MathProblem(Course course, bool capitalisationMatters)
+        {
+            Id = NewMathProblemId();
+            RelDirPath = course.RelDirPath;
+            RelFilePath = System.IO.Path.Combine(course.RelDirPath, $"{Id}.rtf");
+            Index = course.Problems.Count;
+            CapitalisationMatters = capitalisationMatters;
+            CorrectAnswers = new List<string>();
+            SolutionSteps = new List<string>();
+            SetSimplifiedOrderLabel();
+        }
+
+        private static string NewMathProblemId()
+            => string.Join("", Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
 
         public void SaveContents(TextRange contents, string filePath, string dirPath)
         {
@@ -59,7 +59,7 @@ namespace Nezmatematika.Model
 
         public void TrimAndPruneCorrectAnswers()
         {
-            var trimmedAndPruned = new ObservableCollection<string>();
+            var trimmedAndPruned = new List<string>();
 
             for (int i = 0; i < CorrectAnswers.Count; i++)
             {
@@ -99,10 +99,5 @@ namespace Nezmatematika.Model
         }
 
         public string GetCorrectAnswersInOneString() => string.Join("   ", CorrectAnswers);
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

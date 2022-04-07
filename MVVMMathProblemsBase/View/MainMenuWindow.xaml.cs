@@ -732,9 +732,9 @@ namespace Nezmatematika.View
 
         private void LoadMathProblemCollections(TextRange trCodeMode)
         {
-            vM.CurrentMathProblem.CorrectAnswers = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
+            vM.CurrentMathProblem.CorrectAnswers = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
             vM.ReloadTempAnswers();
-            vM.CurrentMathProblem.SolutionSteps = new ObservableCollection<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
+            vM.CurrentMathProblem.SolutionSteps = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
             vM.ReloadTempSolutionSteps();
         }
 
@@ -807,8 +807,6 @@ namespace Nezmatematika.View
         {
             if (vM.CurrentCourse != null && vM.CurrentMathProblem != null)
             {
-                vM.CurrentMathProblem.CorrectAnswers = vM.TempAnswers;
-
                 UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);

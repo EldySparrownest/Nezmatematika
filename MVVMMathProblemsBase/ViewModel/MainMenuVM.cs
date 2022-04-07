@@ -962,7 +962,7 @@ namespace Nezmatematika.ViewModel
         public void PopulateTempMathProblemsFromCurrentCourse()
         {
             TempMathProblems = (CurrentCourse != null && CurrentCourse.Problems != null) ? new ObservableCollection<MathProblem>(CurrentCourse.Problems) : new ObservableCollection<MathProblem>();
-        }
+         }
         public void PopulateTempAnswersFromCurrentMathProblem()
         {
             TempAnswers = (CurrentMathProblem != null && CurrentMathProblem.CorrectAnswers != null) ? new ObservableCollection<string>(CurrentMathProblem.CorrectAnswers) : new ObservableCollection<string>();
@@ -1031,8 +1031,8 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveMathProblem(MathProblem mathProblem, TextRange textRange)
         {
-            mathProblem.CorrectAnswers = new ObservableCollection<string>(TempAnswers);
-            mathProblem.SolutionSteps = new ObservableCollection<string>(TempSolutionStepsTexts);
+            mathProblem.CorrectAnswers = new List<string>(TempAnswers);
+            mathProblem.SolutionSteps = new List<string>(TempSolutionStepsTexts);
             mathProblem.TrimAndPruneCorrectAnswers();
             try
             {

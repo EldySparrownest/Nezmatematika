@@ -1,9 +1,9 @@
 ﻿using Nezmatematika.ViewModel.Helpers;
 using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace Nezmatematika.Model
 {
@@ -15,48 +15,22 @@ namespace Nezmatematika.Model
         public PublishingStatus PublishingStatus { get; set; }
         public DateTime LastPublished { get; set; }
         public int PublishedProblemCount { get; set; }
-        public int Version { get; private set; }
+        public int Version { get; set; }
         public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
         public string RelDirPath { get; set; }
         public string RelFilePath { get; set; }
+        public List<MathProblem> Problems { get; set; }
 
-        private ObservableCollection<MathProblem> problems;
-        public ObservableCollection<MathProblem> Problems
+        public Course()
         {
-            get { return problems; }
-            set
-            {
-                problems = value;
-                OnPropertyChanged("Problems");
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Course(CourseSerialisable serialisedCourse)
-        {
-            RelDirPath = serialisedCourse.RelDirPath;
-            RelFilePath = serialisedCourse.RelFilePath;
-            Author = serialisedCourse.Author;
-            Id = serialisedCourse.Id;
-            Version = serialisedCourse.Version;
-            Created = serialisedCourse.Created;
-            LastPublished = serialisedCourse.LastPublished;
-            LastOpened = serialisedCourse.LastOpened;
-            LastEdited = serialisedCourse.LastEdited;
-            TimeSpentEditing = serialisedCourse.TimeSpentEditing;
-            PublishingStatus = serialisedCourse.PublishingStatus;
-            CourseTitle = serialisedCourse.CourseTitle;
-            Problems = new ObservableCollection<MathProblem>();
-
-            var factory = new MathProblemFactory();
-            foreach (var problem in serialisedCourse.Problems)
-            {
-                Problems.Add(factory.CreateFromSerialised(problem));
-            }
+            Created = DateTime.Now;
+            LastOpened = DateTime.Now;
+            LastEdited = DateTime.Now;
+            TimeSpentEditing = TimeSpan.Zero;
+            Problems = new List<MathProblem>();
         }
         public Course(UserBase author, string title)
         {
@@ -66,7 +40,7 @@ namespace Nezmatematika.Model
             RelDirPath = Path.Combine(FilePathHelper._TeacherCoursesRelDirPath(Author), Id);
             RelFilePath = Path.Combine(FilePathHelper._TeacherCoursesRelDirPath(Author), $"{Id}{GlobalValues.CourseFilename}");
             CourseTitle = title;
-            Problems = new ObservableCollection<MathProblem>();
+            Problems = new List<MathProblem>();
             Created = DateTime.Now;
             LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
@@ -76,7 +50,7 @@ namespace Nezmatematika.Model
 
         public void AddNewMathProblem(bool capitalisationMatters)
         {
-            Problems.Add(new MathProblemFactory().Create(this, capitalisationMatters));
+            Problems.Add(new MathProblem(this, capitalisationMatters));
         }
 
         private void UpdateProblemIndexesAndOrderLabels()
@@ -98,7 +72,7 @@ namespace Nezmatematika.Model
             TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
 
-            new CourseSerialisable(this).Save();
+            XmlHelper.Save(Path.Combine(App.MyBaseDirectory, RelFilePath), typeof(Course), this);
         }
 
         public void PublishCourse(string publishedCoursesRelDirPath, string archivedCoursesRelDirPath, out int problemCountChange)
@@ -142,7 +116,7 @@ namespace Nezmatematika.Model
         {
             var problemsDirName = $"{courseId}_{courseVersion}";
             var fullOriginalFilePath = Path.Combine(App.MyBaseDirectory, originalParentDirPath, $"{courseId}{GlobalValues.CourseFilename}");
-            var course = Course.Read(fullOriginalFilePath);
+            var course = Read(fullOriginalFilePath);
 
             if (course == null)
                 return;
@@ -246,15 +220,14 @@ namespace Nezmatematika.Model
             }
         }
 
-        public static Course Read(string filename)
+        public static Course Read(string relFilePath)
         {
-            var cs = CourseSerialisable.Read(filename);
-            return new Course(cs);
-        }
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var fullFilePath = Path.Combine(App.MyBaseDirectory, relFilePath);
+            using (StreamReader sw = new StreamReader(fullFilePath))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(Course));
+                return xmls.Deserialize(sw) as Course;
+            }
         }
     }
 }
