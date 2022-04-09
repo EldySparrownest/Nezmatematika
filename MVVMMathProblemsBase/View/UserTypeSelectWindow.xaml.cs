@@ -21,7 +21,7 @@ namespace Nezmatematika.View
         {
             App.AppMode = isInStudentMode ? AppMode.Student : AppMode.Teacher;
             MainMenuWindow mainMenuWindow = new MainMenuWindow();
-
+            App.WhereInApp = WhereInApp.MainMenu;
             mainMenuWindow.Show();
             this.Close();
         }

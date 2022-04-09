@@ -21,7 +21,7 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return MMVM.EditCourseVis == Visibility.Visible;
+            return App.WhereInApp == WhereInApp.CourseEditor;
         }
 
         public void Execute(object parameter)

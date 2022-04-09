@@ -26,7 +26,6 @@ namespace Nezmatematika.ViewModel.Commands
                 return true;
 
             return false;
-
         }
 
         public void Execute(object parameter)

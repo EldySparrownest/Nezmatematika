@@ -1,5 +1,4 @@
-﻿using Nezmatematika.Model;
-using System;
+﻿using System;
 using System.Windows;
 
 namespace Nezmatematika
@@ -12,8 +11,6 @@ namespace Nezmatematika
     /// </summary>
     public partial class App : Application
     {
-        public static User AppUser = null;
-
         private static string myBaseDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HopefulSparrow", "Nezmatematika");
         public static string MyBaseDirectory { get { return myBaseDirectory; } }
 

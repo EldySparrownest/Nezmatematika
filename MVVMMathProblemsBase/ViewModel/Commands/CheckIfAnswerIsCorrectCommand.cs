@@ -20,6 +20,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (App.WhereInApp != WhereInApp.CourseForStudent)
+                return false;
             string answer = parameter as string;
             if (string.IsNullOrWhiteSpace(answer) || MMVM.CurrentProblemSolved)
                 return false;

@@ -111,7 +111,6 @@
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\EditSolutionStepCommand.cs" />
-    <Compile Include="ViewModel\Commands\FinishTakingCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\OpenCourseForStudentCommand.cs" />
     <Compile Include="ViewModel\Commands\PublishCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewCourseCommand.cs" />

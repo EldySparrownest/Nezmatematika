@@ -21,22 +21,16 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (MMVM.CurrentUser == null)
+                return false;
             if (String.IsNullOrEmpty(MMVM.TempFirstName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempLastName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempSchoolName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempClassName))
-            {
                 return false;
-            }
             return true;
         }
 

@@ -20,6 +20,15 @@
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Events" Collapsed="true" />
     </Compartments>
+    <AssociationLine Name="PublishingStatus" Type="Nezmatematika.Model.PublishingStatus" FixedFromPoint="true">
+      <Path>
+        <Point X="16.375" Y="4.469" />
+        <Point X="16.375" Y="5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.315" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
     <AssociationLine Name="Problems" Type="Nezmatematika.Model.MathProblem" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="18.25" Y="2.712" />
@@ -28,15 +37,6 @@
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.99" Y="0.443" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="PublishingStatus" Type="Nezmatematika.Model.PublishingStatus" FixedFromPoint="true">
-      <Path>
-        <Point X="16.375" Y="4.469" />
-        <Point X="16.375" Y="5" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.315" Y="0.143" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -49,13 +49,6 @@
     <ShowAsCollectionAssociation>
       <Property Name="Problems" />
     </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Nezmatematika.Model.GlobalValues">
-    <Position X="6.75" Y="0.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAA=</HashCode>
-      <FileName>GlobalValues.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.MathProblem" BaseTypeListCollapsed="true">
     <Position X="18.5" Y="3.25" Width="2.5" />
@@ -78,7 +71,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.UserSettings">
-    <Position X="8" Y="2.5" Width="3" />
+    <Position X="1.25" Y="5.5" Width="3" />
     <Members>
       <Method Name="Read" Hidden="true" />
       <Method Name="Save" Hidden="true" />
@@ -91,22 +84,38 @@
       <FileName>Model\UserSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Nezmatematika.Model.User">
-    <Position X="1.75" Y="0.75" Width="3.5" />
+  <Class Name="Nezmatematika.Model.User" Collapsed="true">
+    <Position X="1.25" Y="1" Width="2.5" />
     <Members>
       <Method Name="ReadCoursesData" Hidden="true" />
       <Method Name="ReadSettings" Hidden="true" />
+      <Method Name="ReadStats" Hidden="true" />
       <Method Name="SaveCoursesData" Hidden="true" />
       <Method Name="SaveDataAndStats" Hidden="true" />
+      <Method Name="SaveSettings" Hidden="true" />
       <Method Name="SaveStats" Hidden="true" />
       <Method Name="User" Hidden="true" />
     </Members>
-    <AssociationLine Name="CoursesData" Type="Nezmatematika.Model.UserCourseData" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="UserStats" Type="Nezmatematika.Model.UserStats" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="5.062" Y="2.056" />
-        <Point X="5.062" Y="1.561" />
-        <Point X="6.625" Y="1.561" />
-        <Point X="6.625" Y="2.25" />
+        <Point X="3.75" Y="1.438" />
+        <Point X="4.75" Y="1.438" />
+        <Point X="4.75" Y="2" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CoursesData" Type="Nezmatematika.Model.UserCourseData" FixedFromPoint="true">
+      <Path>
+        <Point X="3.75" Y="1.312" />
+        <Point X="6.5" Y="1.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.223" Y="0.09" Height="0.182" Width="2.361" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="UserSettings" Type="Nezmatematika.Model.UserSettings" FixedFromPoint="true">
+      <Path>
+        <Point X="3.25" Y="1.562" />
+        <Point X="3.25" Y="5.5" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -115,13 +124,15 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="UserStats" />
+      <Property Name="UserBase" />
+      <Property Name="UserSettings" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="CoursesData" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Nezmatematika.Model.UserBase">
-    <Position X="12" Y="2.5" Width="1.75" />
+    <Position X="1.25" Y="2" Width="1.75" />
     <Members>
       <Method Name="Edit" Hidden="true" />
       <Method Name="NewId" Hidden="true" />
@@ -137,7 +148,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.UserCourseData">
-    <Position X="5" Y="2.25" Width="2.5" />
+    <Position X="6.5" Y="1" Width="2.25" />
     <Members>
       <Method Name="AddNewVisibleStepsCounter" Hidden="true" />
       <Method Name="GetIndexToResumeOn" Hidden="true" />
@@ -162,7 +173,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Nezmatematika.Model.UserStats">
-    <Position X="1.75" Y="2.5" Width="2.75" />
+    <Position X="3.5" Y="2" Width="2.75" />
     <Members>
       <Method Name="AnswerSentUpdate" Hidden="true" />
       <Method Name="CourseCompletedUpdate" Hidden="true" />

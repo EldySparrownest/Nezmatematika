@@ -22,9 +22,9 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser == null)
-                return false;
             if (!MMVM.IsInStudentMode)
+                return false;
+            if (MMVM.CurrentUser == null)
                 return false;
 
             if (MMVM.CurrentCourse != null)

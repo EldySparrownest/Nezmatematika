@@ -20,7 +20,7 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return App.WhereInApp == WhereInApp.Settings && MMVM.CurrentUser != null;
         }
 
         public void Execute(object parameter)

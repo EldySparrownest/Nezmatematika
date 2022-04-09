@@ -20,6 +20,9 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (App.WhereInApp != WhereInApp.CourseEditor)
+                return false;
+
             return MMVM.CurrentAnswer != null && MMVM.CurrentAnswer == parameter?.ToString();
         }
 

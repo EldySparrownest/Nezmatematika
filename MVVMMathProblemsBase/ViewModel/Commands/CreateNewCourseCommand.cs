@@ -22,7 +22,7 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return (string.IsNullOrEmpty(MMVM.TempCourseTitle) == false);
+            return MMVM.IsInStudentMode == false && string.IsNullOrEmpty(MMVM.TempCourseTitle) == false;
         }
 
         public void Execute(object parameter)

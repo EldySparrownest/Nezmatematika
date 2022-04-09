@@ -1510,7 +1510,7 @@
                                Margin="5" />
                     </Button>
                     <Button x:Name="btnFinishCourse"
-                            Command="{Binding FinishTakingCourseCommand}"
+                            Command="{Binding BackToMainMenuFromAnywhereCommand}"
                             Visibility="{Binding BtnFinishCourseVis}"
                             Grid.Column="3"
                             HorizontalAlignment="Center"

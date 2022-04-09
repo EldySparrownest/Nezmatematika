@@ -776,7 +776,6 @@ namespace Nezmatematika.ViewModel
         public EditCourseCommand EditCourseCommand { get; set; }
         public EditSolutionStepCommand EditSolutionStepCommand { get; set; }
         public EditUserCommand EditUserCommand { get; set; }
-        public FinishTakingCourseCommand FinishTakingCourseCommand { get; set; }
         public MakeStepVisibleCommand MakeStepVisibleCommand { get; set; }
         public OpenCourseForStudentCommand OpenCourseForStudentCommand { get; set; }
         public PrepUserForEditingCommand PrepUserForEditingCommand { get; set; }
@@ -865,7 +864,6 @@ namespace Nezmatematika.ViewModel
             EditCourseCommand = new EditCourseCommand(this);
             EditSolutionStepCommand = new EditSolutionStepCommand(this);
             EditUserCommand = new EditUserCommand(this);
-            FinishTakingCourseCommand = new FinishTakingCourseCommand(this);
             MakeStepVisibleCommand = new MakeStepVisibleCommand(this);
             OpenCourseForStudentCommand = new OpenCourseForStudentCommand(this);
             PrepUserForEditingCommand = new PrepUserForEditingCommand(this);

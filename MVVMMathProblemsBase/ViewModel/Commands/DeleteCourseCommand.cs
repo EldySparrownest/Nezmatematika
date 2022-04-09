@@ -21,6 +21,8 @@ namespace Nezmatematika.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (MMVM.IsInStudentMode == true)
+                return false;
             Course selectedCourse = parameter as Course;
             if (selectedCourse != null)
             {
