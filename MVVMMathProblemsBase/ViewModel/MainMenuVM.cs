@@ -1294,7 +1294,7 @@ namespace Nezmatematika.ViewModel
 
         public void GetUserBasesOfTypeList()
         {
-            var curUserBase = CurrentUser.UserBase;
+            var curUserBase = CurrentUser?.UserBase;
             UserBasesOfTypeList.Clear();
             var resultList = new List<UserBase>();
             foreach (UserBase user in AllUserBasesList)
