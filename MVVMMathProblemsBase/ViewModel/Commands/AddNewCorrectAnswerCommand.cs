@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nezmatematika.Model;
+using System;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class AddNewCorrectAnswerCommand : ICommand
     {
@@ -24,13 +21,15 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return App.WhereInApp == WhereInApp.CourseEditor
+                && MMVM.CurrentMathProblem != null
+                && !String.IsNullOrWhiteSpace(parameter?.ToString());
         }
 
         public void Execute(object parameter)
         {
-            MMVM.TempAnswers.Add(parameter.ToString());
-            MMVM.ReloadCorrectAnswers();
+            MMVM.CurrentMathProblem.CorrectAnswers.Add(parameter.ToString());
+            MMVM.PopulateTempAnswersFromCurrentMathProblem();
             MMVM.TempCorrectAnswer = String.Empty;
         }
     }

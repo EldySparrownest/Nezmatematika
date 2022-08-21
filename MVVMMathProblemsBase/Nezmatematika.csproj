@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Nezmatematika</RootNamespace>
     <AssemblyName>Nezmatematika</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>0.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -59,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -71,20 +72,20 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.1.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.4.2.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.4.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.4.1.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.4.2.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -94,25 +95,22 @@
     </ApplicationDefinition>
     <Compile Include="Model\PublishingStatus.cs" />
     <Compile Include="Model\Course.cs" />
-    <Compile Include="Model\CourseSerialisable.cs" />
-    <Compile Include="Model\GlobalValues.cs" />
-    <Compile Include="Model\IMathProblem.cs" />
-    <Compile Include="Model\MathProblemFactory.cs" />
-    <Compile Include="Model\MathProblemSerialisable.cs" />
-    <Compile Include="Model\MySettings.cs" />
-    <Compile Include="Model\SolutionStep.cs" />
-    <Compile Include="Model\SolutionStepSerialisable.cs" />
-    <Compile Include="Model\TextStyling.cs" />
+    <Compile Include="GlobalValues.cs" />
+    <Compile Include="Model\UserSettings.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserBase.cs" />
     <Compile Include="Model\UserCourseData.cs" />
     <Compile Include="Model\UserStats.cs" />
     <Compile Include="ViewModel\Commands\AddNewCorrectAnswerCommand.cs" />
     <Compile Include="ViewModel\Commands\AddNewProblemCommand.cs" />
+    <Compile Include="ViewModel\Commands\AddNewSolutionStepCommand.cs" />
     <Compile Include="ViewModel\Commands\ApplyNewSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\BackToMainMenuFromAnywhereCommand.cs" />
-    <Compile Include="ViewModel\Commands\BackToMainMenuWithoutSavingSettingsCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayAboutAppCommand.cs" />
+    <Compile Include="ViewModel\Commands\DisplayStatisticsCommand.cs" />
     <Compile Include="ViewModel\Commands\DisplayStudentCoursesToContinue.cs" />
     <Compile Include="ViewModel\Commands\EditCorrectAnswerCommand.cs" />
+    <Compile Include="ViewModel\Commands\EditSolutionStepCommand.cs" />
     <Compile Include="ViewModel\Commands\OpenCourseForStudentCommand.cs" />
     <Compile Include="ViewModel\Commands\PublishCourseCommand.cs" />
     <Compile Include="ViewModel\Commands\CreateNewCourseCommand.cs" />
@@ -130,25 +128,22 @@
     <Compile Include="ViewModel\Commands\CheckIfAnswerIsCorrectCommand.cs" />
     <Compile Include="ViewModel\Commands\PrepUserForEditingCommand.cs" />
     <Compile Include="ViewModel\Commands\RemoveCorrectAnswerCommand.cs" />
+    <Compile Include="ViewModel\Commands\RemoveProblemCommand.cs" />
+    <Compile Include="ViewModel\Commands\RemoveSolutionStepCommand.cs" />
     <Compile Include="ViewModel\Commands\RestoreDefaultSettingsCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchBetweenUserAndCodeModeCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchToNextProblemCommand.cs" />
     <Compile Include="ViewModel\Commands\SwitchToPreviousProblemCommand.cs" />
+    <Compile Include="ViewModel\Helpers\FilePathHelper.cs" />
     <Compile Include="ViewModel\Helpers\TextRangeHelper.cs" />
+    <Compile Include="ViewModel\Helpers\XmlHelper.cs" />
+    <Compile Include="ViewModel\Helpers\ZipHelper.cs" />
     <Compile Include="ViewModel\MainMenuVM.cs" />
-    <Compile Include="ViewModel\MathProblemVM.cs" />
     <Compile Include="ViewModel\UserTypeSelectVM.cs" />
     <Compile Include="ViewModel\ValueConverters\NullableColorToSolidColorBrushConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToFeedackConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToModeNameStringCovnerter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToVisibilityConverter.cs" />
-    <Compile Include="ViewModel\ValueConverters\NullBoolToSolidColorBrushConverter.cs" />
     <Compile Include="ViewModel\ValueConverters\SolidColorBrushToColorConverter.cs" />
     <Compile Include="View\MainMenuWindow.xaml.cs">
       <DependentUpon>MainMenuWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MathProblemWindow.xaml.cs">
-      <DependentUpon>MathProblemWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -158,10 +153,6 @@
       <DependentUpon>UserTypeSelectWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="View\MainMenuWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\MathProblemWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,6 +180,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="NezmatematikaModel.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -215,6 +207,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Logo_500x500.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\small-check-mark-icon-5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\my_red_cross_icon_30x30.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,11 +1,10 @@
 ﻿using Nezmatematika.Model;
 using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class CreateNewCourseCommand : ICommand
+    public class AddNewSolutionStepCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -15,24 +14,23 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public CreateNewCourseCommand(MainMenuVM vm)
+        public AddNewSolutionStepCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return MMVM.IsInStudentMode == false && string.IsNullOrEmpty(MMVM.TempCourseTitle) == false;
+            return App.WhereInApp == WhereInApp.CourseEditor
+                && MMVM.CurrentMathProblem != null
+                && !String.IsNullOrWhiteSpace(parameter.ToString());
         }
 
         public void Execute(object parameter)
         {
-            MMVM.CreateNewCourse();
-            MMVM.MainMenuVis = Visibility.Collapsed;
-            MMVM.NewCourseVis = Visibility.Collapsed;
-            MMVM.EditCourseVis = Visibility.Visible;
-            MMVM.CourseEditorMathProblemUserModeVis = Visibility.Visible;
-            App.WhereInApp = WhereInApp.CourseEditor;
+            MMVM.CurrentMathProblem.SolutionSteps.Add(parameter.ToString());
+            MMVM.PopulateTempSolutionStepsFromCurrentMathProblem();
+            MMVM.TempSolutionStepText = string.Empty;
         }
     }
 }

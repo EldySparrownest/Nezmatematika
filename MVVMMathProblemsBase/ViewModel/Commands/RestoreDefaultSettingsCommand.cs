@@ -1,12 +1,8 @@
-﻿using MVVMMathProblemsBase.Model;
+﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class RestoreDefaultSettingsCommand : ICommand
     {
@@ -26,17 +22,15 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public bool CanExecute(object parameter)
         {
             User user = parameter as User;
-            if (user != null)
-            {
+            if (user != null && user.UserBase != null)
                 return true;
-            }
-            return false;
 
+            return false;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.RestoreDefaultSettingsForCurrentUser();
+            MMVM.CurrentSettings = MMVM.GetDefaultSettings();
         }
     }
 }

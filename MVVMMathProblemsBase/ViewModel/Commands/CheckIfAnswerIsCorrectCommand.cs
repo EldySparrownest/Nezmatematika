@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input; // for ICommand
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class CheckIfAnswerIsCorrectCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
-        
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -24,6 +20,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (App.WhereInApp != WhereInApp.CourseForStudent)
+                return false;
             string answer = parameter as string;
             if (string.IsNullOrWhiteSpace(answer) || MMVM.CurrentProblemSolved)
                 return false;
@@ -32,9 +30,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            string answer = parameter as string;
+            string answer = (parameter as string).Trim();
+            MMVM.CurrentUserCourseData.RecordStudentAnswer(answer);
+            MMVM.CurrentProblemSolved = true;
+
             var isCorrect = MMVM.CheckIfAnswerIsCorrect(answer);
-            MMVM.RespondToAnswer(isCorrect);
+            MMVM.UpdateUCDAndStatsAfterAnswer(isCorrect);
+
+            MMVM.DisplayAnswerFeedback(isCorrect);
+            if (MMVM.IsThisProblemTheLastOne())
+                MMVM.BtnNextToBtnFinish();
         }
     }
 }

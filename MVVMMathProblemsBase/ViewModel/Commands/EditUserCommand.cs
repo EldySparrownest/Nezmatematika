@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class EditUserCommand : ICommand
     {
@@ -25,22 +21,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (MMVM.CurrentUser == null)
+                return false;
             if (String.IsNullOrEmpty(MMVM.TempFirstName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempLastName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempSchoolName))
-            {
                 return false;
-            }
             if (String.IsNullOrEmpty(MMVM.TempClassName))
-            {
                 return false;
-            }
             return true;
         }
 
@@ -49,7 +39,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             MMVM.EditUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.EditUserVis = Visibility.Collapsed;
             MMVM.NewUserVis = Visibility.Visible;
-            MMVM.GetUsersOfTypeList();
+            MMVM.GetUserBasesOfTypeList();
         }
     }
 }

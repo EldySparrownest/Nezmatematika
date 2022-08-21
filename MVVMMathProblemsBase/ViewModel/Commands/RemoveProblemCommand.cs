@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Nezmatematika.Model;
+using System;
+using System.IO;
 using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class AddNewProblemCommand : ICommand
+    public class RemoveProblemCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -13,20 +15,27 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public AddNewProblemCommand(MainMenuVM vm)
+        public RemoveProblemCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return App.WhereInApp == WhereInApp.CourseEditor && MMVM.CurrentCourse != null;
+            if (App.WhereInApp != WhereInApp.CourseEditor)
+                return false;
+
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentCourse.Problems.Count > 1;
         }
 
         public void Execute(object parameter)
         {
             var index = MMVM.CurrentMathProblem.Index;
-            MMVM.CurrentCourse.AddNewMathProblem(MMVM.CurrentSettings.CapitalisationMatters);
+            File.Delete(Path.Combine(App.MyBaseDirectory, MMVM.CurrentMathProblem.RelFilePath));
+            MMVM.CurrentCourse.Problems.RemoveAt(index);
+            MMVM.CurrentCourse.Save();
+            if (index == MMVM.CurrentCourse.Problems.Count)
+                index--;
             MMVM.PopulateTempMathProblemsFromCurrentCourse();
             MMVM.CurrentMathProblem = MMVM.CurrentCourse.Problems[index];
         }

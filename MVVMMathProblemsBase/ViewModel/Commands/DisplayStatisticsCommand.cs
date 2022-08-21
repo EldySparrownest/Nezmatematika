@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class DisplaySettingsCommand : ICommand
+    public class DisplayStatisticsCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -15,7 +15,7 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public DisplaySettingsCommand(MainMenuVM vm)
+        public DisplayStatisticsCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
@@ -32,14 +32,15 @@ namespace Nezmatematika.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
-            App.WhereInApp = WhereInApp.Settings;
+            MMVM.ReloadCurrentUserStats();
+            App.WhereInApp = WhereInApp.Statistics;
 
             if (MMVM.IsInStudentMode == true)
-                MMVM.StudentSettingsVis = Visibility.Visible;
+                MMVM.StudentStatsVis = Visibility.Visible;
             else
-                MMVM.TeacherSettingsVis = Visibility.Visible;
+                MMVM.TeacherStatsVis = Visibility.Visible;
 
-            MMVM.SettingsVis = Visibility.Visible;
+            MMVM.StatsVis = Visibility.Visible;
         }
     }
 }

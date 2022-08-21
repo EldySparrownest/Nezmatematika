@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
-    public class BackToMainMenuWithoutSavingSettingsCommand : ICommand
+    public class DisplayAboutAppCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -18,20 +14,24 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public BackToMainMenuWithoutSavingSettingsCommand(MainMenuVM vm)
+        public DisplayAboutAppCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            if (MMVM.CurrentUser != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.RestoreUserSettings();
-            MMVM.SettingsVis = Visibility.Collapsed;
+            MMVM.BackToMainMenu();
+            MMVM.AboutAppVis = Visibility.Visible;
         }
     }
 }

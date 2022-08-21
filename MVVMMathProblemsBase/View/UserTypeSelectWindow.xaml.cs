@@ -1,19 +1,7 @@
-﻿using MVVMMathProblemsBase.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nezmatematika.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace MVVMMathProblemsBase.View
+namespace Nezmatematika.View
 {
     /// <summary>
     /// Interakční logika pro UserTypeSelectWindow.xaml
@@ -29,13 +17,13 @@ namespace MVVMMathProblemsBase.View
             vM = Resources["vm"] as UserTypeSelectVM;
         }
 
-        private void SelectModeAndSwitchToMainMenu(bool? isInStudentMode)
+        private void SelectModeAndSwitchToMainMenu(bool isInStudentMode)
         {
-            App.IsInStudentMode = isInStudentMode;
+            App.AppMode = isInStudentMode ? AppMode.Student : AppMode.Teacher;
             MainMenuWindow mainMenuWindow = new MainMenuWindow();
-            
+            App.WhereInApp = WhereInApp.MainMenu;
             mainMenuWindow.Show();
-            this.Close();           
+            this.Close();
         }
 
         private void btnStudent_Click(object sender, RoutedEventArgs e)

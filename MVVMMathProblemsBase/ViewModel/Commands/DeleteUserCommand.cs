@@ -1,12 +1,8 @@
-﻿using MVVMMathProblemsBase.Model;
+﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class DeleteUserCommand : ICommand
     {
@@ -25,8 +21,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            User selectedUser = parameter as User;
-            if (selectedUser != null && MMVM.UsersOfTypeList.Count > 1)
+            UserBase selectedUserBase = parameter as UserBase;
+            if (selectedUserBase != null && MMVM.UserBasesOfTypeList.Count > 1)
             {
                 return true;
             }
@@ -35,8 +31,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            User userToDelete = parameter as User;
-            MMVM.DeleteUser(userToDelete);
+            UserBase userBaseToDelete = parameter as UserBase;
+            MMVM.DeleteUser(userBaseToDelete);
         }
     }
 }

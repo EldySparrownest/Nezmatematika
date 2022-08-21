@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Nezmatematika.Model;
+using System;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class BackToMainMenuFromAnywhereCommand : ICommand
     {
@@ -30,8 +26,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            if (App.WhereInApp == WhereInApp.Settings)
+                MMVM.LoadCurrentSettingsForCurrentUser();
+            
             if (MMVM.IsInStudentMode == true && App.WhereInApp == WhereInApp.CourseForStudent)
-                MMVM.CurrentUserCourseData.UpdateAtSessionEnd();
+            {
+                MMVM.CurrentUserCourseData.UpdateAtSessionEnd(out TimeSpan sessionDuration);
+                MMVM.CurrentUser.UserStats.SessionEndUpdate(sessionDuration);
+                MMVM.SaveDataAndStats();
+            }
+
             MMVM.BackToMainMenu();
             MMVM.ClearCurrentValuesExceptUser();
         }

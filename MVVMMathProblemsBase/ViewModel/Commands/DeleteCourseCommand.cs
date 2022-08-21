@@ -1,13 +1,8 @@
-﻿using MVVMMathProblemsBase.Model;
+﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class DeleteCourseCommand : ICommand
     {
@@ -26,6 +21,8 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (MMVM.IsInStudentMode == true)
+                return false;
             Course selectedCourse = parameter as Course;
             if (selectedCourse != null)
             {
@@ -37,19 +34,13 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             Course courseToDelete = parameter as Course;
-            if (Directory.Exists(courseToDelete.DirPath))
+            if (courseToDelete.Version != 0)
             {
-                var mathProblemFilePaths = Directory.GetFiles(courseToDelete.DirPath);
-                foreach (var path in mathProblemFilePaths)
-                {
-                    File.Delete(path);
-                }
-                Directory.Delete(courseToDelete.DirPath);
+                Course.ArchiveCourse(courseToDelete.Id, courseToDelete.Version);
             }
-            if (File.Exists(courseToDelete.FilePath))
-            {
-                File.Delete(courseToDelete.FilePath);
-            }
+
+            courseToDelete.Delete();
+
             MMVM.GetListOfTeacherCoursesToContinue();
             if (MMVM.TeacherCoursesToContinueList.Count == 0)
             {

@@ -1,168 +1,233 @@
-﻿using System;
+﻿using Nezmatematika.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Serialization;
 
-namespace MVVMMathProblemsBase.Model
+namespace Nezmatematika.Model
 {
     public class Course
     {
         public string Id { get; set; }
-        public User Author { get; set; }
+        public UserBase Author { get; set; }
         public DateTime Created { get; set; }
         public PublishingStatus PublishingStatus { get; set; }
         public DateTime LastPublished { get; set; }
+        public int PublishedProblemCount { get; set; }
+        public int Version { get; set; }
         public DateTime LastOpened { get; set; }
         public DateTime LastEdited { get; set; }
         public TimeSpan TimeSpentEditing { get; set; }
         public string CourseTitle { get; set; }
-        public string CourseDesc { get; set; }
-        public string DirPath { get; set; }
-        public string FilePath { get; set; }
-        public ObservableCollection<string> Tags { get; set; }
+        public string RelDirPath { get; set; }
+        public string RelFilePath { get; set; }
+        public List<MathProblem> Problems { get; set; }
 
-        private ObservableCollection<MathProblem> problems;
-        public ObservableCollection<MathProblem> Problems
+        public Course()
         {
-            get { return problems; }
-            set
-            {
-                problems = value;
-                OnPropertyChanged("Problems");
-            }
+            Created = DateTime.Now;
+            LastOpened = DateTime.Now;
+            LastEdited = DateTime.Now;
+            TimeSpentEditing = TimeSpan.Zero;
+            Problems = new List<MathProblem>();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Course(CourseSerialisable serialisedCourse)
-        {
-            DirPath = serialisedCourse.DirPath;
-            FilePath = serialisedCourse.FilePath;
-            Author = serialisedCourse.Author;
-            Id = serialisedCourse.Id;
-            Created = serialisedCourse.Created;
-            LastOpened = serialisedCourse.LastOpened;
-            LastEdited = serialisedCourse.LastEdited;
-            TimeSpentEditing = serialisedCourse.TimeSpentEditing;
-            CourseTitle = serialisedCourse.CourseTitle;
-            CourseDesc = serialisedCourse.CourseDesc;
-            Tags = new ObservableCollection<string>(serialisedCourse.Tags);
-            Problems = new ObservableCollection<MathProblem>();
-
-            var factory = new MathProblemFactory();
-            foreach (var problem in serialisedCourse.Problems)
-            {
-                Problems.Add(factory.CreateFromSerialised(problem));
-            }
-        }
-        public Course(User author, string title, string desc, ObservableCollection<string> tags)
+        public Course(UserBase author, string title)
         {
             Author = author;
             Id = NewCourseId(author.Id);
-            DirPath = CourseDirPath();
-            FilePath = CourseFilePath();
+            Version = 0;
+            RelDirPath = Path.Combine(FilePathHelper._TeacherCoursesRelDirPath(Author), Id);
+            RelFilePath = Path.Combine(FilePathHelper._TeacherCoursesRelDirPath(Author), $"{Id}{GlobalValues.CourseFilename}");
             CourseTitle = title;
-            CourseDesc = desc;
-            Tags = tags;
-            Problems = new ObservableCollection<MathProblem>();
+            Problems = new List<MathProblem>();
             Created = DateTime.Now;
             LastOpened = DateTime.Now;
             LastEdited = DateTime.Now;
             PublishingStatus = PublishingStatus.NotPublished;
+            PublishedProblemCount = 0;
         }
 
-        public void AddNewMathProblem(MathProblem mathProblem)
+        public void AddNewMathProblem(bool capitalisationMatters)
         {
-            string precedingLabel;
-            if (Problems.Count == 0)
-            {
-                precedingLabel = "0";
-            }
-            else
-            {
-                precedingLabel = Problems[Problems.Count - 1].OrderLabel;
-            }
-
-            var mathProblemFactory = new MathProblemFactory();
-            Problems.Add((MathProblem)mathProblemFactory.Create(this, "základní", precedingLabel));
+            Problems.Add(new MathProblem(this, capitalisationMatters));
         }
 
-        private void ReorderProblemIndexes()
+        private void UpdateProblemIndexesAndOrderLabels()
         {
             for (int i = Problems.Count - 1; i >= 0; i--)
             {
                 Problems[i].Index = i;
+                Problems[i].SetSimplifiedOrderLabel();
             }
         }
 
         private static string NewCourseId(string authorID)
             => string.Join("_", authorID,
-                    string.Join("", (Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff"))).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
-
-        private string CourseDirPath()
-            => DirPath = Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, Id);
-
-        private string CourseFilePath()
-            => Path.Combine(Environment.CurrentDirectory, "Courses", Author.Id, $"{Id}{GlobalValues.CourseFilename}");
+                    string.Join("", Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmssffffff")).Split(" .:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)));
 
         public void Save()
         {
-            ReorderProblemIndexes();
-            TimeSpentEditing = TimeSpentEditing + ((LastOpened > LastEdited ? LastOpened : LastEdited) - DateTime.Now);
+            UpdateProblemIndexesAndOrderLabels();
+            TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
-            CourseSerialisable cs = new CourseSerialisable(this);
 
-            cs.Save();
+            XmlHelper.Save(Path.Combine(App.MyBaseDirectory, RelFilePath), typeof(Course), this);
         }
 
-        public void Publish(string coursesDirPath)
+        public void PublishCourse(string publishedCoursesRelDirPath, string archivedCoursesRelDirPath, out int problemCountChange)
         {
+            var prevVerDirName = $"{Id}_{Version}"; //adresářové jméno poslední publikované verze
+
             var prevStatus = PublishingStatus;
             var prevPublished = LastPublished;
+            var prevPublishedProblemCount = PublishedProblemCount;
+            problemCountChange = 0;
 
             try
             {
+                var teacherCoursesDirPath = FilePathHelper._TeacherCoursesRelDirPath(Author);
+                var prevVersion = Version;
+                Version++;
                 PublishingStatus = PublishingStatus.PublishedUpToDate;
                 LastPublished = DateTime.Now;
-                Directory.CreateDirectory(coursesDirPath);
-                File.Copy(FilePath, Path.Combine(coursesDirPath, $"{Id}{GlobalValues.CourseFilename}"), true);
-                var newCourseIDDirPath = Path.Combine(coursesDirPath, Id);
-                Directory.CreateDirectory(newCourseIDDirPath);
-                
-                if (Directory.Exists(DirPath) && Directory.Exists(newCourseIDDirPath))
-                {
-                    var files = Directory.EnumerateFiles(DirPath);
+                PublishedProblemCount = Problems.Count;
+                Save();
 
-                    foreach (var file in files)
-                    {
-                        var newFilePath = file.Replace(DirPath, newCourseIDDirPath);
-                        File.Copy(file, newFilePath, true);
-                    }
-                }
+                var prevVersionCourseRelDirPath = Path.Combine(publishedCoursesRelDirPath, prevVerDirName); //adresářová cesta poslední publikované verze
+                var archive = prevVersion != 0 && Directory.Exists(Path.Combine(App.MyBaseDirectory, prevVersionCourseRelDirPath));
+
+                if (archive)
+                    Course.ArchiveCourse(Id, prevVersion, publishedCoursesRelDirPath, archivedCoursesRelDirPath);
+
+                problemCountChange = PublishedProblemCount - prevPublishedProblemCount;
+                CopyAllCourseFiles(Id, Version, teacherCoursesDirPath, publishedCoursesRelDirPath); // obě cesty v parametrech musejí být relativní!
             }
             catch (Exception e)
             {
                 PublishingStatus = prevStatus;
                 LastPublished = prevPublished;
+                PublishedProblemCount = prevPublishedProblemCount;
+                Save();
                 MessageBox.Show(e.Message);
             }
         }
-
-        public static Course Read(string filename)
+        private void CopyAllCourseFiles(string courseId, int courseVersion, string originalParentDirPath, string newParentDirPath)
         {
-            var cs = CourseSerialisable.Read(filename);
-            return new Course(cs);
+            var problemsDirName = $"{courseId}_{courseVersion}";
+            var fullOriginalFilePath = Path.Combine(App.MyBaseDirectory, originalParentDirPath, $"{courseId}{GlobalValues.CourseFilename}");
+            var course = Read(fullOriginalFilePath);
+
+            if (course == null)
+                return;
+
+            course.UpdatePathsToAdjustForMovingFiles(newParentDirPath);
+            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má (a případně si i dovytvoří adresáře)
+
+            //kopírování adresáře s RTF soubory úloh
+            var fullNewDirPath = Path.Combine(App.MyBaseDirectory, newParentDirPath, problemsDirName);
+            var fullOldProblemsDirPath = Path.Combine(App.MyBaseDirectory, originalParentDirPath, courseId);
+            Directory.CreateDirectory(fullNewDirPath);
+            if (Directory.Exists(fullOldProblemsDirPath) && Directory.Exists(fullNewDirPath))
+            {
+                var newFiles = Directory.EnumerateFiles(fullOldProblemsDirPath);
+                foreach (var file in newFiles)
+                {
+                    var newFilePath = file.Replace(fullOldProblemsDirPath, fullNewDirPath);
+                    File.Copy(file, newFilePath, true);
+                }
+            }
         }
 
-        private void OnPropertyChanged(string propertyName)
+        public static void ArchiveCourse(string courseId, int courseVersion)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ArchiveCourse(courseId, courseVersion, FilePathHelper._CoursesPublishedRelDirPath(), FilePathHelper._CoursesArchivedRelDirPath());
+        }
+        public static void ArchiveCourse(string courseId, int courseVersion, string publishedCoursesRelDirPath, string archivedCoursesRelDirPath)
+        {
+            var problemsDirName = $"{courseId}_{courseVersion}";
+            var archivedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, archivedCoursesRelDirPath);
+            var publishedCoursesFullDirPath = Path.Combine(App.MyBaseDirectory, publishedCoursesRelDirPath);
+            var publishedFullFilePath = Path.Combine(App.MyBaseDirectory, publishedCoursesRelDirPath, $"{problemsDirName}{GlobalValues.CourseFilename}");
+            var course = Course.Read(publishedFullFilePath);
+
+            if (course == null)
+                return;
+
+            course.UpdatePathsToAdjustForMovingFiles(archivedCoursesRelDirPath);
+            course.Save(); //hlavní kurzový soubor se rovnou uloží kam má
+
+            //přesun adresáře s RTF soubory úloh
+            Directory.Move(Path.Combine(publishedCoursesFullDirPath, problemsDirName), Path.Combine(archivedCoursesFullDirPath, problemsDirName));
+
+            //výmaz hlavního souboru z publikovaných
+            File.Delete(publishedFullFilePath);
+        }
+
+        public void PrepForExport(string courseId, int courseVersion, string sourceRelDir, string targetRelDir)
+        {
+            var idVersionString = $"{courseId}_{courseVersion}";
+            var originalFileFullPath = Path.Combine(App.MyBaseDirectory, sourceRelDir, $"{idVersionString}{GlobalValues.CourseFilename}");
+            var fileForExportFullPath = Path.Combine(App.MyBaseDirectory, targetRelDir, $"{idVersionString}{GlobalValues.CourseFilename}");
+            File.Copy(originalFileFullPath, fileForExportFullPath, true);
+
+            //kopírování adresáře s RTF soubory úloh
+            var newFullDirPath = Path.Combine(App.MyBaseDirectory, targetRelDir, idVersionString);
+            var oldFullDirPath = Path.Combine(App.MyBaseDirectory, RelDirPath);
+            Directory.CreateDirectory(newFullDirPath);
+            if (Directory.Exists(oldFullDirPath) && Directory.Exists(newFullDirPath))
+            {
+                var newFiles = Directory.EnumerateFiles(oldFullDirPath);
+                foreach (var file in newFiles)
+                {
+                    var newFilePath = file.Replace(oldFullDirPath, newFullDirPath);
+                    File.Copy(file, newFilePath, true);
+                }
+            }
+        }
+
+        public void UpdatePathsToAdjustForMovingFiles(string newCoursesDir)
+        {
+            var versionSuffix = $"_{Version}";
+            var courseDirName = String.Join("", Id, versionSuffix);
+            var fileName = String.Join("", Id, versionSuffix, GlobalValues.CourseFilename);
+            RelDirPath = Path.Combine(newCoursesDir, courseDirName);
+            RelFilePath = Path.Combine(newCoursesDir, fileName);
+
+            foreach (var mathProblem in Problems)
+            {
+                mathProblem.RelDirPath = RelDirPath;
+                mathProblem.RelFilePath = Path.Combine(newCoursesDir, courseDirName, $"{mathProblem.Id}.rtf");
+            }
+        }
+
+        public void Delete()
+        {
+            var fullDirPath = Path.Combine(App.MyBaseDirectory, RelDirPath);
+            var fullFilePath = Path.Combine(App.MyBaseDirectory, RelFilePath);
+            if (Directory.Exists(fullDirPath))
+            {
+                var mathProblemFilePaths = Directory.GetFiles(fullDirPath);
+                foreach (var path in mathProblemFilePaths)
+                {
+                    File.Delete(path);
+                }
+                Directory.Delete(fullDirPath);
+            }
+            if (File.Exists(fullFilePath))
+            {
+                File.Delete(fullFilePath);
+            }
+        }
+
+        public static Course Read(string relFilePath)
+        {
+            var fullFilePath = Path.Combine(App.MyBaseDirectory, relFilePath);
+            using (StreamReader sw = new StreamReader(fullFilePath))
+            {
+                XmlSerializer xmls = new XmlSerializer(typeof(Course));
+                return xmls.Deserialize(sw) as Course;
+            }
         }
     }
 }

@@ -1,13 +1,7 @@
-﻿using MVVMMathProblemsBase.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System;
 using System.Windows.Input; // for ICommand
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class CreateNewUserCommand : ICommand
     {
@@ -39,9 +33,9 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MMVM.CreateNewUser(MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempSchoolName, MMVM.TempClassName);
+            MMVM.CreateNewUser(MMVM.TempTitleBefore, MMVM.TempFirstName, MMVM.TempLastName, MMVM.TempTitleAfter, MMVM.TempSchoolName, MMVM.TempClassName);
             MMVM.BackToMainMenu();
-            MMVM.GetUsersOfTypeList();
+            MMVM.GetUserBasesOfTypeList();
         }
     }
 }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class DisplayStudentCoursesToContinue : ICommand
     {
@@ -25,7 +21,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && MMVM.Settings.HasCourseToContinue)
+            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && MMVM.CurrentSettings.HasCourseToContinue)
             {
                 return true;
             }

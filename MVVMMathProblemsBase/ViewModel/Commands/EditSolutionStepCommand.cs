@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Nezmatematika.ViewModel.Commands
 {
-    public class EditCorrectAnswerCommand : ICommand
+    public class EditSolutionStepCommand : ICommand
     {
         public MainMenuVM MMVM { get; set; }
 
@@ -13,7 +13,7 @@ namespace Nezmatematika.ViewModel.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public EditCorrectAnswerCommand(MainMenuVM vm)
+        public EditSolutionStepCommand(MainMenuVM vm)
         {
             MMVM = vm;
         }
@@ -22,14 +22,16 @@ namespace Nezmatematika.ViewModel.Commands
         {
             if (App.WhereInApp != WhereInApp.CourseEditor)
                 return false;
-            return MMVM.CurrentAnswer != null && !String.IsNullOrWhiteSpace(MMVM.TempCorrectAnswer) && MMVM.CurrentAnswer != MMVM.TempCorrectAnswer;
+            return MMVM.CurrentSolutionStepText != null
+                && !String.IsNullOrWhiteSpace(MMVM.TempSolutionStepText)
+                && MMVM.CurrentSolutionStepText != MMVM.TempSolutionStepText;
         }
 
         public void Execute(object parameter)
         {
-            MMVM.ReplaceInCurrentProblemCorrectAnswers(MMVM.CurrentAnswer, MMVM.TempCorrectAnswer);
-            MMVM.PopulateTempAnswersFromCurrentMathProblem();
-            MMVM.CurrentAnswer = MMVM.TempCorrectAnswer;
+            MMVM.ReplaceInCurrentProblemSolutionSteps(MMVM.CurrentSolutionStepText, MMVM.TempSolutionStepText);
+            MMVM.PopulateTempSolutionStepsFromCurrentMathProblem();
+            MMVM.CurrentSolutionStepText = MMVM.TempSolutionStepText;
         }
     }
 }

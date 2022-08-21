@@ -1,13 +1,9 @@
-﻿using MVVMMathProblemsBase.Model;
+﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class OpenCourseForStudentCommand : ICommand
     {
@@ -26,10 +22,21 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == true && (MMVM.CurrentCourse != null || MMVM.CurrentUserCourseData != null))
-            {
+            if (!MMVM.IsInStudentMode)
+                return false;
+            if (MMVM.CurrentUser == null)
+                return false;
+
+            if (MMVM.CurrentCourse != null)
                 return true;
+
+            if (parameter != null)
+            {
+                var ucd = parameter as UserCourseData;
+                if (ucd != null)
+                    return true;
             }
+
             return false;
         }
 
@@ -39,12 +46,24 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
             {
                 var ucd = parameter as UserCourseData;
                 if (ucd != null)
-                    MMVM.CurrentCourse = MMVM.StudentDirCourseList.Find(c => c.Id == ucd.CourseId);
+                {
+                    MMVM.CurrentUserCourseData = ucd;
+                    MMVM.CurrentCourse = MMVM.AllPublishedCoursesList.Find(c => c.Id == ucd.CourseId && ucd.Version == c.Version);
+
+                    if (MMVM.CurrentCourse == null)
+                        MMVM.CurrentCourse = MMVM.AllArchivedCoursesList.Find(c => c.Id == ucd.CourseId && ucd.Version == c.Version);
+                }
             }
-            
+
             MMVM.BackToMainMenu();
-            MMVM.StudentVis = Visibility.Collapsed;
-            MMVM.OpenCurrentCourseForStudent();
+
+            if (MMVM.CurrentCourse == null)
+                MessageBox.Show("Vybraný kurz se nepodařilo načíst. Vyberte si, prosím, jiný.");
+            else
+            {
+                MMVM.MainMenuVis = Visibility.Collapsed;
+                MMVM.OpenCurrentCourseForStudent();
+            }
         }
     }
 }

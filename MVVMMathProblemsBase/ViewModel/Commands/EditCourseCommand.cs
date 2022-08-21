@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nezmatematika.Model;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class EditCourseCommand : ICommand
     {
@@ -25,7 +22,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == false && MMVM.Settings.HasCourseToContinue)
+            if (MMVM.CurrentUser != null && MMVM.IsInStudentMode == false && MMVM.CurrentCourse != null)
             {
                 return true;
             }
@@ -35,7 +32,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         public void Execute(object parameter)
         {
             MMVM.BackToMainMenu();
-            MMVM.TeacherVis = Visibility.Collapsed;
+            MMVM.MainMenuVis = Visibility.Collapsed;
             App.WhereInApp = WhereInApp.CourseEditor;
             MMVM.StartEditingCurrentCourse();
         }

@@ -1,13 +1,9 @@
-﻿using MVVMMathProblemsBase.Model;
+﻿using Nezmatematika.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class PrepUserForEditingCommand : ICommand
     {
@@ -26,19 +22,17 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            //if (MMVM.CurrentUser != null)
-            User user = parameter as User;
-            if (user != null)
-            {
+            UserBase userBase = parameter as UserBase;
+            if (userBase != null)
                 return true;
-            }
+
             return false;
-            
+
         }
 
         public void Execute(object parameter)
         {
-            User user = parameter as User;
+            UserBase user = parameter as UserBase;
             MMVM.BackToMainMenu();
             MMVM.UserSelVis = Visibility.Visible;
             MMVM.NewUserVis = Visibility.Collapsed;

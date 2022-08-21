@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nezmatematika.Model;
+using System;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class SwitchToNextProblemCommand : ICommand
     {
@@ -26,13 +23,15 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         {
             if (App.WhereInApp != WhereInApp.CourseForStudent)
                 return false;
-            return MMVM.CurrentMathProblem != null && MMVM.CurrentUserCourseData.SolvedProblemsCount > MMVM.CurrentUserCourseData.ResumeOnIndex;
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentProblemSolved && !MMVM.IsThisProblemTheLastOne();
         }
 
         public void Execute(object parameter)
         {
+            MMVM.ResetAnswerFeedbackVisibility();
             MMVM.CurrentMathProblemIndex++;
             MMVM.SetCurrentMathProblemFromCurrentIndex();
+            MMVM.SaveDataAndStats();
         }
     }
 }

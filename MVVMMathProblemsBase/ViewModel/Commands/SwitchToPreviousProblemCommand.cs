@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nezmatematika.Model;
+using System;
+using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class SwitchToPreviousProblemCommand : ICommand
     {
@@ -26,11 +24,13 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
         {
             if (App.WhereInApp != WhereInApp.CourseForStudent)
                 return false;
-            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblem.Index > 0;
+            return MMVM.CurrentMathProblem != null && MMVM.CurrentMathProblemIndex > 0;
         }
 
         public void Execute(object parameter)
         {
+            MMVM.ResetAnswerFeedbackVisibility();
+            MMVM.BtnNextProblemVis = Visibility.Visible;
             MMVM.CurrentMathProblemIndex--;
             MMVM.SetCurrentMathProblemFromCurrentIndex();
         }

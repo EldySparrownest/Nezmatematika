@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media; // for Color
-using System.Windows.Data; // for IVAlueConverter
 using System.Globalization;
 using System.Windows;
+using System.Windows.Data; // for IVAlueConverter
+using System.Windows.Media; // for Color
 
-namespace MVVMMathProblemsBase.ViewModel.ValueConverters
+namespace Nezmatematika.ViewModel.ValueConverters
 {
     public class NullableColorToSolidColorBrushConverter : IValueConverter
     {

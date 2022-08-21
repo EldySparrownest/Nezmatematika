@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LastStudentUser>
+  </LastStudentUser>
+  <LastTeacherUser>
+  </LastTeacherUser>
+  <HasCourseToContinue>false</HasCourseToContinue>
+  <MainBackgroundColour>
+    <A>255</A>
+    <R>92</R>
+    <G>225</G>
+    <B>230</B>
+    <ScA>1</ScA>
+    <ScR>0.107023105</ScR>
+    <ScG>0.7529422</ScG>
+    <ScB>0.7912979</ScB>
+  </MainBackgroundColour>
+  <SecondaryBackgroundColour>
+	  <A>255</A>
+	  <R>92</R>
+	  <G>225</G>
+	  <B>230</B>
+	  <ScA>1</ScA>
+	  <ScR>0.107023105</ScR>
+	  <ScG>0.7529422</ScG>
+	  <ScB>0.7912979</ScB>
+  </SecondaryBackgroundColour>
+  <RequeueOnMistake>true</RequeueOnMistake>
+  <AutosaveProblemWhenSwitching>true</AutosaveProblemWhenSwitching>
+  <AutosaveCourseBeforePublishing>true</AutosaveCourseBeforePublishing>
+  <CapitalisationMatters>false</CapitalisationMatters>
+  <DefaultFontFamily>Cambria Math</DefaultFontFamily>
+  <DefaultFontSize>16</DefaultFontSize>
+</UserSettings>

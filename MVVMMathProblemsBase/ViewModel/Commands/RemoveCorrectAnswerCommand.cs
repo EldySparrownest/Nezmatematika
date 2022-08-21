@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class RemoveCorrectAnswerCommand : ICommand
     {
@@ -24,13 +20,16 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
+            if (App.WhereInApp != WhereInApp.CourseEditor)
+                return false;
+
             return MMVM.CurrentAnswer != null && MMVM.CurrentAnswer == parameter?.ToString();
         }
 
         public void Execute(object parameter)
         {
             MMVM.CurrentMathProblem.CorrectAnswers.Remove(parameter.ToString());
-            MMVM.ReloadTempAnswers();
+            MMVM.PopulateTempAnswersFromCurrentMathProblem();
         }
     }
 }

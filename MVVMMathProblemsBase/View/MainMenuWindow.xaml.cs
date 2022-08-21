@@ -1,24 +1,21 @@
-﻿using MVVMMathProblemsBase.Model;
-using MVVMMathProblemsBase.ViewModel;
-using MVVMMathProblemsBase.ViewModel.Helpers;
+﻿using Microsoft.Win32;
+using Nezmatematika.Model;
+using Nezmatematika.ViewModel;
+using Nezmatematika.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using static Nezmatematika.ViewModel.Helpers.FilePathHelper;
 
-namespace MVVMMathProblemsBase.View
+namespace Nezmatematika.View
 {
     /// <summary>
     /// Interakční logika pro MainMenuWindow.xaml
@@ -31,12 +28,6 @@ namespace MVVMMathProblemsBase.View
     // zaznamenávání historie učení a sledování pokroků
     //  == statistika + zařazování příkladů s chybou na konec kurzu
     // interní editor musí podporovat export a import úloh
-    //  == asi budu zazipovávat?
-
-    //HLAVNÍ SEZNAM VĚCÍ NEZBYTNÝCH, KTERÉ MUSÍM DODĚLAT:
-    // 1) najít způsob, jak serializovat kurzy a příklady (asi udělám helper třídy) - nějakým způsobem hotovo
-    // 2) dořešit přepínání mezi příklady v editoru
-    // 3) rozchodit studentský mód
 
     //Podtrhování a přeškrtávání pohromadě asi fungovat prostě nebude... Pokud mám mít jen jedno, bude to podtrhávání.
 
@@ -48,8 +39,9 @@ namespace MVVMMathProblemsBase.View
 
         private GridViewColumnHeader listViewSortCol = null;
         private SortAdorner listViewSortAdorner = null;
-        private Dictionary<string, RichTextBox> dicTeacherContentLoad;
-        private Dictionary<string, RichTextBox> dicStudentContentLoad;
+        private Dictionary<string, IEnumerable<string>> dicTeacherTagCollection;
+        private Dictionary<string, RichTextBox> dicTeacherTagRTB;
+        private Dictionary<string, RichTextBox> dicStudentTagRTB;
         private RichTextBox RTBWithFcs;
 
         public MainMenuWindow()
@@ -63,57 +55,37 @@ namespace MVVMMathProblemsBase.View
             }
             if (vM.IsInStudentMode == true)
             {
-                //vM.TeacherNotNullCurrentMathProblemAboutToChange += ViewModelTeacher_CurrentMathProblemAboutToChange;
                 vM.StudentCurrentMathProblemChanged += ViewModel_StudentCurrentMathProblemChanged;
             }
 
             RTBWithFcs = new RichTextBox { Visibility = Visibility.Collapsed };
 
-            dicStudentContentLoad = new Dictionary<string, RichTextBox>()
+            dicStudentTagRTB = new Dictionary<string, RichTextBox>()
             {
                 { "ProblemText", rtbProblemTextStudentMode},
-                { "Question", rtbQuestionStudentMode }
+                { "Question", rtbProblemTextStudentMode }
             };
 
-            dicTeacherContentLoad = new Dictionary<string, RichTextBox>()
+            dicTeacherTagRTB = new Dictionary<string, RichTextBox>()
             {
                 { "ProblemText", rtbProblemText},
                 { "Question", rtbQuestion }
             };
-
-            var initFontFamily = new FontFamily("Cambria Math");
-            var initFontSize = 16;
-
-            rtbProblemText.FontFamily = initFontFamily;
-            rtbProblemText.FontSize = initFontSize;
-
-            rtbQuestion.FontFamily = initFontFamily;
-            rtbQuestion.FontSize = initFontSize;
-
-            rtbCodeMode.FontFamily = initFontFamily;
-            rtbCodeMode.FontSize = initFontSize;
-
-            var p = new Paragraph();
-            p.FontFamily = initFontFamily;
-            p.FontSize = initFontSize;
-            p.Margin = new Thickness(0);
-
-            rtbProblemText.Document.Blocks.Clear();
-            rtbProblemText.Document.Blocks.Add(p);
-
-            rtbQuestion.Document.Blocks.Clear();
-            rtbQuestion.Document.Blocks.Add(p);
-
-            rtbCodeMode.Document.Blocks.Clear();
-            rtbCodeMode.Document.Blocks.Add(p);
-
+            dicTeacherTagCollection = new Dictionary<string, IEnumerable<string>>()
+            {
+                { "Answer", vM.TempAnswers },
+                { "Step", vM.TempSolutionStepsTexts }
+            };
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cbEditorFontFamily.ItemsSource = fontFamilies;
-            cbEditorFontFamily.SelectedItem = initFontFamily;
+
+            cbSEditorFontFamily.ItemsSource = fontFamilies;
 
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 40, 44, 48, 72 };
             cbEditorFontSize.ItemsSource = fontSizes;
-            cbEditorFontSize.Text = initFontSize.ToString();
+            cbSEditorFontSize.ItemsSource = fontSizes;
+
+            ResetCourseEditor(this, new RoutedEventArgs());
 
             lvUsers.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
         }
@@ -157,6 +129,11 @@ namespace MVVMMathProblemsBase.View
             ListViewColumnHeader_Click(sender, e, lvContinuableCourses);
         }
 
+        private void lvStudentCoursesFinishedColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            ListViewColumnHeader_Click(sender, e, lvStudentCoursesFinished);
+        }
+
         private void lvStartableNewCoursesColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             ListViewColumnHeader_Click(sender, e, lvStartableNewCourses);
@@ -169,12 +146,42 @@ namespace MVVMMathProblemsBase.View
 
         private void ResetCourseEditor(object sender, RoutedEventArgs e)
         {
+            var settingsLoadedProperly = !(vM.CurrentSettings == null);
+            var initFontFamily = (settingsLoadedProperly && !String.IsNullOrEmpty(vM.CurrentSettings.DefaultFontFamily)) ? new FontFamily(vM.CurrentSettings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            var initFontSize = (settingsLoadedProperly && vM.CurrentSettings.DefaultFontSize != 0) ? vM.CurrentSettings.DefaultFontSize : 16;
+
+            cbEditorFontFamily.SelectedItem = initFontFamily;
+            cbEditorFontSize.Text = initFontSize.ToString();
+
+            rtbProblemText.FontFamily = initFontFamily;
+            rtbProblemText.FontSize = initFontSize;
+
+            rtbQuestion.FontFamily = initFontFamily;
+            rtbQuestion.FontSize = initFontSize;
+
+            rtbCodeMode.FontFamily = initFontFamily;
+            rtbCodeMode.FontSize = initFontSize;
+
+            var p = new Paragraph();
+            p.FontFamily = initFontFamily;
+            p.FontSize = initFontSize;
+            p.Margin = new Thickness(0);
+
+            rtbProblemText.Document.Blocks.Clear();
+            rtbProblemText.Document.Blocks.Add(p);
+
+            rtbQuestion.Document.Blocks.Clear();
+            rtbQuestion.Document.Blocks.Add(p);
+
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbCodeMode.Document.Blocks.Add(p);
+
             btnCodeMode.IsChecked = false;
         }
 
         private void ViewModelTeacher_CurrentMathProblemAboutToChange(object sender, EventArgs e)
         {
-            if (vM.Settings.AutosaveProblemWhenSwitching && App.WhereInApp == WhereInApp.CourseEditor)
+            if (vM.CurrentSettings.AutosaveProblemWhenSwitching && App.WhereInApp == WhereInApp.CourseEditor)
             {
                 btnSaveCourse_Click(sender, new RoutedEventArgs());
             }
@@ -184,7 +191,8 @@ namespace MVVMMathProblemsBase.View
         {
             if (vM.CurrentMathProblem != null)
             {
-                if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
+                var mathProblemFullFilePath = System.IO.Path.Combine(App.MyBaseDirectory, vM.CurrentMathProblem.RelFilePath);
+                if (!string.IsNullOrEmpty(mathProblemFullFilePath) && File.Exists(mathProblemFullFilePath))
                 {
                     switch (App.WhereInApp)
                     {
@@ -194,10 +202,7 @@ namespace MVVMMathProblemsBase.View
                             break;
                         case WhereInApp.CourseForStudent:
                             rtbProblemTextStudentMode.Document.Blocks.Clear();
-                            rtbQuestionStudentMode.Document.Blocks.Clear();
-                            tbStudentsAnswer.Clear();
-                            LoadMathProblemIntoRTBs(dicStudentContentLoad);
-                            //tbStudentsAnswer.Text = "";
+                            LoadMathProblemFromFile(mathProblemFullFilePath, dicStudentTagRTB);
                             break;
                     }
                 }
@@ -217,8 +222,9 @@ namespace MVVMMathProblemsBase.View
                         rtbCodeMode.Document.Blocks.Clear();
                         rtbProblemText.Document.Blocks.Clear();
                         rtbQuestion.Document.Blocks.Clear();
-                        if (!string.IsNullOrEmpty(vM.CurrentMathProblem.FilePath) && File.Exists(vM.CurrentMathProblem.FilePath))
-                            LoadMathProblemIntoRTBs(dicTeacherContentLoad);
+                        var curMathProblemFullFilePath = System.IO.Path.Combine(App.MyBaseDirectory, vM.CurrentMathProblem.RelFilePath);
+                        if (!string.IsNullOrEmpty(curMathProblemFullFilePath) && File.Exists(curMathProblemFullFilePath))
+                            LoadMathProblemFromFile(curMathProblemFullFilePath, dicTeacherTagRTB);
                         break;
                 }
             }
@@ -499,24 +505,16 @@ namespace MVVMMathProblemsBase.View
             if (RTBWithFcs != null)
             {
                 if (!RTBWithFcs.Selection.IsEmpty)
-                { RTBWithFcs.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush); }
-                else
-                { NewParagraphWhenSelectionIsEmpty(); }
+                    RTBWithFcs.Selection.ApplyPropertyValue(Inline.ForegroundProperty, colourBrush);
             }
         }
 
         private void cbEditorFontFamily_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbEditorFontFamily.SelectedItem != null)
+            if (cbEditorFontFamily.SelectedItem != null && RTBWithFcs != null && !RTBWithFcs.Selection.IsEmpty)
             {
-                if (RTBWithFcs != null)
-                {
-                    if (!RTBWithFcs.Selection.IsEmpty)
-                    { RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem); }
-                    else
-                    { NewParagraphWhenSelectionIsEmpty(); }
-                    RTBWithFcs.Focus();
-                }
+                RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, cbEditorFontFamily.SelectedItem);
+                RTBWithFcs.Focus();
             }
         }
 
@@ -529,9 +527,8 @@ namespace MVVMMathProblemsBase.View
                 if (RTBWithFcs != null)
                 {
                     if (!RTBWithFcs.Selection.IsEmpty)
-                    { RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text); }
-                    else
-                    { NewParagraphWhenSelectionIsEmpty(); }
+                        RTBWithFcs.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cbEditorFontSize.Text);
+
                 }
             }
             RTBWithFcs.Focus();
@@ -565,16 +562,40 @@ namespace MVVMMathProblemsBase.View
         private FlowDocument FlowDocumentOfCurrentMathProblem()
         {
             FlowDocument newdocument = new FlowDocument();
-            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
 
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<ProblemText>"));
-            AddDocument(rtbProblemText.Document, newdocument);
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</ProblemText>\n"));
-            newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("<Question>"));
-            AddDocument(rtbQuestion.Document, newdocument);
-            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("</Question>"));
+            foreach (var tagRTBPair in dicTeacherTagRTB)
+            {
+                newdocument.Blocks.Add(new Paragraph { Margin = new Thickness(0) });
+                newdocument = AddRTBContentWithTagsToFlowDoc(newdocument, tagRTBPair.Key, tagRTBPair.Value);
+            }
+
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run("\n"));
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(WrapBoolInTags(cbProblemCapitalisation.IsChecked == true, "CapitalisationMatters")));
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Answer", vM.CurrentMathProblem.CorrectAnswers)));
+            newdocument.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run(StringCollectionWrappedInTags("Step", vM.CurrentMathProblem.SolutionSteps)));
+
             return newdocument;
+        }
+
+        private FlowDocument AddRTBContentWithTagsToFlowDoc(FlowDocument originalFlowDoc, string tagName, RichTextBox rtb)
+        {
+            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"<{tagName}>"));
+            AddDocument(rtb.Document, originalFlowDoc);
+            originalFlowDoc.Blocks.OfType<Paragraph>().Last().Inlines.Add(new Run($"</{tagName}>"));
+            return originalFlowDoc;
+        }
+
+        private string StringCollectionWrappedInTags(string itemTagName, IEnumerable<string> collection)
+        {
+            return $"<{itemTagName}s>\n"
+                + string.Join("\n", collection.Select(s => $"<{itemTagName}>{s}</{itemTagName}>"))
+                + $"\n</{itemTagName}s>\n";
+        }
+
+        private string WrapBoolInTags(bool value, string tagName)
+        {
+            var textBool = value ? "true" : "false";
+            return $"<{tagName}>{textBool}</{tagName}>\n";
         }
 
         public static void AddDocument(FlowDocument from, FlowDocument to)
@@ -597,7 +618,7 @@ namespace MVVMMathProblemsBase.View
             SaveRTF(questionPath, new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd));
             SaveRTF(codeModePath, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
         }
-        private static void SaveRTF(string path, TextRange tr) //only used when debugging
+        private static void SaveRTF(string path, TextRange tr) //used for exporting current problem (and when debugging)
         {
             try
             {
@@ -611,10 +632,18 @@ namespace MVVMMathProblemsBase.View
             }
         }
 
+        private void LoadComboBoxesForSettings(object sender, RoutedEventArgs e)
+        {
+            cbSEditorFontFamily.SelectedItem = !String.IsNullOrEmpty(vM.CurrentSettings.DefaultFontFamily) ? new FontFamily(vM.CurrentSettings.DefaultFontFamily) : new FontFamily("Cambria Math");
+            int fontSize = vM.CurrentSettings.DefaultFontSize != 0 ? vM.CurrentSettings.DefaultFontSize : 16;
+            cbSEditorFontSize.SelectedItem = fontSize;
+            cbSEditorFontSize.Text = fontSize.ToString();
+        }
+
         private void BackToModeSelection(object sender, RoutedEventArgs e)
         {
             App.WhereInApp = WhereInApp.ModeSelection;
-            App.IsInStudentMode = null;
+            App.AppMode = AppMode.Unselected;
             UserTypeSelectWindow userTypeSelectWindow = new UserTypeSelectWindow();
 
             userTypeSelectWindow.Show();
@@ -633,26 +662,39 @@ namespace MVVMMathProblemsBase.View
         private void InsertTextFromButtonClick(string textToInsert)
         {
             if (!RTBWithFcs.Selection.IsEmpty)
-            {
                 RTBWithFcs.Selection.Text = textToInsert;
-            }
             else
-            {
                 NewParagraphWhenSelectionIsEmpty(textToInsert);
-            }
+
             RTBWithFcs.CaretPosition = RTBWithFcs.CaretPosition.GetPositionAtOffset(textToInsert.Length);
         }
 
-        private void LoadMathProblemIntoRTBs(Dictionary<string, RichTextBox> tagRTBDictionary)
+        private void LoadMathProblemFromFile(string filepath, Dictionary<string, RichTextBox> tagRTBDictionary, bool loadForEditor = false)
         {
-            FileStream fileStream = new FileStream(vM.CurrentMathProblem.FilePath, FileMode.Open);
+            var trCodeMode = LoadRTBCodeModeContentFromFile(filepath);
+            LoadMathProblemIntoRTBs(trCodeMode, tagRTBDictionary);
+            if (loadForEditor)
+            {
+                LoadMathProblemCollections(trCodeMode);
+                LoadCapitalisation(trCodeMode);
+            }
+        }
+
+        private TextRange LoadRTBCodeModeContentFromFile(string filepath)
+        {
+            FileStream fileStream = new FileStream(filepath, FileMode.Open);
             var trCodeMode = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
             trCodeMode.Load(fileStream, DataFormats.Rtf);
             fileStream.Close();
 
-            var tpContentStart = rtbCodeMode.Document.ContentStart;
+            return trCodeMode;
+        }
 
-            for (int i = 0; i < dicTeacherContentLoad.Count; i++)
+        private void LoadMathProblemIntoRTBs(TextRange trCodeMode, Dictionary<string, RichTextBox> tagRTBDictionary)
+        {
+            var tpContentStart = trCodeMode.Start;
+
+            for (int i = 0; i < dicTeacherTagRTB.Count; i++)
             {
                 var openTag = $"<{tagRTBDictionary.ElementAt(i).Key}>";
                 var closeTag = $"</{tagRTBDictionary.ElementAt(i).Key}>";
@@ -663,10 +705,10 @@ namespace MVVMMathProblemsBase.View
 
                 if (textOpenTagStartIndex < 0 || textCloseTagStartIndex < 0)
                 {
-                    MessageBoxResult result = MessageBox.Show("Při načítání příkladu ze souboru byla zjištěna chyba.\n" +
+                    MessageBoxResult result = MessageBox.Show("Při načítání úlohy ze souboru byla zjištěna chyba.\n" +
                                                                 "Nouzovým načtením bude celý obsah souboru načten do textového pole \"Zadání\".\n" +
                                                                 "Chcete se pokusit příklad načíst nouzově?",
-                                                                "Nezmatematika - chyba načtení příkladu",
+                                                                "Nezmatematika - chyba načtení úlohy",
                                                                 MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
@@ -683,18 +725,81 @@ namespace MVVMMathProblemsBase.View
                 {
                     new TextRange(tpStart, tpEnd).Save(stream, DataFormats.XamlPackage);
                     new TextRange(rtbTarget.Document.ContentEnd, rtbTarget.Document.ContentEnd).Load(stream, DataFormats.XamlPackage);
+                    if (App.WhereInApp == WhereInApp.CourseForStudent && i < tagRTBDictionary.Count - 1) rtbTarget.AppendText("\r\n\r\n");
                 }
             }
+        }
+
+        private void LoadMathProblemCollections(TextRange trCodeMode)
+        {
+            vM.CurrentMathProblem.CorrectAnswers = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Answer"));
+            vM.PopulateTempAnswersFromCurrentMathProblem();
+            vM.CurrentMathProblem.SolutionSteps = new List<string>(ParseTaggedTextIntoList(trCodeMode.Text, "Step"));
+            vM.PopulateTempSolutionStepsFromCurrentMathProblem();
+        }
+
+        private List<string> ParseTaggedTextIntoList(string textToParse, string tagItemName)
+        {
+            var collectionOpenTag = $"<{tagItemName}s>";
+            var collectionCloseTag = $"</{tagItemName}s>";
+            var itemOpenTag = $"<{tagItemName}>";
+            var itemCloseTag = $"</{tagItemName}>";
+            var newCollection = new List<string>();
+
+            var collectionStart = textToParse.IndexOf(collectionOpenTag);
+            var collectionEnd = textToParse.IndexOf(collectionCloseTag);
+            if (collectionStart == -1 || collectionEnd == -1)
+                return newCollection;
+
+            try
+            {
+                textToParse = textToParse.Substring(textToParse.IndexOf(collectionOpenTag));
+                textToParse = textToParse.Substring(0, textToParse.IndexOf(collectionCloseTag));
+                textToParse = textToParse.Replace(collectionOpenTag, "");
+
+                while (textToParse.Contains(itemOpenTag) && textToParse.Contains(itemCloseTag))
+                {
+                    var item = textToParse.Substring(0, textToParse.IndexOf(itemCloseTag));
+                    newCollection.Add(item.Replace(itemOpenTag, ""));
+                    textToParse = textToParse.Substring(item.Length + itemCloseTag.Length);
+                }
+                return newCollection;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        
+        private void LoadCapitalisation(TextRange trCodeMode)
+        {
+            cbProblemCapitalisation.IsChecked = ParseTaggedBool(trCodeMode.Text, "CapitalisationMatters");
+        }
+
+        private bool ParseTaggedBool(string textToParse, string tagName)
+        {
+            var itemOpenTag = $"<{tagName}>";
+            var itemCloseTag = $"</{tagName}>";
+            try
+            {
+                textToParse = textToParse.Substring(textToParse.IndexOf(itemOpenTag));
+                textToParse = textToParse.Substring(0, textToParse.IndexOf(itemCloseTag));
+                textToParse = textToParse.Replace(itemOpenTag, "");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+            return textToParse.ToLower() == "true";
         }
 
         private void btnPublishCourse_Click(object sender, RoutedEventArgs e)
         {
             if (vM.CurrentCourse != null)
             {
-                if (vM.Settings.AutosaveCourseBeforePublishing)
+                if (vM.CurrentSettings.AutosaveCourseBeforePublishing)
                     btnSaveCourse_Click(sender, e);
-
-                vM.PublishCurrentCourse();
             }
         }
 
@@ -702,20 +807,120 @@ namespace MVVMMathProblemsBase.View
         {
             if (vM.CurrentCourse != null && vM.CurrentMathProblem != null)
             {
-                vM.CurrentMathProblem.CorrectAnswers = vM.TempAnswers;
-
-                rtbCodeMode.Document.Blocks.Clear();
-                rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+                vM.TeacherNotNullCurrentMathProblemAboutToChange -= ViewModelTeacher_CurrentMathProblemAboutToChange;
+                UpdateCodeMode();
 
                 var problem = new TextRange(rtbProblemText.Document.ContentStart, rtbProblemText.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemText = problem.Text.Trim();
+                vM.CurrentMathProblem.ProblemText = TextRangeHelper.GetTextRangeSubstringWithoutLineBreaks(problem, 22);
                 var question = new TextRange(rtbQuestion.Document.ContentStart, rtbQuestion.Document.ContentEnd);
-                vM.CurrentMathProblem.ProblemQuestion = question.Text.Trim();
+                vM.CurrentMathProblem.ProblemQuestion = TextRangeHelper.GetTextRangeSubstringWithoutLineBreaks(question, 25);
                 var contents = new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd);
 
                 vM.SaveCurrentCourse();
                 vM.SaveCurrentMathProblem(contents);
+                
+                var curMathProblem = vM.CurrentMathProblem;
+                vM.PopulateTempMathProblemsFromCurrentCourse();
+                vM.CurrentMathProblem = curMathProblem;
+                vM.TeacherNotNullCurrentMathProblemAboutToChange += ViewModelTeacher_CurrentMathProblemAboutToChange;
             }
+        }
+
+        private void UpdateCodeMode()
+        {
+            rtbCodeMode.Document.Blocks.Clear();
+            rtbCodeMode.Document = FlowDocumentOfCurrentMathProblem();
+        }
+
+        private void btnImportProblem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "RTF soubory (*.rtf)|*.rtf",
+                RestoreDirectory = true,
+                Title = "Nezmatematika - import úlohy"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                foreach (var item in dicTeacherTagRTB)
+                {
+                    item.Value.Document.Blocks.Clear();
+                }
+                LoadMathProblemFromFile(openFileDialog.FileName, dicTeacherTagRTB, true);
+            }
+        }
+
+        private void btnExportProblem_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".rtf",
+                Filter = "RTF soubory (*.rtf)|*.rtf",
+                OverwritePrompt = true,
+                Title = "Nezmatematika - export úlohy",
+                ValidateNames = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                UpdateCodeMode();
+                SaveRTF(saveFileDialog.FileName, new TextRange(rtbCodeMode.Document.ContentStart, rtbCodeMode.Document.ContentEnd));
+            }
+        }
+
+        private void btnImportCourse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "komprimované složky (*.zip)|*.zip",
+                RestoreDirectory = true,
+                Title = "Nezmatematika - import kurzu"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+                ZipHelper.UnzipDirectory(openFileDialog.FileName, GetFullPath(FullPathOptions.DirCoursesPublished));
+
+            vM.GetListOfNewCoursesToStart();
+        }
+
+        private void btnExportCourse_Click(object sender, RoutedEventArgs e)
+        {
+            if (vM.CurrentCourse.Version < 1)
+            {
+                MessageBox.Show("Exportuje se poslední zveřejněná verze. Proto kurz nelze exportovat, dokud jej nezveřejníte.");
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".zip",
+                Filter = "Komprimovaná složka (*.zip)|*.zip",
+                OverwritePrompt = true,
+                Title = "Nezmatematika - export kurzu",
+                ValidateNames = true
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var exportDirFullPath = GetFullPath(FullPathOptions.DirExports);
+                Directory.CreateDirectory(exportDirFullPath);
+                PrepCourseForExport(vM.CurrentCourse);
+
+                if (ZipHelper.ZipUpDirectory(exportDirFullPath, saveFileDialog.FileName) == true)
+                    MessageBox.Show("Export kurzu proběhl úspěšně.");
+
+                Directory.Delete(exportDirFullPath, true);
+            }
+        }
+
+        private void PrepCourseForExport(Course course) //TADY OPRAVDU MAJÍ BÝT CESTY RELATIVNÍ!!!
+        {
+            course.PrepForExport(course.Id, course.Version, _CoursesPublishedRelDirPath(), _ExportsDirName());
         }
     }
 

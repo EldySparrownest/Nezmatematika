@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMMathProblemsBase.ViewModel.Commands
+namespace Nezmatematika.ViewModel.Commands
 {
     public class SwitchBetweenUserAndCodeModeCommand : ICommand
     {
@@ -25,7 +21,7 @@ namespace MVVMMathProblemsBase.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return MMVM.EditCourseVis == Visibility.Visible;
+            return App.WhereInApp == WhereInApp.CourseEditor;
         }
 
         public void Execute(object parameter)
