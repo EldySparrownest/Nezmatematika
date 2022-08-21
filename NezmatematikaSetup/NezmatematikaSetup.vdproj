@@ -15,20 +15,50 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0F6FB34F7C80807CF09E6AD68012992C"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_127472A8BE0F5CB0D18E39D0BA65BC94"
+        "OwnerKey" = "8:_3F686AA637C66D641D3E5B7DFA2CCA8A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_127472A8BE0F5CB0D18E39D0BA65BC94"
+        "OwnerKey" = "8:_66ABB8D99DE1D1158F2CD904158058BE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_127472A8BE0F5CB0D18E39D0BA65BC94"
+        "OwnerKey" = "8:_B1CEA68C83CA669A0F950C928C50E830"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_127472A8BE0F5CB0D18E39D0BA65BC94"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_13B945082BA8468BB4E05E4F4648D4E5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_14BA5D68A84034148350BEF6CB458DBE"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_3F686AA637C66D641D3E5B7DFA2CCA8A"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -39,26 +69,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "MsmKey" = "8:_591D480326FFEB246582A7F11D82FD07"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_618F3518E95A24C60EC60FB58616804C"
+        "OwnerKey" = "8:_591D480326FFEB246582A7F11D82FD07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_66ABB8D99DE1D1158F2CD904158058BE"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_97A74411142C58871DF8295754710521"
-        "OwnerKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
+        "MsmKey" = "8:_896753A885309DB690D221CA0A3129FC"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_97A74411142C58871DF8295754710521"
-        "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_97A74411142C58871DF8295754710521"
-        "OwnerKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "MsmKey" = "8:_B1CEA68C83CA669A0F950C928C50E830"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -69,56 +111,62 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C0B5885987FD46A1880928B104238E24"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D4B2BE48BD094F869514968618D00015"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D4B2BE48BD094F869514968618D00015"
+        "OwnerKey" = "8:_896753A885309DB690D221CA0A3129FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C0B5885987FD46A1880928B104238E24"
+        "OwnerKey" = "8:_0F6FB34F7C80807CF09E6AD68012992C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_52B5B8637A764ADBAE827689E21AA2FC"
+        "OwnerKey" = "8:_3F686AA637C66D641D3E5B7DFA2CCA8A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3F11F4BE9514414BBACDA7142C242725"
+        "OwnerKey" = "8:_66ABB8D99DE1D1158F2CD904158058BE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_97A74411142C58871DF8295754710521"
+        "OwnerKey" = "8:_B1CEA68C83CA669A0F950C928C50E830"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3D0BC7F082764F41B5BEB8622DCF76D5"
+        "OwnerKey" = "8:_14BA5D68A84034148350BEF6CB458DBE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_480CDFF80C1546E39001172A6EDE294F"
+        "OwnerKey" = "8:_591D480326FFEB246582A7F11D82FD07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_618F3518E95A24C60EC60FB58616804C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_127472A8BE0F5CB0D18E39D0BA65BC94"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -216,40 +264,20 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_13B945082BA8468BB4E05E4F4648D4E5"
-            {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\View\\nezmatematika3_jB0_icon.ico"
-            "TargetName" = "8:nezmatematika3_jB0_icon.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3D0BC7F082764F41B5BEB8622DCF76D5"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0F6FB34F7C80807CF09E6AD68012992C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Xceed.Wpf.Toolkit, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3D0BC7F082764F41B5BEB8622DCF76D5"
+                    "_0F6FB34F7C80807CF09E6AD68012992C"
                     {
                     "Name" = "8:Xceed.Wpf.Toolkit.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Xceed.Wpf.Toolkit.dll"
+            "SourcePath" = "8:Xceed.Wpf.Toolkit.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
@@ -264,99 +292,17 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3F11F4BE9514414BBACDA7142C242725"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3F11F4BE9514414BBACDA7142C242725"
-                    {
-                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.Metro.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Xceed.Wpf.AvalonDock.Themes.Metro.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_45EBAC9ACAB34584B2303324C8EEE31B"
-            {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\DefaultSettings.xml"
-            "TargetName" = "8:DefaultSettings.xml"
-            "Tag" = "8:"
-            "Folder" = "8:_10A8B60928A74F60BAE3DAFEAFFB3C25"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_52B5B8637A764ADBAE827689E21AA2FC"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_52B5B8637A764ADBAE827689E21AA2FC"
-                    {
-                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.VS2010.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Xceed.Wpf.AvalonDock.Themes.VS2010.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_97A74411142C58871DF8295754710521"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_127472A8BE0F5CB0D18E39D0BA65BC94"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_97A74411142C58871DF8295754710521"
+                    "_127472A8BE0F5CB0D18E39D0BA65BC94"
                     {
                     "Name" = "8:Xceed.Wpf.AvalonDock.dll"
                     "Attributes" = "3:512"
@@ -380,10 +326,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE324A660E01409B93FF6387C414645F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_13B945082BA8468BB4E05E4F4648D4E5"
             {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\DefaultSettings.xml"
-            "TargetName" = "8:DefaultSettings.xml"
+            "SourcePath" = "8:..\\Nezmatematika\\View\\nezmatematika3_jB0_icon.ico"
+            "TargetName" = "8:nezmatematika3_jB0_icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
             "Condition" = "8:"
@@ -400,20 +346,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C0B5885987FD46A1880928B104238E24"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_14BA5D68A84034148350BEF6CB458DBE"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
-                    "_C0B5885987FD46A1880928B104238E24"
+                    "_14BA5D68A84034148350BEF6CB458DBE"
                     {
-                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.Aero.dll"
+                    "Name" = "8:System.Net.Http.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Xceed.Wpf.AvalonDock.Themes.Aero.dll"
+            "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
@@ -428,24 +374,219 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3F686AA637C66D641D3E5B7DFA2CCA8A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.VS2010, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_3F686AA637C66D641D3E5B7DFA2CCA8A"
+                    {
+                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.VS2010.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Xceed.Wpf.AvalonDock.Themes.VS2010.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_45EBAC9ACAB34584B2303324C8EEE31B"
+            {
+            "SourcePath" = "8:..\\Nezmatematika\\DefaultSettings.xml"
+            "TargetName" = "8:DefaultSettings.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_10A8B60928A74F60BAE3DAFEAFFB3C25"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D4B2BE48BD094F869514968618D00015"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_591D480326FFEB246582A7F11D82FD07"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+                "ScatterAssemblies"
+                {
+                    "_591D480326FFEB246582A7F11D82FD07"
+                    {
+                    "Name" = "8:System.IO.Compression.FileSystem.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.IO.Compression.FileSystem.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_618F3518E95A24C60EC60FB58616804C"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:System.IO.Compression, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_618F3518E95A24C60EC60FB58616804C"
+                    {
+                    "Name" = "8:System.IO.Compression.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.IO.Compression.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_66ABB8D99DE1D1158F2CD904158058BE"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.Metro, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_66ABB8D99DE1D1158F2CD904158058BE"
+                    {
+                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.Metro.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Xceed.Wpf.AvalonDock.Themes.Metro.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_896753A885309DB690D221CA0A3129FC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_D4B2BE48BD094F869514968618D00015"
+                    "_896753A885309DB690D221CA0A3129FC"
                     {
                     "Name" = "8:Microsoft.Xaml.Behaviors.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\bin\\Debug\\Microsoft.Xaml.Behaviors.dll"
+            "SourcePath" = "8:Microsoft.Xaml.Behaviors.dll"
             "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B1CEA68C83CA669A0F950C928C50E830"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Xceed.Wpf.AvalonDock.Themes.Aero, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B1CEA68C83CA669A0F950C928C50E830"
+                    {
+                    "Name" = "8:Xceed.Wpf.AvalonDock.Themes.Aero.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Xceed.Wpf.AvalonDock.Themes.Aero.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE324A660E01409B93FF6387C414645F"
+            {
+            "SourcePath" = "8:..\\Nezmatematika\\DefaultSettings.xml"
+            "TargetName" = "8:DefaultSettings.xml"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
             "Condition" = "8:"
@@ -640,7 +781,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Nezmatematika"
         "ProductCode" = "8:{EC1CACAD-62A8-44A8-A2DE-179FB028327A}"
-        "PackageCode" = "8:{C60649DC-A42C-4D59-AF0B-32835D0AE9CC}"
+        "PackageCode" = "8:{C9B35E78-16EC-49AD-8334-F87A6D29C9FD}"
         "UpgradeCode" = "8:{DD85018C-C18C-4BCD-9E68-2799CA4229C3}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -760,7 +901,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D856720D928E4D6F9535A8BE10C4B372"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_44F65A55FF524ABB878AC23A402E89CD"
             {
             "Name" = "8:Nezmatematika"
             "Arguments" = "8:"
@@ -768,7 +909,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_480CDFF80C1546E39001172A6EDE294F"
+            "Target" = "8:_726424A3FE3741A29ECF1C379EC64FBA"
             "Folder" = "8:_4CAEF871F1634652ADE01C955948DFAE"
             "WorkingFolder" = "8:_95D68066D1244A54A490EDAC48175484"
             "Icon" = "8:_13B945082BA8468BB4E05E4F4648D4E5"
@@ -1173,9 +1314,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_480CDFF80C1546E39001172A6EDE294F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_726424A3FE3741A29ECF1C379EC64FBA"
             {
-            "SourcePath" = "8:..\\MVVMMathProblemsBase\\obj\\Release\\Nezmatematika.exe"
+            "SourcePath" = "8:..\\Nezmatematika\\obj\\Release\\Nezmatematika.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95D68066D1244A54A490EDAC48175484"
@@ -1193,7 +1334,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{FA5F9B8B-296F-40E1-A88D-63FEF7F3A490}"
             "ShowKeyOutput" = "11:TRUE"
