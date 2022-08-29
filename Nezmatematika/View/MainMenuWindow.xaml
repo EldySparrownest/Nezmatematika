@@ -39,7 +39,8 @@
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Label HorizontalAlignment="Left"
+                <Label Style="{StaticResource bigLblS}"
+                       HorizontalAlignment="Left"
                        Grid.ColumnSpan="3"
                        Grid.Row="0">
                     <Label.Content>
@@ -55,9 +56,9 @@
                 </Label>
                 <Button x:Name="btnDispProfileSel"
                         Command="{Binding DisplayProfileSelectionCommand}"
-                        Margin="5"
+                        Style="{StaticResource mainMenuBtnS}"
                         Width="Auto"
-                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
                         Grid.Row="1"
                         HorizontalAlignment="Right">
                     <Label Content="Změna profilu" />
@@ -372,7 +373,7 @@
                 <Grid x:Name="gridStudentNewCourseSelection"
                       Visibility="{Binding StudentNewCourseSelVis}"
                       Grid.Column="1"
-                      Grid.Row="1"
+                      Grid.Row="2"
                       Grid.RowSpan="3">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -1214,45 +1215,45 @@
                                    Margin="5" />
                     </Grid>
                 </Grid>
-                <Grid Name="gridStudentMenu"
-                      HorizontalAlignment="Left"
+                <Viewbox StretchDirection="Both">
+                    <Grid Name="gridStudentMenu"
                       Visibility="{Binding Path=StudentVis,
                                    Source={StaticResource vm}}"
-                      Grid.Column="0"
                       Grid.Row="3"
                       Margin="5">
                     <StackPanel VerticalAlignment="Bottom">
                         <Button Command="{Binding DisplayNewCourseSelectionCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Začít nový kurz" />
                         </Button>
                         <Button Command="{Binding DisplayStudentCoursesToContinue}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Pokračovat v kurzu" />
                         </Button>
                         <Button Command="{Binding DisplayStatisticsCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Statistiky" />
                         </Button>
                         <Button Command="{Binding DisplaySettingsCommand}"
-                                Margin="5"
-                                Click="LoadComboBoxesForSettings">
+                                Click="LoadComboBoxesForSettings"
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Nastavení" />
                         </Button>
                         <Button Command="{Binding DisplayAboutAppCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="O programu" />
                         </Button>
                         <Button Click="BackToModeSelection"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Zpět na výběr módu" />
                         </Button>
                         <Button Click="AppCurrentShutdown"
-                                Margin="5,5,5,0">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Ukončit" />
                         </Button>
                     </StackPanel>
-                </Grid>
+                    </Grid>
+                </Viewbox>
                 <Grid Name="gridTeacherMenu"
                       HorizontalAlignment="Left"
                       Visibility="{Binding Path=TeacherVis,
@@ -1262,32 +1263,32 @@
                       Margin="5">
                     <StackPanel VerticalAlignment="Bottom">
                         <Button Command="{Binding DisplayNewCourseCreationCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Vytvořit nový kurz" />
                         </Button>
                         <Button Command="{Binding DisplayCourseToEditSelectionCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Upravit kurz" />
                         </Button>
                         <Button Command="{Binding DisplayStatisticsCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Statistiky" />
                         </Button>
                         <Button Command="{Binding DisplaySettingsCommand}"
                                 Click="LoadComboBoxesForSettings"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Nastavení" />
                         </Button>
                         <Button Command="{Binding DisplayAboutAppCommand}"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="O programu" />
                         </Button>
                         <Button Click="BackToModeSelection"
-                                Margin="5">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Zpět na výběr módu" />
                         </Button>
                         <Button Click="AppCurrentShutdown"
-                                Margin="5,5,5,0">
+                                Style="{StaticResource mainMenuBtnS}">
                             <Label Content="Ukončit" />
                         </Button>
                     </StackPanel>
@@ -1295,6 +1296,7 @@
             </Grid>
             <Grid x:Name="gridTakingCourse"
                   Visibility="{Binding CourseForStudentVis}"
+                  HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   Margin="20">
                 <Grid.ColumnDefinitions>
@@ -1566,7 +1568,7 @@
                                     Command="{Binding PublishCourseCommand}"
                                     Margin="5">
                                 <Label Content="Zveřejnit&#xa;   kurz"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center" />
                             </Button>
                             <Separator />
                             <ToggleButton x:Name="btnBold"
