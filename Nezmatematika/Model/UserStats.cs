@@ -132,15 +132,12 @@ namespace Nezmatematika.Model
 
         public void Save(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(UserStats), this);
+            XmlHelper.Save(fullFilePath, this);
         }
-        public static UserStats Read(string filename)
+        public static UserStats Read(string fullFilePath)
         {
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
-                return xmls.Deserialize(sr) as UserStats;
-            }
+            XmlHelper.TryDeserialiaze<UserStats>(fullFilePath, out var userStats);
+            return userStats;
         }
     }
 }

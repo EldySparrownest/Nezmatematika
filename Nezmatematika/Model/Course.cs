@@ -72,7 +72,7 @@ namespace Nezmatematika.Model
             TimeSpentEditing = TimeSpentEditing + (LastOpened > LastEdited ? LastOpened : LastEdited).Subtract(DateTime.Now);
             LastEdited = DateTime.Now;
 
-            XmlHelper.Save(Path.Combine(App.MyBaseDirectory, RelFilePath), typeof(Course), this);
+            XmlHelper.Save(Path.Combine(App.MyBaseDirectory, RelFilePath), this);
         }
 
         public void PublishCourse(string publishedCoursesRelDirPath, string archivedCoursesRelDirPath, out int problemCountChange)
@@ -223,11 +223,8 @@ namespace Nezmatematika.Model
         public static Course Read(string relFilePath)
         {
             var fullFilePath = Path.Combine(App.MyBaseDirectory, relFilePath);
-            using (StreamReader sw = new StreamReader(fullFilePath))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(Course));
-                return xmls.Deserialize(sw) as Course;
-            }
+            XmlHelper.TryDeserialiaze<Course>(fullFilePath, out var course); 
+            return course;
         }
     }
 }

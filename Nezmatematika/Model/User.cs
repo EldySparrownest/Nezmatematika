@@ -27,10 +27,10 @@ namespace Nezmatematika.Model
             UserStats = new UserStats();
         }
 
-        public User(UserBase userBase, string coursesDataFilename, string settingsFullFilePath, string statsFullFilePath)
+        public User(UserBase userBase, string coursesDataFullfilePath, string settingsFullFilePath, string statsFullFilePath)
         {
             UserBase = userBase;
-            ReadCoursesData(coursesDataFilename);
+            ReadCoursesData(coursesDataFullfilePath);
             ReadSettings(settingsFullFilePath);
             ReadStats(statsFullFilePath);
         }
@@ -43,44 +43,30 @@ namespace Nezmatematika.Model
 
         public void SaveCoursesData(string coursesDataFilename)
         {
-            XmlHelper.Save(coursesDataFilename, typeof(List<UserCourseData>), CoursesData);
+            XmlHelper.Save(coursesDataFilename, CoursesData);
         }
         public void SaveSettings(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(UserSettings), UserSettings);
+            XmlHelper.Save(fullFilePath, UserSettings);
         }
         public void SaveStats(string statsFilename)
         {
-            XmlHelper.Save(statsFilename, typeof(UserStats), UserStats);
+            XmlHelper.Save(statsFilename, UserStats);
         }
 
-        public void ReadCoursesData(string coursesDataFilename)
+        public void ReadCoursesData(string coursesDataFullFilePath)
         {
-            if (File.Exists(coursesDataFilename))
-            {
-                using (StreamReader sw = new StreamReader(coursesDataFilename))
-                {
-                    XmlSerializer xmls = new XmlSerializer(typeof(List<UserCourseData>));
-                    CoursesData = xmls.Deserialize(sw) as List<UserCourseData>;
-                }
-            }
-            else CoursesData = new List<UserCourseData>();
+            XmlHelper.TryDeserialiaze<List<UserCourseData>>(coursesDataFullFilePath, out var coursesData);
+            CoursesData = coursesData;
         }
         public void ReadSettings(string fullFilePath)
         {
             UserSettings = File.Exists(fullFilePath) ? UserSettings.Read(fullFilePath) : new UserSettings();
         }
-        public void ReadStats(string statsFilename)
+        public void ReadStats(string statsFullFilePath)
         {
-            if (File.Exists(statsFilename))
-            {
-                using (StreamReader sw = new StreamReader(statsFilename))
-                {
-                    XmlSerializer xmls = new XmlSerializer(typeof(UserStats));
-                    UserStats = xmls.Deserialize(sw) as UserStats;
-                }
-            }
-            else UserStats = new UserStats();
+            XmlHelper.TryDeserialiaze<UserStats>(statsFullFilePath, out var userStats);
+            UserStats = userStats;
         }
     }
 }

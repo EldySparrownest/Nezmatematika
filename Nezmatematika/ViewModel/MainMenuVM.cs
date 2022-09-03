@@ -1044,7 +1044,7 @@ namespace Nezmatematika.ViewModel
         }
         public void SaveUserList()
         {
-            XmlHelper.Save(_UserListFullPath(), typeof(List<UserBase>), new List<UserBase>(this.AllUserBasesList));
+            XmlHelper.Save(_UserListFullPath(), new List<UserBase>(this.AllUserBasesList));
         }
         #endregion SavingMethods
 
@@ -1279,16 +1279,7 @@ namespace Nezmatematika.ViewModel
         #region GetMethods
         public void GetListOfAllUsers()
         {
-            AllUserBasesList.Clear();
-            List<UserBase> resultList = new List<UserBase>();
-            if (File.Exists(_UserListFullPath()))
-            {
-                using (StreamReader sw = new StreamReader(_UserListFullPath()))
-                {
-                    XmlSerializer xmls = new XmlSerializer(typeof(List<UserBase>));
-                    resultList = xmls.Deserialize(sw) as List<UserBase>;
-                }
-            }
+            XmlHelper.TryDeserialiaze< List<UserBase>> (_UserListFullPath(), out var resultList);
             AllUserBasesList = new ObservableCollection<UserBase>(resultList);
         }
 

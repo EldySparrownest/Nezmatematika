@@ -123,15 +123,12 @@ namespace Nezmatematika.Model
 
         public void Save(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(UserCourseData), this);
+            XmlHelper.Save(fullFilePath, this);
         }
-        public UserCourseData Read(string filename)
+        public UserCourseData Read(string fullFilePath)
         {
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(UserCourseData));
-                return xmls.Deserialize(sr) as UserCourseData;
-            }
+            XmlHelper.TryDeserialiaze<UserCourseData>(fullFilePath, out var userCourseData);
+            return userCourseData;
         }
     }
 
@@ -254,15 +251,12 @@ namespace Nezmatematika.Model
 
         public void Save(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(CopyOfUserCourseData), this);
+            XmlHelper.Save(fullFilePath, this);
         }
-        public CopyOfUserCourseData Read(string filename)
+        public CopyOfUserCourseData Read(string fullFilePath)
         {
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(CopyOfUserCourseData));
-                return xmls.Deserialize(sr) as CopyOfUserCourseData;
-            }
+            XmlHelper.TryDeserialiaze<CopyOfUserCourseData>(fullFilePath, out var copyOfUserCourseData);
+            return copyOfUserCourseData;
         }
     }
 }

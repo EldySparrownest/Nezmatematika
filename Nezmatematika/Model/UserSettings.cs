@@ -23,15 +23,12 @@ namespace Nezmatematika.Model
 
         public void Save(string fullFilePath)
         {
-            XmlHelper.Save(fullFilePath, typeof(UserSettings), this);
+            XmlHelper.Save(fullFilePath, this);
         }
-        public static UserSettings Read(string filename)
+        public static UserSettings Read(string fullFilePath)
         {
-            using (StreamReader sr = new StreamReader(filename))
-            {
-                XmlSerializer xmls = new XmlSerializer(typeof(UserSettings));
-                return xmls.Deserialize(sr) as UserSettings;
-            }
+            XmlHelper.TryDeserialiaze<UserSettings>(fullFilePath, out var userSettings);
+            return userSettings;
         }
     }
 }
